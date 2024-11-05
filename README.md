@@ -1,7 +1,12 @@
 # HTML-Editor
+## 事项
+系统测试开始时间：11月17日
+
 ## 项目结构
 src.main.java       源代码路径
+
 src.main.resources  资源路径
+
 src.main.test       测试路径 
 
 
