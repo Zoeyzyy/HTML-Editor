@@ -13,13 +13,12 @@ public class SaveCommand implements Command {
         this.filePath = filePath;
     }
 
-    @Override
-    public void execute() {
-        document.save(filePath);
+    public static Command create(HTMLDocument document, String filePath) {
+        return new SaveCommand(document, filePath);
     }
 
     @Override
-    public void undo() {
-        // save 不能undo 和 redo
+    public void execute() {
+        document.save(filePath);
     }
 }

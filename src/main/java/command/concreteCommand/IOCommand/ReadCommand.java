@@ -13,13 +13,12 @@ public class ReadCommand implements Command {
         this.filePath = filePath;
     }
 
-    @Override
-    public void execute() {
-        document.read(filePath);
+    public static Command create(HTMLDocument document, String filePath) {
+        return new ReadCommand(document, filePath);
     }
 
     @Override
-    public void undo() {
-        // read 不能undo 和 redo
+    public void execute() {
+        document.read(filePath);
     }
 }

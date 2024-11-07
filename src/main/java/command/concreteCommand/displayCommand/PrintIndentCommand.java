@@ -13,12 +13,12 @@ public class PrintIndentCommand implements Command {
         this.indent = indent;
     }
 
-    @Override
-    public void execute() {
-        document.printIndent(indent);
+    public static Command create(HTMLDocument document, int indent) {
+        return new PrintIndentCommand(document, indent);
     }
 
     @Override
-    public void undo() {
+    public void execute() {
+        System.out.println(document.getIndentFormat(indent));
     }
 }

@@ -15,11 +15,6 @@ public class RedoCommand implements Command {
 
     @Override
     public void execute() {
-        commandHistory.redo();
-    }
-
-    @Override
-    public void undo() {
-        // redo 不能undo 和 redo
+        commandHistory.redoLastCommand();
     }
 }

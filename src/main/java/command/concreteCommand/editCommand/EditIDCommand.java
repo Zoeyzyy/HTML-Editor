@@ -2,9 +2,10 @@ package command.concreteCommand.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
+import command.CanUndoCommand;
 import command.Command;
 
-public class EditIDCommand implements Command {
+public class EditIDCommand implements CanUndoCommand {
     private HTMLDocument document;
     private String oldID;
     private String newID;
@@ -13,6 +14,10 @@ public class EditIDCommand implements Command {
         this.document = document;
         this.oldID = oldID;
         this.newID = newID;
+    }
+
+    public static Command create(HTMLDocument document, String oldID, String newID) {
+        return new EditIDCommand(document, oldID, newID);
     }
 
     @Override

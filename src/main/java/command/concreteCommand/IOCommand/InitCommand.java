@@ -11,13 +11,12 @@ public class InitCommand implements Command {
         this.document = document;
     }
 
-    @Override
-    public void execute() {
-        document.init();
+    public static Command create(HTMLDocument document) {
+        return new InitCommand(document);
     }
 
     @Override
-    public void undo() {
-        // init 不能undo 和 redo
+    public void execute() {
+        document.init();
     }
 }

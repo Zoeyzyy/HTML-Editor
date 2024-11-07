@@ -11,12 +11,12 @@ public class SpellCheckCommand implements Command {
         this.document = document;
     }
 
-    @Override
-    public void execute() {
-        document.spellCheck();
+    public static Command create(HTMLDocument document) {
+        return new SpellCheckCommand(document);
     }
 
     @Override
-    public void undo() {
+    public void execute() {
+        System.out.println(document.getSpellCheck());
     }
 }

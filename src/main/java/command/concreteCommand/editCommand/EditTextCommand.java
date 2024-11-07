@@ -2,9 +2,10 @@ package command.concreteCommand.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
+import command.CanUndoCommand;
 import command.Command;
 
-public class EditTextCommand implements Command {
+public class EditTextCommand implements CanUndoCommand {
     private HTMLDocument document;
     private String element; // ID
     private String newTextContent;
@@ -14,6 +15,10 @@ public class EditTextCommand implements Command {
         this.document = document;
         this.element = element;
         this.newTextContent = newTextContent;
+    }
+
+    public static Command create(HTMLDocument document, String element, String newTextContent) {
+        return new EditTextCommand(document, element, newTextContent);  
     }
 
     @Override

@@ -2,9 +2,10 @@ package command.concreteCommand.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
+import command.CanUndoCommand;
 import command.Command;
 
-public class InsertCommand implements Command {
+public class InsertCommand implements CanUndoCommand {
     private HTMLDocument document;
     private String tagName;
     private String idValue;
@@ -16,13 +17,18 @@ public class InsertCommand implements Command {
         this.document = document;
         this.tagName = tagName;
         this.idValue = idValue;
-        this.parentElement = parentElement;
+        this.insertLocation = parentElement;
         this.textContent = textContent;
+    }
+
+    public static Command create(HTMLDocument document, String tagName, String idValue, String parentElement,
+            String textContent) {
+        return new InsertCommand(document, tagName, idValue, parentElement, textContent);
     }
 
     @Override
     public void execute() {
-        document.insertElement(tagName, idValue, parentElement, textContent);
+        document.insertElement(tagName, idValue, insertLocation, textContent);
     }
 
     @Override

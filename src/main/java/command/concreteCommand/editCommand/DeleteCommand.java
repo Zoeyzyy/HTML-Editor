@@ -2,9 +2,10 @@ package command.concreteCommand.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
+import command.CanUndoCommand;
 import command.Command;
 
-public class DeleteCommand implements Command {
+public class DeleteCommand implements CanUndoCommand {
     private HTMLDocument document;
     private String element; // ID
     private String tagName;
@@ -16,6 +17,10 @@ public class DeleteCommand implements Command {
     public DeleteCommand(HTMLDocument document, String element) {
         this.document = document;
         this.element = element;
+    }
+
+    public static Command create(HTMLDocument document, String element) {
+        return new DeleteCommand(document, element);
     }
 
     @Override
