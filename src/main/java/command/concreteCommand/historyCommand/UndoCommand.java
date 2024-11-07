@@ -1,0 +1,25 @@
+package command.concreteCommand.IOCommand;
+
+import document.HTMLDocument;
+import document.HTMLElement;
+import command.Command;
+import command.CommandHistory
+
+
+public class UndoCommand implements Command {
+    private CommandHistory commandHistory;
+
+    public UndoCommand(CommandHistory commandHistory) {  
+        this.commandHistory = commandHistory;
+    }
+
+    @Override
+    public void execute() {
+        commandHistory.undo();
+    }
+
+    @Override
+    public void undo() {
+        // undo 不能undo 和 redo
+    }
+}
