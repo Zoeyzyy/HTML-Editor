@@ -1,4 +1,4 @@
-package command.concreteCommand.sessionCommand;
+package command.commandImpl.sessionCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
@@ -17,6 +17,6 @@ public class ChangeEditorCommand implements Command {
 
     @Override
     public void execute() {
-        session.changeEditor(filePath);
+        session.activateEditor(filePath);
     }
 }

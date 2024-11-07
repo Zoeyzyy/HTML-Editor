@@ -1,4 +1,4 @@
-package command.concreteCommand.sessionCommand;
+package command.commandImpl.sessionCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
@@ -17,6 +17,7 @@ public class DirTreeCommand implements Command {
     
     @Override
     public void execute() {
+        // return String
         System.out.println(session.getDirTreeFormat());
     }
 }

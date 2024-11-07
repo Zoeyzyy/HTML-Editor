@@ -1,4 +1,4 @@
-package command.concreteCommand.editCommand;
+package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
@@ -26,12 +26,12 @@ public class AppendCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        document.appendElement(tagName, idValue, parentElement, textContent);
+        document.addElement(tagName, idValue, parentElement, textContent);
         
     }
 
     @Override
     public void undo() {
-        document.removeElement(idValue); 
+        document.removeElementById(idValue); 
     }
 }

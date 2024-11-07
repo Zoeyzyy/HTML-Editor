@@ -1,4 +1,4 @@
-package command.concreteCommand.editCommand;
+package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;

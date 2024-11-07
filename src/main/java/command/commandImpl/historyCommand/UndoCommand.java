@@ -1,4 +1,4 @@
-package command.concreteCommand.IOCommand;
+package command.commandImpl.historyCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;

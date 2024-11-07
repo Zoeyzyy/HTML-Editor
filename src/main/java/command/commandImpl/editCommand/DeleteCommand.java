@@ -1,4 +1,4 @@
-package command.concreteCommand.editCommand;
+package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
@@ -27,8 +27,7 @@ public class DeleteCommand implements CanUndoCommand {
     public void execute() {
         tagName = document.findElementById(element).getTagName();
         idValue = document.findElementById(element).getId();
-        insertLocation = document.findElementById(element).getParentId();
-        parentElement = document.findElementById(element).getParentId();
+        insertLocation = document.findElementById(element).getInsertLocation();
         textContent = document.findElementById(element).getTextContent();
         
         document.removeElementById(element);

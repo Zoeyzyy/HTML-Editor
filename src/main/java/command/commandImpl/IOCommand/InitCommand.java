@@ -1,22 +1,22 @@
-package command.concreteCommand.displayCommand;
+package command.commandImpl.IOCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
 import command.Command;
 
-public class SpellCheckCommand implements Command {
+public class InitCommand implements Command {
     private HTMLDocument document;
 
-    public SpellCheckCommand(HTMLDocument document) {
+    public InitCommand(HTMLDocument document) {
         this.document = document;
     }
 
     public static Command create(HTMLDocument document) {
-        return new SpellCheckCommand(document);
+        return new InitCommand(document);
     }
 
     @Override
     public void execute() {
-        System.out.println(document.getSpellCheck());
+        document.init();
     }
 }

@@ -1,4 +1,4 @@
-package command.concreteCommand.sessionCommand;
+package command.commandImpl.sessionCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
@@ -17,7 +17,9 @@ public class EditorListCommand implements Command {
 
     @Override
     public void execute() {
-        // session getEditorList ?
-        System.out.println(session.getEditorList());
+        // return [String1, string2]
+        for (HTMLElement element : session.getEditorList()) {
+            System.out.println(element);
+        }
     }
 }

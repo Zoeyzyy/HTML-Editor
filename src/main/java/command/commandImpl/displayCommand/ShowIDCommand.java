@@ -1,4 +1,4 @@
-package command.concreteCommand.displayCommand;
+package command.commandImpl.displayCommand;
 
 import document.HTMLDocument;
 import document.HTMLElement;
