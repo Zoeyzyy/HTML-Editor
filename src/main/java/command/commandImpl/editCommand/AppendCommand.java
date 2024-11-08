@@ -26,7 +26,7 @@ public class AppendCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        document.addElement(tagName, idValue, parentElement, textContent);
+        document.appendElement(tagName, idValue,  textContent,parentElement);
         
     }
 
