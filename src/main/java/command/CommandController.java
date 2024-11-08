@@ -1,8 +1,8 @@
 package command;
 
-import command.Impl.InsertCommand;
-
 import java.util.HashMap;
+
+import command.concreteCommand.editCommand.InsertCommand;
 
 /**
  * The Controller of Command
