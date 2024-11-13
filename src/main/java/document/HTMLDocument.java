@@ -4,21 +4,32 @@ import exception.ElementBadRemoved;
 import exception.ElementNotFound;
 import lombok.Data;
 import lombok.Setter;
+import javax.lang.model.element.Element;
+import java.util.List;
 
 @Data
 public class HTMLDocument {
-    private final HTMLElement root;
+    private HTMLElement root;
     private boolean showID;
+    private StringBuilder sb;
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
         this.showID = false;
+        this.sb = new StringBuilder();
+
+    }
+    public HTMLDocument() {
+        root=null;
+        showID = false;
+        sb = new StringBuilder();
     }
 
     /**
      * init document
      */
     public void init(){
+        root=null;
         // TODO
     }
 
@@ -88,17 +99,93 @@ public class HTMLDocument {
         removeElementById(id,root);
     }
 
+    /**
+     * 获取doc 的缩进形式
+     * @param indent
+     * @return
+     */
     public String getIndentFormat(int indent) {
-
-        return "";
+        sb.setLength(0);
+        getIndentFormat(this.root,indent,0);
+        return sb.toString();
     }
 
     public String getTreeFormat(boolean spellCheck) {
-        return "";
+        sb.setLength(0);
+        getTreeFormat(this.root,0);
+        return sb.toString();
     }
 
-    public boolean getSpellCheck() {
-        return false;
+
+    private void getIndentFormat(HTMLElement ele, int indent, int level) {
+        if(ele==null){
+            return;
+        }
+
+        printIndent(level, indent);
+
+        String eleTagHeader = String.format("<%s",ele.getTagName());
+        if(ele.getTagName()!=null){
+            eleTagHeader+=String.format(" id=\"%s\">\n",ele.getId());
+        }else
+            eleTagHeader+=">\n";
+
+        sb.append(eleTagHeader);
+
+        if(ele.getTextContent()!=null){
+            printIndent(level+1, indent);
+            sb.append(ele.getTextContent()).append("\n");
+        }
+        for(HTMLElement child : ele.getChildren()){
+            getIndentFormat(child,indent,level+1);
+        }
+
+        sb.append(String.format("</%s>\n",ele.getTagName()));
+    }
+
+    private void getTreeFormat(HTMLElement element,  int level) {
+        // 打印当前元素的标签名和ID
+        printIndent(2, level);
+        sb.setLength(sb.length() - 1); // 删除printIndent添加的换行符
+        sb.append(element.getTagName());
+
+        // 如果有ID，添加ID
+        if (element.getId() != null && !element.getId().isEmpty()) {
+            sb.append("#").append(element.getId());
+        }
+        sb.append("\n");
+
+        // 如果有文本内容，添加文本内容
+        if (element.getTextContent() != null && !element.getTextContent().isEmpty()) {
+            printIndent(2, level + 1);
+            sb.append("└── ").append(element.getTextContent()).append("\n");
+        }
+
+        // 处理子元素
+        List<HTMLElement> children = element.getChildren();
+        if (children != null && !children.isEmpty()) {
+            for (int i = 0; i < children.size(); i++) {
+                HTMLElement child = children.get(i);
+                boolean isLast = (i == children.size() - 1);
+
+                // 为子元素添加适当的前缀
+                printIndent(2, level + 1);
+
+                if (isLast) {
+                    sb.append("└── ");
+                } else {
+                    sb.append("├── ");
+                }
+
+                // 递归处理子元素
+                getTreeFormat(child, level + 1);
+            }
+        }
+    }
+
+
+    public String getSpellCheck() {
+        return "";
     }
 
 
@@ -123,8 +210,14 @@ public class HTMLDocument {
         }
     }
 
+    private void printIndent(int indent,int level){
+        String format="%" + (level * indent) + "s%s";
+        sb.append(String.format(format,"",""));
+    }
+
 
     public void editID(String oldID, String newID) {
-        // TODO
+        findElementById(oldID)
+                .setId(newID);
     }
 }
