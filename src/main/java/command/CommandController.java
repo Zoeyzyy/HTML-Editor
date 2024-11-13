@@ -1,9 +1,8 @@
 package command;
 
-import command.commandImpl.CommandFactory;
+import document.HTMLDocument;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 
 /**
@@ -11,9 +10,10 @@ import java.util.HashMap;
  * 主要用于用户命令的解析
  */
 public class CommandController {
+    CommandFactory commandFactory;
 
-    public CommandController() {
-
+    public CommandController(HTMLDocument document) {
+        commandFactory=new CommandFactory(document);
     }
 
     /**
@@ -30,8 +30,8 @@ public class CommandController {
             String commandName = parts[0];
             String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
-            Command command = CommandFactory.createCommand(commandName);
-            command.execute(args);
+            Command command = commandFactory.createCommand(commandName,args);
+            command.execute();
         } catch (Exception e) {
             // 处理异常
             System.err.println("Error executing command: " + e.getMessage());
