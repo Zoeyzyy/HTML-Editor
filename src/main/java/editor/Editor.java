@@ -22,7 +22,7 @@ public class Editor {
         this.modified = false;
         this.showId = false;
         this.document = new HTMLDocument();
-        this.commandController = new CommandController();
+        this.commandController = new CommandController(document);
         this.commandHistory = new CommandHistory();
         load();  // 创建编辑器时自动加载文件
     }
@@ -32,10 +32,10 @@ public class Editor {
      */
     public void load() {
         try {
-            commandController.loadFromFile(filename, document);
+            commandController.run("read " + filename);
             modified = false;
             System.out.println("文件加载成功");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("文件加载失败：" + e.getMessage());
         }
     }
@@ -45,11 +45,51 @@ public class Editor {
      */
     public void save() {
         try {
-            commandController.saveToFile(filename);
+            commandController.run("save " + filename);
             modified = false;
             System.out.println("文件保存成功");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("文件保存失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 显示当前文档内容
+     */
+    public void display() {
+        if (showId) {
+            commandController.run("print-tree");
+        } else {
+            commandController.run("print-indent 2"); // 使用默认缩进值2
+        }
+    }
+
+    /**
+     * 执行编辑命令
+     * @param commandLine 命令行字符串
+     */
+    public void executeCommand(String commandLine) {
+        modified = true;
+        commandController.run(commandLine);
+    }
+
+    /**
+     * 撤销上一次操作
+     */
+    public void undo() {
+        if (commandHistory.canUndo()) {
+            commandController.run("undo");
+            modified = true;
+        }
+    }
+
+    /**
+     * 重做上一次被撤销的操作
+     */
+    public void redo() {
+        if (commandHistory.canRedo()) {
+            commandController.run("redo");
+            modified = true;
         }
     }
 
@@ -59,8 +99,6 @@ public class Editor {
     public void close() {
         if (modified) {
             System.out.println("文档已修改，是否保存？(Y/N)");
-            // 这里可以添加用户输入处理逻辑
-            // 如果用户选择保存，则调用 save()
         }
         System.out.println("编辑器已关闭");
     }
@@ -81,17 +119,6 @@ public class Editor {
     }
 
     /**
-     * 显示当前文档内容
-     */
-    public void display() {
-        if (showId) {
-            commandController.displayWithIds(document);
-        } else {
-            commandController.display(document);
-        }
-    }
-
-    /**
      * 检查文档是否被修改
      * @return 如果被修改返回true
      */
@@ -105,34 +132,5 @@ public class Editor {
      */
     public String getFileName() {
         return filename;
-    }
-
-    /**
-     * 执行编辑命令
-     * @param commandLine 命令行字符串
-     */
-    public void executeCommand(String commandLine) {
-        modified = true;
-        commandController.executeCommand(commandLine, document, commandHistory);
-    }
-
-    /**
-     * 撤销上一次操作
-     */
-    public void undo() {
-        if (commandHistory.canUndo()) {
-            commandHistory.undo().undo();
-            modified = true;
-        }
-    }
-
-    /**
-     * 重做上一次被撤销的操作
-     */
-    public void redo() {
-        if (commandHistory.canRedo()) {
-            commandHistory.redo().execute();
-            modified = true;
-        }
     }
 }
