@@ -1,24 +1,29 @@
 package command.commandImpl.displayCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
 
-public class PrintTreeCommand implements Command {
-    private HTMLDocument document;
-    private boolean spellCheck;
+import java.io.PrintStream;
 
-    public PrintTreeCommand(HTMLDocument document, boolean spellCheck) {
+public class PrintTreeCommand implements Command {
+    private final HTMLDocument document;
+    private final PrintStream printStream;
+
+    public PrintTreeCommand(HTMLDocument document, PrintStream printStream) {
         this.document = document;
-        this.spellCheck = spellCheck;
+        this.printStream = printStream;
     }
 
-    public static Command create(HTMLDocument document, boolean spellCheck) {
-        return new PrintTreeCommand(document, spellCheck);
+    public static Command create(HTMLDocument document) {
+        return new PrintTreeCommand(document, System.out);
+    }
+
+    public static Command create(HTMLDocument document, PrintStream printStream) {
+        return new PrintTreeCommand(document, printStream);
     }
 
     @Override
     public void execute() {
-        System.out.println(document.getTreeFormat(spellCheck));
+        printStream.println(document.getTreeFormat(true));
     }
 }

@@ -1,12 +1,12 @@
 package command.commandImpl.displayCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
 
 public class ShowIDCommand implements Command {
-    private HTMLDocument document;
-    private boolean showID;
+    private final HTMLDocument document;
+    private final boolean showID;
+
 
     public ShowIDCommand(HTMLDocument document, boolean showID) {
         this.document = document;

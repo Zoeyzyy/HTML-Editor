@@ -1,9 +1,7 @@
 package command.commandImpl.historyCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
-import command.CommandHistory
+import command.CommandHistory;
 
 
 public class RedoCommand implements Command {

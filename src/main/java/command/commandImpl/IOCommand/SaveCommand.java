@@ -20,8 +20,8 @@ import org.xml.sax.InputSource;
 import command.Command;
 
 public class SaveCommand implements Command {
-    private HTMLDocument document;
-    private String filePath;
+    private final HTMLDocument document;
+    private final String filePath;
 
     public SaveCommand(HTMLDocument document, String filePath) {
         this.document = document;

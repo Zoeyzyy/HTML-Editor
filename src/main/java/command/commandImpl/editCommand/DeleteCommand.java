@@ -1,17 +1,15 @@
 package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.CanUndoCommand;
 import command.Command;
 
 public class DeleteCommand implements CanUndoCommand {
-    private HTMLDocument document;
-    private String element; // ID
+    private final HTMLDocument document;
+    private final String element; // ID
     private String tagName;
     private String idValue;
     private String insertLocation;
-    private String parentElement;
     private String textContent;
 
     public DeleteCommand(HTMLDocument document, String element) {
@@ -29,7 +27,7 @@ public class DeleteCommand implements CanUndoCommand {
         idValue = document.findElementById(element).getId();
         insertLocation = document.findElementById(element).getInsertLocation();
         textContent = document.findElementById(element).getTextContent();
-        
+
         document.removeElementById(element);
     }
 
