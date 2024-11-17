@@ -5,10 +5,14 @@ import command.CommandHistory;
 
 
 public class RedoCommand implements Command {
-    private CommandHistory commandHistory;
+    private final CommandHistory commandHistory;
 
     public RedoCommand(CommandHistory commandHistory) {
         this.commandHistory = commandHistory;
+    }
+
+    public Command create(CommandHistory commandHistory) {
+        return new RedoCommand(commandHistory);
     }
 
     @Override

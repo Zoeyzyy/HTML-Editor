@@ -14,6 +14,11 @@ public class PrintTreeCommand implements Command {
         this.printStream = printStream;
     }
 
+    public PrintTreeCommand(HTMLDocument document) {
+        this.document = document;
+        this.printStream = System.out;
+    }
+
     public static Command create(HTMLDocument document) {
         return new PrintTreeCommand(document, System.out);
     }
