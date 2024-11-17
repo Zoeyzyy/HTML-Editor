@@ -4,6 +4,7 @@ import command.CanUndoCommand;
 import command.Command;
 import command.commandImpl.editCommand.InsertCommand;
 import document.HTMLDocument;
+import org.junit.jupiter.api.Test;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 // import org.junit.jupiter.api.Test;

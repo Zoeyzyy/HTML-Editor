@@ -1,7 +1,9 @@
 package document;
 
+import document.documentImpl.HTMLElementImpl;
 import lombok.Data;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,13 +14,13 @@ public abstract class HTMLElement {
     private String tagName;
     private String Id;
     private String textContent;
-    private List<HTMLElement> children;
+    private List<HTMLElement> children; // child elements
 
     /**
      * Builder模式
      * 外部创建HTMLElement对象就只会调用这个接口里面定义的函数
      */
-    interface Builder {
+    public interface Builder {
         Builder setTagName(String tagName);
         Builder setId(String id);
         Builder setClassName(String className);
@@ -31,32 +33,38 @@ public abstract class HTMLElement {
      * 创建element对象时调用的builder
      * @return 一个HTMLElement builder对象
      */
-    static Builder builder() {
-        // TODO
-        throw new UnsupportedOperationException("Implementation not yet available");
+    public static Builder builder() {
+        return new HTMLElementImpl.BuilderImpl();
     }
 
     /**
      * 插入child
      * @param child HTML element
      */
-    abstract void addChild(HTMLElement child);
+    public abstract void addChild(HTMLElement child);
 
     /**
      * 移除子元素
-     * @param child
+     * @param child HTML element
      */
-    abstract void removeChild(HTMLElement child);
+    public abstract void removeChild(HTMLElement child);
 
-    abstract void removeChild(String id);
+    protected abstract void removeChild(String id);
 
     /**
      * @return 该element下的所有一级children
      */
-    abstract List<HTMLElement> getChildren();
+    public List<HTMLElement> getChildren() {
+        return null;
+    }
 
     /**
      * 打印当前元素
      */
-    abstract void display();
+    protected abstract void display();
+
+    /**
+     * 拼写检查
+     */
+    public abstract List<String> checkSpelling(SpellChecker spellChecker) throws IOException;
 }
