@@ -1,0 +1,26 @@
+package command.CommandImpl.sessionCommand;
+
+import command.commandImpl.sessionCommand.EditorListCommand;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+public class EditorListCommandTest {
+    @Test
+    public void execute() {
+        Session session = new Session("example.html");
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+
+        EditorListCommand editorListCommand = new EditorListCommand(session, printStream);
+        editorListCommand.execute();
+
+        String output = byteArrayOutputStream.toString();
+        assertEquals("example.html\n", output);
+        printStream.close();
+
+        // TODO: 新增编辑器，再次检测
+    }
+}

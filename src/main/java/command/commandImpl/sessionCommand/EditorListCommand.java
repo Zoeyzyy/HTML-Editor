@@ -1,25 +1,36 @@
 package command.commandImpl.sessionCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
 
+import java.io.PrintStream;
+
 public class EditorListCommand implements Command {
-    private Session session;
+    private final Session session;
+    private final PrintStream printStream;
 
     public EditorListCommand(Session session) {
         this.session = session;
+        this.printStream = System.out;
+    }
+
+    public EditorListCommand(Session session, PrintStream printStream) {
+        this.session = session;
+        this.printStream = printStream;
     }
 
     public static Command create(Session session) {
         return new EditorListCommand(session);
     }
 
+    public static Command create(Session session, PrintStream printStream) {
+        return new EditorListCommand(session, printStream);
+    }
+
     @Override
     public void execute() {
-        // return [String1, string2]
-        for (HTMLElement element : session.getEditorList()) {
-            System.out.println(element);
+        // return [String1, string2, ...]
+        for (Editor editor : session.getEditorList()) {
+            printStream.println(editor.getName());
         }
     }
 }
