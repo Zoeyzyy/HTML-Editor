@@ -3,6 +3,7 @@ package command.commandImpl.editCommand;
 import document.HTMLDocument;
 import command.CanUndoCommand;
 import command.Command;
+import exception.ElementBadRemoved;
 
 public class DeleteCommand implements CanUndoCommand {
     private final HTMLDocument document;
@@ -28,7 +29,11 @@ public class DeleteCommand implements CanUndoCommand {
         insertLocation = document.findElementById(element).getInsertLocation();
         textContent = document.findElementById(element).getTextContent();
 
-        document.removeElementById(element);
+        try {
+            document.removeElementById(element);
+        } catch (ElementBadRemoved e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
