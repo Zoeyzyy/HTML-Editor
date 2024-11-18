@@ -2,11 +2,12 @@ package command.commandImpl.sessionCommand;
 
 import command.Command;
 import command.commandImpl.IOCommand.SaveCommand;
+import session.Session;
 
 import java.io.PrintStream;
 
 public class CloseCommand implements Command {
-    private Session session;
+    private final Session session;
     private final PrintStream printStream;
 
     public CloseCommand(Session session) {

@@ -1,6 +1,7 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 public class EnterSessionCommand implements Command{
     private final Session session;
@@ -14,6 +15,6 @@ public class EnterSessionCommand implements Command{
 
     @Override
     public void execute() {
-        session.enter();
+        session.enter("");
     }
 }
