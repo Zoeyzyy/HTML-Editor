@@ -3,6 +3,7 @@ package command.commandImpl.editCommand;
 import document.HTMLDocument;
 import command.CanUndoCommand;
 import command.Command;
+import exception.ElementNotFound;
 
 public class AppendCommand implements CanUndoCommand {
     private final HTMLDocument document;
@@ -25,12 +26,15 @@ public class AppendCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        document.appendElement(tagName, idValue,  textContent,parentElement);
-        
+        try {
+            document.appendElement(tagName, idValue, textContent, parentElement);
+        }catch (ElementNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void undo() {
-        document.removeElementById(idValue); 
+        document.removeElementById(idValue);
     }
 }

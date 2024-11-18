@@ -2,9 +2,12 @@ package command.CommandImpl.sessionCommand;
 
 import command.commandImpl.sessionCommand.EditorListCommand;
 import org.junit.jupiter.api.Test;
+import session.Session;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EditorListCommandTest {
     @Test
