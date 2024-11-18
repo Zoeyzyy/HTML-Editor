@@ -1,7 +1,7 @@
 package command.commandImpl.historyCommand;
 
 import command.Command;
-import command.CommandHistory;
+import history.CommandHistory;
 
 
 public class UndoCommand implements Command {
@@ -17,6 +17,6 @@ public class UndoCommand implements Command {
 
     @Override
     public void execute() {
-        commandHistory.undoLastCommand();
+        commandHistory.undo();
     }
 }
