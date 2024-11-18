@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 public abstract class HTMLElement {
-    private String tagName;
+    private String tagName; // such as <html> <la> and so on 只要存储tag 名称，<>不用存储
     private String Id;
     private String textContent;
     private List<HTMLElement> children; // child elements

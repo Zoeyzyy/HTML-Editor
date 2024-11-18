@@ -1,16 +1,18 @@
 package command.commandImpl.historyCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
 import command.CommandHistory;
 
 
 public class UndoCommand implements Command {
-    private CommandHistory commandHistory;
+    private final CommandHistory commandHistory;
 
     public UndoCommand(CommandHistory commandHistory) {  
         this.commandHistory = commandHistory;
+    }
+
+    public Command create(CommandHistory commandHistory) {
+        return new UndoCommand(commandHistory);
     }
 
     @Override

@@ -1,16 +1,19 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 public class LoadCommand implements Command {
-    private String filePath;
+    private final Session session;
+    private final String filePath;
 
-    public LoadCommand(String filePath) {
+    public LoadCommand(Session session, String filePath) {
+        this.session = session;
         this.filePath = filePath;
     }
 
-    public static Command create(String filePath) {
-        return new LoadCommand(filePath);
+    public static Command create(Session session, String filePath) {
+        return new LoadCommand(session, filePath);
     }
 
     @Override

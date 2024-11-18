@@ -1,16 +1,15 @@
 package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.CanUndoCommand;
 import command.Command;
 
 public class AppendCommand implements CanUndoCommand {
-    private HTMLDocument document;
-    private String tagName;
-    private String idValue;
-    private String parentElement; // parent element id
-    private String textContent; // optional
+    private final HTMLDocument document;
+    private final String tagName;
+    private final String idValue;
+    private final String parentElement; // parent element id
+    private final String textContent; // optional
 
     public AppendCommand(HTMLDocument document, String tagName, String idValue, String parentElement, String textContent) {
         this.document = document;

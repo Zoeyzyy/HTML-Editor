@@ -19,8 +19,8 @@ import org.w3c.dom.Node;
 import command.Command;
 
 public class ReadCommand implements Command {
-    private HTMLDocument document;
-    private String filePath;
+    private final HTMLDocument document;
+    private final String filePath;
 
     public ReadCommand(HTMLDocument document, String filePath) {
         this.document = document;
@@ -35,11 +35,11 @@ public class ReadCommand implements Command {
     public void execute() {
         // Read the HTML file
         // TODO
-        String file;
+        String file = "";
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = (Document) dBuilder.parse(new File("example.xml"));
+            Document doc = (Document) dBuilder.parse(new File(filePath));
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();

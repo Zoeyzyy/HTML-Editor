@@ -1,14 +1,13 @@
 package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.CanUndoCommand;
 import command.Command;
 
 public class EditIDCommand implements CanUndoCommand {
-    private HTMLDocument document;
-    private String oldID;
-    private String newID;
+    private final HTMLDocument document;
+    private final String oldID;
+    private final String newID;
 
     public EditIDCommand(HTMLDocument document, String oldID, String newID) {
         this.document = document;

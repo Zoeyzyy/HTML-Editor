@@ -5,7 +5,7 @@ import document.HTMLElement;
 import command.Command;
 
 public class InitCommand implements Command {
-    private HTMLDocument document;
+    private final HTMLDocument document;
 
     public InitCommand(HTMLDocument document) {
         this.document = document;

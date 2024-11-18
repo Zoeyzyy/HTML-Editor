@@ -1,14 +1,13 @@
 package command.commandImpl.editCommand;
 
 import document.HTMLDocument;
-import document.HTMLElement;
 import command.CanUndoCommand;
 import command.Command;
 
 public class EditTextCommand implements CanUndoCommand {
-    private HTMLDocument document;
-    private String element; // ID
-    private String newTextContent;
+    private final HTMLDocument document;
+    private final String element; // ID
+    private final String newTextContent;
     private String oldTextContent;
 
     public EditTextCommand(HTMLDocument document, String element, String newTextContent) {

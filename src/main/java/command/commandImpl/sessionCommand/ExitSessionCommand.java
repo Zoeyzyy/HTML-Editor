@@ -1,13 +1,16 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 public class ExitSessionCommand implements Command {
-    public ExitSessionCommand() {
+    private final Session session;
+    public ExitSessionCommand(Session session) {
+        this.session = session;
     }
 
-    public static Command create() {
-        return new ExitSessionCommand();
+    public static Command create(Session session) {
+        return new ExitSessionCommand(session);
     }
 
     @Override
