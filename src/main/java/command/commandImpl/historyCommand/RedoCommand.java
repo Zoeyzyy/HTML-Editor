@@ -11,7 +11,7 @@ public class RedoCommand implements Command {
         this.commandHistory = commandHistory;
     }
 
-    public Command create(CommandHistory commandHistory) {
+    public static Command create(CommandHistory commandHistory) {
         return new RedoCommand(commandHistory);
     }
 
