@@ -1,7 +1,169 @@
 package document;
 
-/**
- * TODO
- */
-public class HTMLDocumentTest {
+import exception.ElementBadRemoved;
+import exception.ElementNotFound;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+class HTMLDocumentTest {
+    private HTMLDocument document;
+    private HTMLElement rootElement;
+    private File testFile;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        // 创建一个基础的HTML文档用于测试
+        document = new HTMLDocument();
+
+        // 创建测试用的HTML文件
+        testFile = File.createTempFile("test", ".html");
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(testFile);
+            writer.write("<html id=\"root\">\n" +
+                    "    <head id=\"head\">\n" +
+                    "        <title id=\"title\">Test Page</title>\n" +
+                    "    </head>\n" +
+                    "    <body id=\"body\">\n" +
+                    "        <div id=\"content\">Hello World</div>\n" +
+                    "    </body>\n" +
+                    "</html>");
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (testFile != null && testFile.exists()) {
+            testFile.delete();
+        }
+    }
+
+    @Test
+    void testReadHTML() {
+        // 测试读取HTML文件
+        document.read(testFile);
+        HTMLElement root = document.findElementById("root");
+        assertNotNull(root);
+        assertEquals("html", root.getTagName());
+    }
+
+    @Test
+    void testFindElementById() {
+        document.read(testFile);
+
+        // 测试查找存在的元素
+        HTMLElement content = document.findElementById("content");
+        assertNotNull(content);
+        assertEquals("div", content.getTagName());
+        assertEquals("Hello World", content.getTextContent());
+
+        // 测试查找不存在的元素
+        HTMLElement nonExistent = document.findElementById("nonexistent");
+        assertNull(nonExistent);
+    }
+
+    @Test
+    void testAppendElement() {
+        document.read(testFile);
+
+        try {
+            // 测试添加新元素
+            document.appendElement("p", "new-paragraph", "New Content", "body");
+
+            HTMLElement newElement = document.findElementById("new-paragraph");
+            assertNotNull(newElement);
+            assertEquals("p", newElement.getTagName());
+            assertEquals("New Content", newElement.getTextContent());
+        } catch (ElementNotFound e) {
+            fail("Should not throw ElementNotFound exception");
+        }
+    }
+
+    @Test
+    void testAppendElementToNonExistentParent() {
+        document.read(testFile);
+
+        try {
+            document.appendElement("p", "new-paragraph", "New Content", "non-existent-parent");
+            fail("Should throw ElementNotFound exception");
+        } catch (ElementNotFound e) {
+            // 预期的异常
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    void testRemoveElementById() {
+        document.read(testFile);
+
+        try {
+            // 测试移除元素
+            document.removeElementById("content");
+            assertNull(document.findElementById("content"));
+        } catch (ElementBadRemoved e) {
+            fail("Should not throw ElementBadRemoved exception");
+        }
+    }
+
+    @Test
+    void testRemoveRootElement() {
+        document.read(testFile);
+
+        try {
+            document.removeElementById("root");
+            fail("Should throw ElementBadRemoved exception");
+        } catch (ElementBadRemoved e) {
+            // 预期的异常
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    void testEditID() {
+        document.read(testFile);
+
+        // 测试编辑元素ID
+        document.editID("content", "new-content");
+
+        assertNull(document.findElementById("content"));
+        assertNotNull(document.findElementById("new-content"));
+    }
+
+    @Test
+    void testGetTreeFormat() {
+        document.read(testFile);
+
+        String treeFormat = document.getTreeFormat(false);
+        assertNotNull(treeFormat);
+        assertTrue(treeFormat.contains("html#root"));
+        assertTrue(treeFormat.contains("body#body"));
+        assertTrue(treeFormat.contains("div#content"));
+    }
+
+    @Test
+    void testGetIndentFormat() {
+        document.read(testFile);
+
+        String indentFormat = document.getIndentFormat(2);
+        assertNotNull(indentFormat);
+        assertTrue(indentFormat.contains("<html"));
+        assertTrue(indentFormat.contains("</html>"));
+    }
+
+    @Test
+    void testInit() {
+        document.read(testFile);
+        document.init();
+
+        // 测试初始化后根元素应该为null
+        assertNull(document.findElementById("root"));
+    }
 }
