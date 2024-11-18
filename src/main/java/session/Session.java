@@ -6,17 +6,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
 
-class Editor {
-    private String filename;
-    private boolean modified;
 
-    public Editor(String filename) {
-        this.filename = filename;
-        this.modified = false;
-    }
-}
-
-class Session {
+public class Session {
     private String id;
     private List<String> files;
     private Map<String, Editor> editors;
