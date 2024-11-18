@@ -1,6 +1,7 @@
 package command;
 
 import document.HTMLDocument;
+import history.CommandHistory;
 
 import java.util.Arrays;
 
@@ -11,9 +12,11 @@ import java.util.Arrays;
  */
 public class CommandController {
     CommandFactory commandFactory;
+    CommandHistory commandHistory;
 
     public CommandController(HTMLDocument document) {
-        commandFactory=new CommandFactory(document);
+        commandHistory=new CommandHistory();
+        commandFactory=new CommandFactory(document,commandHistory);
     }
 
     /**
