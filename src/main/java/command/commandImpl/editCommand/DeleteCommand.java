@@ -4,6 +4,7 @@ import document.HTMLDocument;
 import command.CanUndoCommand;
 import command.Command;
 import exception.ElementBadRemoved;
+import exception.ElementNotFound;
 
 public class DeleteCommand implements CanUndoCommand {
     private final HTMLDocument document;
@@ -38,6 +39,10 @@ public class DeleteCommand implements CanUndoCommand {
 
     @Override
     public void undo() {
-        document.insertElement(tagName, idValue, insertLocation, textContent);
+        try {
+            document.insertElement(tagName, idValue, insertLocation, textContent);
+        }catch (ElementNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
