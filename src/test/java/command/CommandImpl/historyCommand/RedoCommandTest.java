@@ -20,7 +20,7 @@ public class RedoCommandTest {
         InsertCommand insertCommand = new InsertCommand(document, "div", "id1", "body", "hello HTML");
         insertCommand.execute();
         assertEquals("Hello HTML", document.findElementById("id1").getTextContent());
-        commandHistory.pushCommand(insertCommand);
+        commandHistory.push(insertCommand);
 
         UndoCommand undoCommand = new UndoCommand(commandHistory);
         undoCommand.execute();
