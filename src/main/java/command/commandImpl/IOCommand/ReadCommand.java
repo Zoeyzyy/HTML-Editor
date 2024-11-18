@@ -38,7 +38,7 @@ public class ReadCommand implements Command {
         File file = new File(filePath);
 
         // 检查文件是否存在
-        if (!file.exists())
+        if (!file.exists()) {
             System.out.println("文件不存在！");
         }
 
