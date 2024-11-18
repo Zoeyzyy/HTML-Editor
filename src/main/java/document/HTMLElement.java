@@ -16,6 +16,9 @@ public abstract class HTMLElement {
     private String textContent;
     private List<HTMLElement> children; // child elements
 
+    // 用于存储拼写检查结果
+    private List<String> spellCheckResults;
+
     /**
      * Builder模式
      * 外部创建HTMLElement对象就只会调用这个接口里面定义的函数
@@ -67,4 +70,9 @@ public abstract class HTMLElement {
      * 拼写检查
      */
     public abstract List<String> checkSpelling(SpellChecker spellChecker) throws IOException;
+
+    public void updateSpellCheckResults(SpellChecker spellChecker) throws IOException {
+        this.spellCheckResults = checkSpelling(spellChecker);
+    }
+
 }
