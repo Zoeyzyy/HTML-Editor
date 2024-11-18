@@ -10,6 +10,7 @@ import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.RedoCommand;
 import command.commandImpl.historyCommand.UndoCommand;
 import document.HTMLDocument;
+import history.CommandHistory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,11 +46,14 @@ public class CommandFactory {
     private final Map<String, CommandCreator> commandMap = new HashMap<>();
     private final Map<String, CommandFormat> commandFormats = new HashMap<>();
     private final HTMLDocument document;
+    private final CommandHistory commandHistory;
 
 
 
-    public CommandFactory(HTMLDocument document) {
+    public CommandFactory(HTMLDocument document, CommandHistory commandHistory) {
         this.document = document;
+        this.commandHistory = commandHistory;
+        this.initCommandFormats();
         this.registerCommands();
     }
 
@@ -121,11 +125,12 @@ public class CommandFactory {
         registerCommand("init",
                 args -> InitCommand.create(document));
 
+
         registerCommand("redo",
-                args -> RedoCommand.create());
+                args -> RedoCommand.create(commandHistory));
 
         registerCommand("undo",
-                args -> UndoCommand.create());
+                args -> UndoCommand.create(commandHistory));
     }
 
 
