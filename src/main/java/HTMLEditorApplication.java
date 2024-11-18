@@ -1,11 +1,15 @@
+import editor.Editor;
+
 import java.util.Scanner;
 
 public class HTMLEditorApplication {
     private static final String PROMPT = "shell> ";
     private boolean isRunning = true;
     private final Scanner scanner;
+    private final Editor editor;
 
     public HTMLEditorApplication() {
+        editor=new Editor();
         scanner = new Scanner(System.in);
     }
 
@@ -36,17 +40,10 @@ public class HTMLEditorApplication {
                 clearScreen();
                 break;
             default:
-
+                editor.executeCommand(command);
         }
     }
 
-    private void showHelp() {
-        System.out.println("Available commands:");
-        System.out.println("  help  - Show this help message");
-        System.out.println("  date  - Show current date and time");
-        System.out.println("  clear - Clear the screen");
-        System.out.println("  exit  - Exit the shell");
-    }
 
     private void clearScreen() {
         // This is a simple way to clear screen, might not work in all terminals
