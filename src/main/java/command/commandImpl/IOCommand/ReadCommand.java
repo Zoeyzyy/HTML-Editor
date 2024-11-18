@@ -35,21 +35,13 @@ public class ReadCommand implements Command {
     public void execute() {
         // Read the HTML file
         // TODO
-        String file = "";
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = (Document) dBuilder.parse(new File(filePath));
+        File file = new File(filePath);
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource((Node) doc), new StreamResult(writer));
-
-            file = writer.getBuffer().toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+        // 检查文件是否存在
+        if (!file.exists()) {
+            System.out.println("文件不存在！");
         }
+
         document.read(file);
     }
 }
