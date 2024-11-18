@@ -2,6 +2,7 @@ package document;
 
 import document.documentImpl.HTMLElementImpl;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +18,7 @@ public abstract class HTMLElement {
     private List<HTMLElement> children; // child elements
 
     // 用于存储拼写检查结果
+    @Getter
     private List<String> spellCheckResults;
 
     /**
