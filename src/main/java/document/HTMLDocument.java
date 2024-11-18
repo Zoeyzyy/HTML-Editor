@@ -4,7 +4,13 @@ import exception.ElementBadRemoved;
 import exception.ElementNotFound;
 import lombok.Data;
 import lombok.Setter;
-import javax.lang.model.element.Element;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Data
@@ -36,12 +42,24 @@ public class HTMLDocument {
     /**
      * 读取文件
      */
-    public void read(String file){
-        // TODO
+    public void read(File input){
+        try {
+            // 读取HTML文件
+            Document doc = Jsoup.parse(input, "UTF-8");
+
+            // 获取根元素（HTML标签）
+            Element rootElement = doc.children().first(); // 通常是html标签
+
+            // 将JSoup的Element转换为我们的HTMLElement
+            this.root = convertJsoupElement(rootElement);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading HTML file: " + e.getMessage());
+        }
     }
 
     public String save() {
-        return "";
+        return getTreeFormat(false);
     }
 
     /**
@@ -69,6 +87,15 @@ public class HTMLDocument {
                                             .build();
 
         insertElementById(parentElement,newElement);
+    }
+
+    public void insertElement(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
+        HTMLElement newElement = HTMLElement.builder()
+                .setId(idValue)
+                .setTagName(tagName)
+                .setTextContent(textContent)
+                .build();
+        insertElementById(insertLocation,newElement);
     }
 
     /**
@@ -216,8 +243,41 @@ public class HTMLDocument {
     }
 
 
+    /**
+     * 将JSoup的Element转换为自定义的HTMLElement
+     * @param jsoupElement jsoup 读取出的对象
+     * @return HTMLElement
+     */
+    private HTMLElement convertJsoupElement(Element jsoupElement) {
+        if (jsoupElement == null) {
+            return null;
+        }
+
+        // 创建新的HTMLElement构建器
+        HTMLElement.Builder builder = HTMLElement.builder()
+                .setTagName(jsoupElement.tagName())
+                .setId(jsoupElement.id())
+                .setTextContent(jsoupElement.ownText());
+
+
+        // 构建当前元素
+        HTMLElement element = builder.build();
+
+        // 递归处理所有子元素
+        for (Element child : jsoupElement.children()) {
+            HTMLElement childElement = convertJsoupElement(child);
+            if (childElement != null) {
+                element.addChild(childElement);
+            }
+        }
+
+        return element;
+    }
+
+
     public void editID(String oldID, String newID) {
         findElementById(oldID)
                 .setId(newID);
     }
+
 }
