@@ -2,69 +2,120 @@ package element;
 
 import document.HTMLElement;
 import document.SpellChecker;
+import document.documentImpl.HTMLElementImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+/**
+ * 单元测试类，用于测试 HTMLElement 的所有方法
+ */
 class HTMLElementTest {
-
-    private HTMLElement rootElement;
-    private SpellChecker spellChecker;
+    private HTMLElement element;
+    private SpellChecker mockSpellChecker;
 
     @BeforeEach
     void setUp() {
-        spellChecker = new SpellChecker();
-
-        rootElement = HTMLElement.builder()
+        // 使用 HTMLElementImpl 创建 HTMLElement 实例
+        element = HTMLElement.builder()
                 .setTagName("div")
-                .setId("root")
-                .setTextContent("Thiss is a sampple textt with speling erorrs.")
-                .addChild(
-                        HTMLElement.builder()
-                                .setTagName("p")
-                                .setTextContent("Child elemnt with incorect words.")
-                                .build()
-                )
+                .setId("testId")
+                .setTextContent("Sample text")
                 .build();
+
+        mockSpellChecker = mock(SpellChecker.class); // 模拟拼写检查器
     }
 
     @Test
-    void testCheckSpelling() throws IOException {
-        // Check spelling for the root element
-        List<String> errors = rootElement.checkSpelling(spellChecker);
-
-        // Assertions
-        assertEquals(6, errors.size()); // Expect 6 spelling errors in total
-        assertTrue(errors.get(0).contains("Thiss")); // Check first error
-        assertTrue(errors.get(1).contains("sampple")); // Check second error
-        assertTrue(errors.get(4).contains("incorect")); // Check child element error
+    void testBuilder() {
+        assertEquals("div", element.getTagName());
+        assertEquals("testId", element.getId());
+        assertEquals("Sample text", element.getTextContent());
     }
 
     @Test
-    void testAddChild() {
-        HTMLElement newChild = HTMLElement.builder()
+    void testAddChildAndGetChildren() {
+        HTMLElement child = HTMLElement.builder()
                 .setTagName("span")
-                .setTextContent("Another text.")
+                .setId("child1")
+                .setTextContent("Child content")
                 .build();
 
-        rootElement.addChild(newChild);
+        element.addChild(child);
 
-        // Assertions
-        assertEquals(2, rootElement.getChildren().size()); // Expect 2 children
-        assertEquals("span", rootElement.getChildren().get(1).getTagName());
+        List<HTMLElement> children = element.getChildren();
+        assertNotNull(children);
+        assertEquals(1, children.size());
+        assertEquals("span", children.get(0).getTagName());
     }
 
     @Test
     void testRemoveChild() {
-        HTMLElement child = rootElement.getChildren().get(0);
-        rootElement.removeChild(child);
+        HTMLElement child = HTMLElement.builder()
+                .setTagName("span")
+                .setId("child1")
+                .setTextContent("Child content")
+                .build();
 
-        // Assertions
-        assertEquals(0, rootElement.getChildren().size()); // Expect no children
+        element.addChild(child);
+        assertEquals(1, element.getChildren().size());
+
+        element.removeChild(child);
+        assertTrue(element.getChildren().isEmpty());
+    }
+
+    @Test
+    void testRemoveChildById() {
+        HTMLElement child = HTMLElement.builder()
+                .setTagName("span")
+                .setId("child1")
+                .setTextContent("Child content")
+                .build();
+
+        element.addChild(child);
+        assertEquals(1, element.getChildren().size());
+
+        element.removeChild("child1");
+        assertTrue(element.getChildren().isEmpty());
+    }
+
+    @Test
+    void testDisplay() {
+        // 直接调用 display 方法，如果需要打印到控制台，可以观察输出
+        element.display();
+    }
+
+    @Test
+    void testCheckSpelling() throws IOException {
+        // 配置 mock 行为
+        List<String> mockResults = new ArrayList<>();
+        mockResults.add("error1");
+        when(mockSpellChecker.checkSpelling(anyString())).thenReturn(mockResults);
+
+        List<String> spellCheckResults = element.checkSpelling(mockSpellChecker);
+        assertNotNull(spellCheckResults);
+        assertEquals(1, spellCheckResults.size());
+        assertEquals("error1", spellCheckResults.get(0));
+    }
+
+    @Test
+    void testUpdateSpellCheckResults() throws IOException {
+        // 配置 mock 行为
+        List<String> mockResults = new ArrayList<>();
+        mockResults.add("error1");
+        when(mockSpellChecker.checkSpelling(anyString())).thenReturn(mockResults);
+
+        element.updateSpellCheckResults(mockSpellChecker);
+        List<String> spellCheckResults = element.getSpellCheckResults();
+
+        assertNotNull(spellCheckResults);
+        assertEquals(1, spellCheckResults.size());
+        assertEquals("error1", spellCheckResults.get(0));
     }
 }

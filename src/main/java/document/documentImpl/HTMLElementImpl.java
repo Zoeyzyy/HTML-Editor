@@ -35,7 +35,7 @@ public class HTMLElementImpl extends HTMLElement {
     }
 
     @Override
-    protected void removeChild(String id) {
+    public void removeChild(String id) {
         getChildren().removeIf(child -> id.equals(child.getId()));
     }
 
@@ -45,7 +45,7 @@ public class HTMLElementImpl extends HTMLElement {
     }
 
     @Override
-    protected void display() {
+    public void display() {
         StringBuilder builder = new StringBuilder();
         builder.append("<").append(getTagName());
         if (getId() != null) builder.append(" id=\"").append(getId()).append("\"");
