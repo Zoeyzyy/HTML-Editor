@@ -75,6 +75,29 @@ public class HTMLElementImpl extends HTMLElement {
         return results;
     }
 
+    @Override
+    public void insertElementBefore(HTMLElement element, String targetId) {
+        for (int i = 0; i < getChildren().size(); i++) {
+            if (targetId.equals(getChildren().get(i).getId())) {
+                getChildren().add(i, element);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Element with id " + targetId + " not found.");
+    }
+
+    @Override
+    public String getInsertLocation(HTMLElement element) {
+        List<HTMLElement> children = getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            if (element.equals(children.get(i))) {
+                // 如果存在下一个兄弟元素，返回其 ID
+                return (i + 1 < children.size()) ? children.get(i + 1).getId() : null;
+            }
+        }
+        throw new IllegalArgumentException("Element not found among children.");
+    }
+
     /**
      * 静态内部类实现 Builder 模式
      */

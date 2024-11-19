@@ -77,4 +77,19 @@ public abstract class HTMLElement {
         this.spellCheckResults = checkSpelling(spellChecker);
     }
 
+    /**
+     * 在指定id的元素之前插入新元素
+     * @param element 要插入的元素
+     * @param targetId 目标元素的id
+     */
+    public abstract void insertElementBefore(HTMLElement element, String targetId);
+
+    /**
+     * 获取指定元素的下一个兄弟元素的 ID
+     *
+     * @param element 指定的元素
+     * @return 下一个兄弟元素的 ID，如果不存在则返回 null
+     */
+    public abstract String getInsertLocation(HTMLElement element);
+
 }
