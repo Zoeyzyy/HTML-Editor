@@ -3,6 +3,7 @@ package document.documentImpl;
 import document.HTMLElement;
 import document.SpellChecker;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * HTMLElement 的具体实现类
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class HTMLElementImpl extends HTMLElement {
     private String className;
