@@ -67,4 +67,16 @@ public class CommandHistory {
     public boolean canRedo() {
         return !redoStack.isEmpty();
     }
+
+    /**
+     * 获取最后执行的命令，但不移除它
+     * @return 最后执行的命令
+     * @throws NoUndoableOperationException 如果没有可撤销的命令
+     */
+    public Command peekLast() {
+        if (undoStack.isEmpty()) {
+            throw new NoUndoableOperationException();
+        }
+        return undoStack.peek();
+    }
 }
