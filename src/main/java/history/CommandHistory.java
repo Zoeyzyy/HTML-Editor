@@ -1,6 +1,8 @@
 package history;
 
 import command.Command;
+import exception.NoRedoableOperationException;
+import exception.NoUndoableOperationException;
 import java.util.Stack;
 
 public class CommandHistory {
@@ -26,32 +28,28 @@ public class CommandHistory {
 
     /**
      * 撤销上一个命令
-     * @return 被撤销的命令
      */
-    public Command undo() {
+    public void undo() {
         if (undoStack.isEmpty()) {
-            System.out.println("没有可撤销的操作");
-            return null;
+            throw new NoUndoableOperationException();
         }
         
         Command command = undoStack.pop();
         redoStack.push(command);
-        return command;
+        command.execute();
     }
 
     /**
      * 重做上一个被撤销的命令
-     * @return 被重做的命令
      */
-    public Command redo() {
+    public void redo() {
         if (redoStack.isEmpty()) {
-            System.out.println("没有可重做的操作");
-            return null;
+            throw new NoRedoableOperationException();
         }
 
         Command command = redoStack.pop();
         undoStack.push(command);
-        return command;
+        command.execute();
     }
 
     /**
