@@ -2,16 +2,14 @@ package editor;
 
 import document.HTMLDocument;
 import command.CommandController;
-import command.Command;
-import history.CommandHistory;
+import java.util.Scanner;
 
 public class Editor {
     private String filename;
     private boolean modified;
     private boolean showId;
-    private HTMLDocument document;
-    private CommandController commandController;
-    private CommandHistory commandHistory;
+    private final HTMLDocument document;
+    private final CommandController commandController;
 
     /**
      * 构造函数
@@ -20,7 +18,6 @@ public class Editor {
         this.modified = false;
         this.showId = false;
         this.document = new HTMLDocument();
-        this.commandHistory = new CommandHistory();
         this.commandController = new CommandController(document);
     }
 
@@ -62,7 +59,13 @@ public class Editor {
     public void close() {
         if (modified) {
             System.out.println("文档已修改，是否保存？(Y/N)");
-            // 这里可以添加用户输入处理逻辑
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine().trim().toUpperCase();
+            
+            if (input.equals("Y")) {
+                save();
+            }
+            // 如果输入 N 则直接关闭，不保存
         }
         executeCommand("init");  // 初始化文档状态
         this.filename = null;
@@ -122,48 +125,11 @@ public class Editor {
      */
     public void executeCommand(String commandLine) {
         try {
-            // 直接使用commandController的run方法
+            // 直接执行命令，不需要保存历史
             commandController.run(commandLine);
-            
-            // 获取最后执行的命令（从CommandHistory中）
-            Command lastCommand = commandController.commandHistory.peekLast();
-            
-            // 将可撤销的命令添加到历史记录
-            if (lastCommand instanceof CanUndoCommand && 
-                !commandLine.startsWith("print") && 
-                !commandLine.startsWith("display") && 
-                !commandLine.startsWith("showid")) {
-                commandHistory.push(lastCommand);
-                modified = true;
-            }
+            modified = true;
         } catch (Exception e) {
             System.out.println("命令执行失败：" + e.getMessage());
-        }
-    }
-
-    /**
-     * 撤销上一个命令
-     */
-    public void undo() {
-        if (commandHistory.canUndo()) {
-            Command command = commandHistory.undo();
-            if (command != null) {
-                command.undo();
-                modified = true;
-            }
-        }
-    }
-
-    /**
-     * 重做上一个被撤销的命令
-     */
-    public void redo() {
-        if (commandHistory.canRedo()) {
-            Command command = commandHistory.redo();
-            if (command != null) {
-                command.execute();
-                modified = true;
-            }
         }
     }
 }
