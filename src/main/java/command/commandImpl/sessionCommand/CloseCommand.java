@@ -38,7 +38,7 @@ public class CloseCommand implements Command {
             if (input.equals("y")) {
                 printStream.println("Please input file path:");
                 String filePath = new java.util.Scanner(System.in).nextLine();
-                Command saveCommand = SaveCommand.create(session.getActiveDocument(), filePath);
+                Command saveCommand = SaveCommand.create(session.getActiveEditor().getDocument(), filePath);
                 saveCommand.execute();
                 break;
             }else{ // confirm again

@@ -22,12 +22,12 @@ public class EditTextCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        oldTextContent = document.getTextContent(element);
-        document.editTextContent(element, newTextContent);
+        oldTextContent = document.findElementById(element).getTextContent();
+        document.findElementById(element).setTextContent(newTextContent);
     }
 
     @Override
     public void undo() {
-        document.editTextContent(element, oldTextContent); 
+        document.findElementById(element).setTextContent(oldTextContent);
     }
 }

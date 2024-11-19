@@ -27,7 +27,7 @@ public class DeleteCommand implements CanUndoCommand {
     public void execute() {
         tagName = document.findElementById(element).getTagName();
         idValue = document.findElementById(element).getId();
-        insertLocation = document.findElementById(element).getInsertLocation();
+        insertLocation = document.findElementById(element).getInsertLocation(document.findElementById(element));
         textContent = document.findElementById(element).getTextContent();
 
         try {
