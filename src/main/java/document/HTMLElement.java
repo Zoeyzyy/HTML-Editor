@@ -54,7 +54,7 @@ public abstract class HTMLElement {
      */
     public abstract void removeChild(HTMLElement child);
 
-    protected abstract void removeChild(String id);
+    public abstract void removeChild(String id);
 
     /**
      * @return 该element下的所有一级children
@@ -66,7 +66,7 @@ public abstract class HTMLElement {
     /**
      * 打印当前元素
      */
-    protected abstract void display();
+    public abstract void display();
 
     /**
      * 拼写检查
