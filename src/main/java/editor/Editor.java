@@ -1,7 +1,7 @@
 package editor;
 
 import document.HTMLDocument;
-import command.CommandController;
+import command.CommandParser;
 import lombok.Getter;
 
 import java.util.Scanner;
@@ -18,7 +18,7 @@ public class Editor {
     private boolean modified;
     private boolean showId;
     private final HTMLDocument document;
-    private final CommandController commandController;
+    private final CommandParser commandParser;
 
     /**
      * 构造函数
@@ -27,7 +27,7 @@ public class Editor {
         this.modified = false;
         this.showId = false;
         this.document = new HTMLDocument();
-        this.commandController = new CommandController(document);
+        this.commandParser = new CommandParser(document);
     }
 
     public HTMLDocument getDocument(){
@@ -121,7 +121,7 @@ public class Editor {
      */
     public void executeCommand(String commandLine) {
             // 先执行命令
-            commandController.run(commandLine);
+            commandParser.run(commandLine);
             // 然后根据命令类型决定是否更新修改状态
             if (!commandLine.startsWith("print-") && !commandLine.startsWith("read ") && !commandLine.startsWith("save ")) {
                 modified = true;

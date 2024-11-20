@@ -19,8 +19,8 @@ public class HTMLDocument {
 
     @Setter
     private boolean showID;
-    private StringBuilder sb;
-    private String templatePath;
+    private final StringBuilder sb;
+    private final String templatePath;
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
@@ -34,6 +34,7 @@ public class HTMLDocument {
         root=null;
         showID = false;
         sb = new StringBuilder();
+        this.templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
     }
 
     public boolean getShowID(){
@@ -76,8 +77,12 @@ public class HTMLDocument {
      * @param id element id
      * @return 满足该id的第一个元素 else null
      */
-    public HTMLElement findElementById(String id) {
-        return findElementById(id,root);
+    public HTMLElement findElementById(String id) throws ElementNotFound {
+        HTMLElement element=findElementById(id,root);
+        if (element == null) {
+            throw new ElementNotFound("Element: Id " +id+" Not Found");
+        }
+        return element;
     }
 
     /**
@@ -95,7 +100,12 @@ public class HTMLDocument {
                                             .setTextContent(textContent)
                                             .build();
 
-        insertElementById(parentElement,newElement);
+        HTMLElement parent = findElementById(parentElement);
+
+        if (parent == null) {
+            throw new ElementNotFound("Element: Id "+parentElement+" Not Found");
+        }
+        parent.addChild(newElement);
     }
 
     /**
@@ -103,8 +113,8 @@ public class HTMLDocument {
      * @param element
      * @throws ElementNotFound
      */
-    public void appendElement(HTMLElement element) throws ElementNotFound {
-
+    public void appendElement(HTMLElement element) {
+        element.getParent().addChild(element);
     }
 
 
@@ -121,71 +131,13 @@ public class HTMLDocument {
             root = newElement;
             return;
         }
-
-        // 使用队列进行BFS搜索
-        Queue<HTMLElement> queue = new LinkedList<>();
-        // 记录父节点的映射，用于后续插入操作
-        Map<HTMLElement, HTMLElement> parentMap = new HashMap<>();
-
-        queue.offer(root);
-        HTMLElement targetElement = null;
-
-        // BFS搜索目标位置
-        while (!queue.isEmpty()) {
-            HTMLElement current = queue.poll();
-
-            // 找到目标位置
-            if (current.getId().equals(insertLocation)) {
-                targetElement = current;
-                break;
-            }
-
-            // 将子节点加入队列
-            if (current.getChildren() != null) {
-                for (HTMLElement child : current.getChildren()) {
-                    queue.offer(child);
-                    parentMap.put(child, current);
-                }
-            }
+        HTMLElement sibling = findElementById(insertLocation);
+        if (sibling == null) {
+            throw new ElementNotFound("Element: Id "+insertLocation+" Not Found");
         }
 
-        // 如果没找到目标位置，抛出异常
-        if (targetElement == null) {
-            throw new ElementNotFound("Element with id " + insertLocation + " not found");
-        }
-
-        // 获取目标元素的父节点
-        HTMLElement parent = parentMap.get(targetElement);
-
-        // 如果目标元素是root
-        if (parent == null) {
-            newElement.getChildren().add(root);
-            root = newElement;
-            return;
-        }
-
-        // 在父节点的children列表中找到目标元素的位置
-        List<HTMLElement> parentChildren = parent.getChildren();
-        int targetIndex = parentChildren.indexOf(targetElement);
-
-        // 在目标元素之前插入新元素
-        parentChildren.add(targetIndex, newElement);
+        sibling.getParent().insertElementBefore(newElement,insertLocation);
     }
-
-    /**
-     * 插入element
-     * @param parentId 父节点Id
-     * @param element 需要插入的元素
-     * @throws ElementNotFound
-     */
-    private void insertElementById(String parentId, HTMLElement element) throws ElementNotFound {
-        HTMLElement parent = findElementById(parentId);
-        if (parent == null) {
-            throw new ElementNotFound("Element: Id "+parentId+" Not Found");
-        }
-        parent.addChild(element);
-    }
-
 
 
     /**
@@ -199,6 +151,7 @@ public class HTMLDocument {
         }
         removeElementById(id,root);
     }
+
 
     /**
      * 获取doc 的缩进形式
@@ -247,7 +200,6 @@ public class HTMLDocument {
     private void getTreeFormat(HTMLElement element,  int level) {
         // 打印当前元素的标签名和ID
         printIndent(2, level);
-        sb.setLength(sb.length() - 1); // 删除printIndent添加的换行符
         sb.append(element.getTagName());
 
         // 如果有ID，添加ID
@@ -304,16 +256,15 @@ public class HTMLDocument {
     }
 
     private void removeElementById(String id, HTMLElement ele) {
-        for(HTMLElement child : ele.getChildren()){
-            if(child.getId().equals(id)){
-                ele.removeChild(child);
-            }
-        }
+        ele.removeChild(id);
     }
 
     private void printIndent(int indent,int level){
-        String format="%" + (level * indent) + "s%s";
-        sb.append(String.format(format,"",""));
+        StringBuilder spaces = new StringBuilder();
+        for (int i = 0; i < level * indent; i++) {
+            spaces.append(" ");
+        }
+        sb.append(spaces);
     }
 
 
@@ -349,9 +300,8 @@ public class HTMLDocument {
     }
 
 
-    public void editID(String oldID, String newID) {
-        findElementById(oldID)
-                .setId(newID);
+    public void editID(String oldID, String newID) throws ElementNotFound {
+        findElementById(oldID).setId(newID);
     }
 
 }

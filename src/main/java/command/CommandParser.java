@@ -1,6 +1,7 @@
 package command;
 
 import document.HTMLDocument;
+import exception.ElementNotFound;
 import history.CommandHistory;
 
 import java.util.Arrays;
@@ -10,11 +11,11 @@ import java.util.Arrays;
  * The Controller of Command
  * 主要用于用户命令的解析
  */
-public class CommandController {
+public class CommandParser {
     CommandFactory commandFactory;
     CommandHistory commandHistory;
 
-    public CommandController(HTMLDocument document) {
+    public CommandParser(HTMLDocument document) {
         commandHistory=new CommandHistory();
         commandFactory=new CommandFactory(document,commandHistory);
     }
@@ -23,7 +24,7 @@ public class CommandController {
      * 执行命令
      * @param input 用户输入的完整命令
      */
-    public void run(String input){
+    public void run(String input) throws ElementNotFound {
             String[] parts = parseInput(input);
             if (parts.length == 0) {
                 throw new IllegalArgumentException("Empty command");
