@@ -32,6 +32,6 @@ public class DirTreeCommand implements Command {
     @Override
     public void execute() {
         // return String
-        printStream.println(session.getDirTreeFormat());
+        printStream.println(session.getDirTreeFormat(0));
     }
 }
