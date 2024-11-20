@@ -26,9 +26,10 @@ public class HTMLDocument {
         this.root = root;
         this.showID = false;
         this.sb = new StringBuilder();
-        this.templatePath="\\src\\main\\resources\\templates.html";
+        this.templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
 
     }
+
     public HTMLDocument() {
         root=null;
         showID = false;
