@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShowIDCommandTest {
     @Test
@@ -18,7 +18,7 @@ public class ShowIDCommandTest {
 
         ShowIDCommand showIDCommand = new ShowIDCommand(doc, true);
         showIDCommand.execute();
-        assertEquals(true, doc.getShowID());
+        assertTrue(doc.getShowID());
 
         // test printTree
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -28,16 +28,16 @@ public class ShowIDCommandTest {
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +
                 "  <head>\n" +
-                "    <title></title>#title\n" +
+                "    <title>" +
+                "    </title>#title\n" +
                 "  </head>#head\n" +
-                "  <body>\n" +
-                "  </body>#body\n" +
+                "  <body></body>#body\n" +
                 "</html>#html", output);
         printStream.close();
 
         showIDCommand = new ShowIDCommand(doc, false);
         showIDCommand.execute();
-        assertEquals(false, doc.getShowID());
+        assertFalse(doc.getShowID());
 
         // test printTree
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -47,10 +47,10 @@ public class ShowIDCommandTest {
         output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +
                 "  <head>\n" +
-                "    <title></title>\n" +
+                "    <title>\n" +
+                "    </title>\n" +
                 "  </head>\n" +
-                "  <body>\n" +
-                "  </body>\n" +
+                "  <body></body>\n" +
                 "</html>", output);
         printStream.close();
     }

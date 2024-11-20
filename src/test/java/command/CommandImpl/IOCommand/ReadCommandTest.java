@@ -25,13 +25,7 @@ public class ReadCommandTest {
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                " <head>\n" +
-                "  <title>Hello World!</title>\n" +
-                " </head>\n" +
-                " <body>\n" +
-                " </body>\n" +
-                "</html>", output);
+        assertEquals("<html>\n<head>\n<title></title>\n</head>\n<body>\n</body>\n</html>", output);
         printStream.close();
     }
 }

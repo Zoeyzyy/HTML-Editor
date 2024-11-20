@@ -18,7 +18,7 @@ public class InitCommandTest {
         InitCommand initCommand = new InitCommand(document);
         initCommand.execute();
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintIndentCommand printIndentCommand = new PrintIndentCommand(document, 1, printStream);

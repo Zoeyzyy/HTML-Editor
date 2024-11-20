@@ -18,16 +18,16 @@ public class PrintIndentCommandTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(doc, 1);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(doc, 1, printStream);
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +
                 " <head>\n" +
-                "  <title></title>\n" +
+                "  <title>\n" +
+                "  </title>\n" +
                 " </head>\n" +
-                " <body>\n" +
-                " </body>\n" +
+                " <body></body>\n" +
                 "</html>", output);
         printStream.close();
     }

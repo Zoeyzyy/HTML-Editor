@@ -16,7 +16,7 @@ public class SpellCheckCommandTest {
         doc.init();
 
         // printStream to capture output
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         SpellCheckCommand spellCheckCommand = new SpellCheckCommand(doc, printStream);
