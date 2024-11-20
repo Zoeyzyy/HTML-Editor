@@ -15,7 +15,7 @@ public class ReadCommandTest {
     public void execute() {
         HTMLDocument document = new HTMLDocument(null);
 
-        ReadCommand readCommand = new ReadCommand(document, "example.html");
+        ReadCommand readCommand = new ReadCommand(document, "\\src\\main\\resources\\Test.html");
         readCommand.execute();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

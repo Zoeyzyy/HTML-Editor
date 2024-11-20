@@ -34,12 +34,12 @@ public class ReadCommand implements Command {
     @Override
     public void execute() {
         // Read the HTML file
-        // TODO
-        File file = new File(filePath);
+        String currentPath = System.getProperty("user.dir");
+        File file = new File(currentPath + filePath);
 
         // 检查文件是否存在
         if (!file.exists()) {
-            System.out.println("文件不存在！");
+            System.err.println("文件不存在！");
         }
 
         document.read(file);

@@ -18,10 +18,10 @@ public class InitCommandTest {
         InitCommand initCommand = new InitCommand(document);
         initCommand.execute();
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(document, 1);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(document, 1, printStream);
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();
