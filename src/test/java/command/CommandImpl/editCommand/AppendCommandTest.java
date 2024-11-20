@@ -13,7 +13,7 @@ public class AppendCommandTest {
     public void executeAndUndo() {
         HTMLDocument doc = new HTMLDocument(null);
         doc.init();
-        AppendCommand appendCommand = new AppendCommand(doc, "div", "id1", "body", "hello World");
+        AppendCommand appendCommand = new AppendCommand(doc, "div", "id1", "body", "Hello World");
         appendCommand.execute();
         assertEquals("Hello world", doc.findElementById("id1").getTextContent());
         // TODO: test id1's parent is body
