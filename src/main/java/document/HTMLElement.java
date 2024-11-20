@@ -65,7 +65,10 @@ public abstract class HTMLElement {
      * @return 该element下的所有一级children
      */
     public List<HTMLElement> getChildren() {
-        return null;
+        if (children == null) {
+            children = new ArrayList<>();
+        }
+        return children;
     }
 
     /**

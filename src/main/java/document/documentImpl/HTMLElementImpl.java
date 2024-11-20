@@ -21,7 +21,13 @@ public class HTMLElementImpl extends HTMLElement {
     public void addChild(HTMLElement child) {
         if (child == null) return;
 
+        // 确保 children 不为 null
         List<HTMLElement> children = getChildren();
+        if (children == null) {
+            children = new ArrayList<>();
+            super.setChildren(children);
+        }
+
         child.setParent(this);
 
         if (!children.isEmpty()) {
