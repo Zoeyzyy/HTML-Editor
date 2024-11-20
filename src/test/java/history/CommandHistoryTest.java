@@ -1,6 +1,8 @@
 package history;
 
 import command.Command;
+import exception.NoUndoableOperationException;
+import exception.NoRedoableOperationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +17,6 @@ public class CommandHistoryTest {
             // 测试用空实现
         }
         
-        @Override
         public void undo() {
             // 测试用空实现
         }
@@ -45,8 +46,7 @@ public class CommandHistoryTest {
         Command cmd = new TestCommand();
         history.push(cmd);
         
-        Command undoCmd = history.undo();
-        assertSame(cmd, undoCmd, "撤销的命令应该是最后压入的命令");
+        history.undo();
         assertFalse(history.canUndo(), "撤销后不应该有可撤销的操作");
         assertTrue(history.canRedo(), "撤销后应该有可重做的操作");
     }
@@ -57,24 +57,23 @@ public class CommandHistoryTest {
         history.push(cmd);
         history.undo();
         
-        Command redoCmd = history.redo();
-        assertSame(cmd, redoCmd, "重做的命令应该是最后撤销的命令");
+        history.redo();
         assertTrue(history.canUndo(), "重做后应该有可撤销的操作");
         assertFalse(history.canRedo(), "重做后不应该有可重做的操作");
     }
 
     @Test
     void testUndoEmptyHistory() {
-        Command cmd = history.undo();
-        assertNull(cmd, "空历史记录撤销应该返回null");
-        assertFalse(history.canUndo(), "空历史记录不应该有可撤销的操作");
+        assertThrows(NoUndoableOperationException.class, () -> {
+            history.undo();
+        }, "空历史记录撤销应该抛出异常");
     }
 
     @Test
     void testRedoEmptyHistory() {
-        Command cmd = history.redo();
-        assertNull(cmd, "空历史记录重做应该返回null");
-        assertFalse(history.canRedo(), "空历史记录不应该有可重做的操作");
+        assertThrows(NoRedoableOperationException.class, () -> {
+            history.redo();
+        }, "空历史记录重做应该抛出异常");
     }
 
     @Test
@@ -98,14 +97,13 @@ public class CommandHistoryTest {
         history.push(cmd1);
         history.push(cmd2);
         
-        Command undoCmd2 = history.undo();
-        Command undoCmd1 = history.undo();
-        assertSame(cmd2, undoCmd2, "应该按照相反顺序撤销命令");
-        assertSame(cmd1, undoCmd1, "应该按照相反顺序撤销命令");
+        history.undo();
+        history.undo();
         
-        Command redoCmd1 = history.redo();
-        Command redoCmd2 = history.redo();
-        assertSame(cmd1, redoCmd1, "应该按照原始顺序重做命令");
-        assertSame(cmd2, redoCmd2, "应该按照原始顺序重做命令");
+        history.redo();
+        history.redo();
+        
+        assertTrue(history.canUndo(), "重做后应该有可撤销的操作");
+        assertFalse(history.canRedo(), "重做后不应该有可重做的操作");
     }
 }
