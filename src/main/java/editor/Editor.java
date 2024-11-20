@@ -2,10 +2,19 @@ package editor;
 
 import document.HTMLDocument;
 import command.CommandController;
+import lombok.Getter;
+
 import java.util.Scanner;
 
 public class Editor {
     private String filename;
+    /**
+     * -- GETTER --
+     *  检查文档是否被修改
+     *
+     * @return 如果被修改返回true
+     */
+    @Getter
     private boolean modified;
     private boolean showId;
     private final HTMLDocument document;
@@ -30,14 +39,11 @@ public class Editor {
      * @param filename 要加载的文件名
      */
     public void load(String filename) {
-        try {
             this.filename = filename;
             executeCommand("read " + filename);
             modified = false;
             System.out.println("文件加载成功");
-        } catch (Exception e) {
-            System.out.println("文件加载失败：" + e.getMessage());
-        }
+
     }
 
     /**
@@ -48,13 +54,10 @@ public class Editor {
             System.out.println("没有指定文件名");
             return;
         }
-        try {
             executeCommand("save " + filename);
             modified = false;
             System.out.println("文件保存成功");
-        } catch (Exception e) {
-            System.out.println("文件保存失败：" + e.getMessage());
-        }
+
     }
 
     /**
@@ -81,7 +84,9 @@ public class Editor {
      * @param showId 是否显示ID
      */
     public void setShowId(boolean showId) {
+        this.showId = showId;
         document.setShowID(showId);
+        modified = true;
     }
 
     /**
@@ -95,23 +100,11 @@ public class Editor {
      * 显示当前文档内容
      */
     public void display() {
-        try {
             if (showId) {
                 executeCommand("print-tree");
             } else {
                 executeCommand("print-indent 2");
             }
-        } catch (Exception e) {
-            System.out.println("显示失败：" + e.getMessage());
-        }
-    }
-
-    /**
-     * 检查文档是否被修改
-     * @return 如果被修改返回true
-     */
-    public boolean isModified() {
-        return modified;
     }
 
     /**
@@ -127,12 +120,11 @@ public class Editor {
      * @param commandLine 命令行字符串
      */
     public void executeCommand(String commandLine) {
-        try {
-            // 直接执行命令，不需要保存历史
+            // 先执行命令
             commandController.run(commandLine);
-            modified = true;
-        } catch (Exception e) {
-            System.out.println("命令执行失败：" + e.getMessage());
-        }
+            // 然后根据命令类型决定是否更新修改状态
+            if (!commandLine.startsWith("print-") && !commandLine.startsWith("read ") && !commandLine.startsWith("save ")) {
+                modified = true;
+            }
     }
 }
