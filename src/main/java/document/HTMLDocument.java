@@ -20,11 +20,13 @@ public class HTMLDocument {
     @Setter
     private boolean showID;
     private StringBuilder sb;
+    private String templatePath;
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
         this.showID = false;
         this.sb = new StringBuilder();
+        this.templatePath="\\src\\main\\resources\\templates.html";
 
     }
     public HTMLDocument() {
@@ -42,7 +44,7 @@ public class HTMLDocument {
      */
     public void init(){
         root=null;
-        // TODO
+        read(new File(templatePath));
     }
 
     /**
@@ -94,6 +96,16 @@ public class HTMLDocument {
 
         insertElementById(parentElement,newElement);
     }
+
+    /**
+     * 为Undo设计
+     * @param element
+     * @throws ElementNotFound
+     */
+    public void appendElement(HTMLElement element) throws ElementNotFound {
+
+    }
+
 
     public void insertElement(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
         // 创建新元素
