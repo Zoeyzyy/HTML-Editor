@@ -17,14 +17,17 @@ public class HTMLEditorApplication {
         System.out.println("Welcome to HTML Editor! (Type 'exit' to quit)");
 
         while (isRunning) {
-            System.out.print(PROMPT);
-            String input = scanner.nextLine().trim();
+            try {
+                System.out.print(PROMPT);
+                String input = scanner.nextLine().trim();
 
-            if (input.isEmpty()) {
-                continue;
+                if (input.isEmpty()) {
+                    continue;
+                }
+                processCommand(input);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             }
-
-            processCommand(input);
         }
 
         scanner.close();
