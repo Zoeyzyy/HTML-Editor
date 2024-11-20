@@ -77,8 +77,7 @@ public class Editor {
      * @param showId 是否显示ID
      */
     public void setShowId(boolean showId) {
-        this.showId = showId;
-        executeCommand("showid " + showId);
+        document.setShowID(showId);
     }
 
     /**

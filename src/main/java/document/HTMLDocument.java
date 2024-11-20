@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class HTMLDocument {
@@ -90,12 +90,67 @@ public class HTMLDocument {
     }
 
     public void insertElement(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
+        // 创建新元素
         HTMLElement newElement = HTMLElement.builder()
                 .setId(idValue)
                 .setTagName(tagName)
                 .setTextContent(textContent)
                 .build();
-        insertElementById(insertLocation,newElement);
+
+        // 如果root为空，直接将新元素设为root
+        if (root == null) {
+            root = newElement;
+            return;
+        }
+
+        // 使用队列进行BFS搜索
+        Queue<HTMLElement> queue = new LinkedList<>();
+        // 记录父节点的映射，用于后续插入操作
+        Map<HTMLElement, HTMLElement> parentMap = new HashMap<>();
+
+        queue.offer(root);
+        HTMLElement targetElement = null;
+
+        // BFS搜索目标位置
+        while (!queue.isEmpty()) {
+            HTMLElement current = queue.poll();
+
+            // 找到目标位置
+            if (current.getId().equals(insertLocation)) {
+                targetElement = current;
+                break;
+            }
+
+            // 将子节点加入队列
+            if (current.getChildren() != null) {
+                for (HTMLElement child : current.getChildren()) {
+                    queue.offer(child);
+                    parentMap.put(child, current);
+                }
+            }
+        }
+
+        // 如果没找到目标位置，抛出异常
+        if (targetElement == null) {
+            throw new ElementNotFound("Element with id " + insertLocation + " not found");
+        }
+
+        // 获取目标元素的父节点
+        HTMLElement parent = parentMap.get(targetElement);
+
+        // 如果目标元素是root
+        if (parent == null) {
+            newElement.getChildren().add(root);
+            root = newElement;
+            return;
+        }
+
+        // 在父节点的children列表中找到目标元素的位置
+        List<HTMLElement> parentChildren = parent.getChildren();
+        int targetIndex = parentChildren.indexOf(targetElement);
+
+        // 在目标元素之前插入新元素
+        parentChildren.add(targetIndex, newElement);
     }
 
     /**
