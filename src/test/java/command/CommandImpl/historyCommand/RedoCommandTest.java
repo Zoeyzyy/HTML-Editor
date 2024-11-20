@@ -8,6 +8,7 @@ import history.CommandHistory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class RedoCommandTest {
     @Test
@@ -17,14 +18,14 @@ public class RedoCommandTest {
         CommandHistory commandHistory = new CommandHistory();
 
         // Test all undoable commands
-        InsertCommand insertCommand = new InsertCommand(document, "div", "id1", "body", "hello HTML");
+        InsertCommand insertCommand = new InsertCommand(document, "div", "id1", "body", "Hello HTML");
         insertCommand.execute();
         assertEquals("Hello HTML", document.findElementById("id1").getTextContent());
         commandHistory.push(insertCommand);
 
         UndoCommand undoCommand = new UndoCommand(commandHistory);
         undoCommand.execute();
-        assertEquals(null, document.findElementById("id1").getTextContent());
+        assertNull(document.findElementById("id1"));
 
         // Test redo
         RedoCommand redoCommand = new RedoCommand(commandHistory);

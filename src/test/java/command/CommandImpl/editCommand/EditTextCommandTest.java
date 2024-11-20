@@ -11,10 +11,10 @@ public class EditTextCommandTest {
     public void executeAndUndo() {
         HTMLDocument doc = new HTMLDocument(null);
         doc.init();
-        EditTextCommand editTextCommand1 = new EditTextCommand(doc, "body", "hello world");
+        EditTextCommand editTextCommand1 = new EditTextCommand(doc, "body", "Hello World");
         editTextCommand1.execute();
         assertEquals("Hello World", doc.findElementById("body").getTextContent());
-        EditTextCommand editTextCommand2 = new EditTextCommand(doc, "body", "hello world again");
+        EditTextCommand editTextCommand2 = new EditTextCommand(doc, "body", "Hello World Again");
         editTextCommand2.execute();
         assertEquals("Hello World Again", doc.findElementById("body").getTextContent());
 
