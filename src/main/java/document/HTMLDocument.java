@@ -31,6 +31,14 @@ public class HTMLDocument {
         sb = new StringBuilder();
     }
 
+    public boolean getShowID(){
+        return this.showID;
+    }
+
+    public void setShowID(boolean showId){
+        this.showID = showId;
+    }
+
     /**
      * init document
      */

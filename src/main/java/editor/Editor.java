@@ -21,6 +21,10 @@ public class Editor {
         this.commandController = new CommandController(document);
     }
 
+    public HTMLDocument getDocument(){
+        return this.document;
+    }
+
     /**
      * 加载文档内容
      * @param filename 要加载的文件名
