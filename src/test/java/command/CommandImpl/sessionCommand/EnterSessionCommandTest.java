@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import session.Session;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class EnterSessionCommandTest {
     @Test
@@ -13,11 +14,11 @@ public class EnterSessionCommandTest {
         Session session = new Session("example.html");
         ExitSessionCommand exitSessionCommand = new ExitSessionCommand(session);
         exitSessionCommand.execute();
-        assertEquals(null, session.getActiveDocument());
+        assertNull(session.getActiveEditor());
 
         EnterSessionCommand enterSessionCommand = new EnterSessionCommand(session);
         enterSessionCommand.execute();
         // TODO: how to check the session
-        assertEquals("example.html", session.getActiveDocument().getFilePath());
+        assertEquals("example.html", session.getActiveEditor().getFileName());
     }
 }
