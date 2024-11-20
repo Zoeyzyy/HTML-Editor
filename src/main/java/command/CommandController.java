@@ -24,7 +24,6 @@ public class CommandController {
      * @param input 用户输入的完整命令
      */
     public void run(String input){
-        try {
             String[] parts = parseInput(input);
             if (parts.length == 0) {
                 throw new IllegalArgumentException("Empty command");
@@ -35,10 +34,6 @@ public class CommandController {
 
             Command command = commandFactory.createCommand(commandName,args);
             command.execute();
-        } catch (Exception e) {
-            // 处理异常
-            System.err.println("Error executing command: " + e.getMessage());
-        }
     }
 
     private String[] parseInput(String input) {

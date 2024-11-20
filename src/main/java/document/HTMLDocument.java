@@ -3,6 +3,7 @@ package document;
 import exception.ElementBadRemoved;
 import exception.ElementNotFound;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,9 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-@Data
 public class HTMLDocument {
     private HTMLElement root;
+
+    @Setter
     private boolean showID;
     private StringBuilder sb;
 
@@ -33,10 +35,6 @@ public class HTMLDocument {
 
     public boolean getShowID(){
         return this.showID;
-    }
-
-    public void setShowID(boolean showId){
-        this.showID = showId;
     }
 
     /**
