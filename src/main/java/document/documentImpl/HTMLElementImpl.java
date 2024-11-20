@@ -17,21 +17,50 @@ import java.util.List;
 public class HTMLElementImpl extends HTMLElement {
     private String className;
 
-    public HTMLElementImpl() {
-        // 初始化 children 为一个空列表，防止 NullPointerException
-        setChildren(new ArrayList<>());
-    }
-
     @Override
     public void addChild(HTMLElement child) {
-        if (child != null) {
-            getChildren().add(child);
+        if (child == null) return;
+
+        List<HTMLElement> children = getChildren();
+        child.setParent(this);
+
+        if (!children.isEmpty()) {
+            HTMLElement lastChild = children.get(children.size() - 1);
+            lastChild.setNextSibling(child);
+            child.setPreviousSibling(lastChild);
         }
+
+        child.setInsertLocation(children.size());
+        children.add(child);
     }
 
     @Override
     public void removeChild(HTMLElement child) {
-        getChildren().remove(child);
+        if (child == null || !getChildren().contains(child)) return;
+
+        List<HTMLElement> children = getChildren();
+        int index = child.getInsertLocation();
+
+        // Update siblings
+        if (index > 0) {
+            children.get(index - 1).setNextSibling(child.getNextSibling());
+        }
+        if (index < children.size() - 1) {
+            children.get(index + 1).setPreviousSibling(child.getPreviousSibling());
+        }
+
+        // Remove the child
+        children.remove(index);
+
+        // Reset the child's relations
+        child.setParent(null);
+        child.setPreviousSibling(null);
+        child.setNextSibling(null);
+
+        // Update insertLocation for all subsequent siblings
+        for (int i = index; i < children.size(); i++) {
+            children.get(i).setInsertLocation(i);
+        }
     }
 
     @Override
@@ -77,25 +106,37 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public void insertElementBefore(HTMLElement element, String targetId) {
-        for (int i = 0; i < getChildren().size(); i++) {
-            if (targetId.equals(getChildren().get(i).getId())) {
-                getChildren().add(i, element);
+        List<HTMLElement> children = getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            if (targetId.equals(children.get(i).getId())) {
+                HTMLElement target = children.get(i);
+
+                // Update siblings for the new element
+                element.setParent(this);
+                element.setNextSibling(target);
+                element.setPreviousSibling(target.getPreviousSibling());
+                element.setInsertLocation(i);
+
+                if (target.getPreviousSibling() != null) {
+                    target.getPreviousSibling().setNextSibling(element);
+                }
+                target.setPreviousSibling(element);
+
+                children.add(i, element);
+
+                // Update insertLocation for subsequent elements
+                for (int j = i + 1; j < children.size(); j++) {
+                    children.get(j).setInsertLocation(j);
+                }
                 return;
             }
         }
-        throw new IllegalArgumentException("Element with id " + targetId + " not found.");
+        throw new IllegalArgumentException("Element with ID " + targetId + " not found.");
     }
 
     @Override
     public String getInsertLocation(HTMLElement element) {
-        List<HTMLElement> children = getChildren();
-        for (int i = 0; i < children.size(); i++) {
-            if (element.equals(children.get(i))) {
-                // 如果存在下一个兄弟元素，返回其 ID
-                return (i + 1 < children.size()) ? children.get(i + 1).getId() : null;
-            }
-        }
-        throw new IllegalArgumentException("Element not found among children.");
+        return element.getNextSibling() != null ? element.getNextSibling().getId() : null;
     }
 
     /**

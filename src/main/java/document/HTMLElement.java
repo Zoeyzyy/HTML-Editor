@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,11 @@ public abstract class HTMLElement {
     private String tagName; // such as <html> <la> and so on 只要存储tag 名称，<>不用存储
     private String Id;
     private String textContent;
-    private List<HTMLElement> children; // child elements
+    private List<HTMLElement> children = new ArrayList<>(); // child elements
+    private HTMLElement parent; // Parent element pointer
+    private HTMLElement previousSibling; // Previous sibling pointer
+    private HTMLElement nextSibling; // Next sibling pointer
+    private int insertLocation = -1; // Index in the parent's children list
 
     // 用于存储拼写检查结果
     @Getter
