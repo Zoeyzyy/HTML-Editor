@@ -1,6 +1,10 @@
 package command.CommandImpl.sessionCommand;
 
+import command.commandImpl.sessionCommand.CloseCommand;
 import org.junit.jupiter.api.Test;
+import session.Session;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CloseCommandTest {
     @Test

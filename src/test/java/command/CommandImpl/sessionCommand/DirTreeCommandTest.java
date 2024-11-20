@@ -2,6 +2,7 @@ package command.CommandImpl.sessionCommand;
 
 import command.commandImpl.sessionCommand.DirTreeCommand;
 import org.junit.jupiter.api.Test;
+import session.Session;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

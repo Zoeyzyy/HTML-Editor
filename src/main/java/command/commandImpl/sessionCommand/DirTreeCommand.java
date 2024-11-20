@@ -3,6 +3,7 @@ package command.commandImpl.sessionCommand;
 import document.HTMLDocument;
 import document.HTMLElement;
 import command.Command;
+import session.Session;
 
 import java.io.PrintStream;
 

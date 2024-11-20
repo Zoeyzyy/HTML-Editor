@@ -1,6 +1,7 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 public class ExitSessionCommand implements Command {
     private final Session session;

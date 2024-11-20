@@ -2,6 +2,7 @@ package command.CommandImpl.sessionCommand;
 
 import command.commandImpl.sessionCommand.ChangeEditorCommand;
 import org.junit.jupiter.api.Test;
+import session.Session;
 
 public class ChangeEditorCommandTest {
     @Test
@@ -10,7 +11,7 @@ public class ChangeEditorCommandTest {
         String filePath1 = "";
         String filePath2 = "";
         Session session = new Session(filePath1);
-        ChangeEditorCommand changeEditorCommand = new ChangeEditorCommand(filePath2);
+        ChangeEditorCommand changeEditorCommand = new ChangeEditorCommand(session, filePath2);
         changeEditorCommand.execute();
 
         // TODO: check the active document

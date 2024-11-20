@@ -1,6 +1,7 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 public class LoadCommand implements Command {
     private final Session session;

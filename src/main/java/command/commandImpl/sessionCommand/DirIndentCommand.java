@@ -1,6 +1,7 @@
 package command.commandImpl.sessionCommand;
 
 import command.Command;
+import session.Session;
 
 import java.io.PrintStream;
 

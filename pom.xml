@@ -24,6 +24,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-en</artifactId>
+            <version>6.5</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.7.0</version>
@@ -37,7 +43,15 @@
             <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>
