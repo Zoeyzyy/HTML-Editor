@@ -1,9 +1,9 @@
 package session;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+
+import editor.Editor;
+
 import java.io.*;
 
 
@@ -19,7 +19,9 @@ public class Session {
         this.activeEditor = null;
         if (this.recover(id) != null) {
            for (String filename : this.files) {
-               this.editors.put(filename, new Editor(filename));
+               Editor editor = new Editor();
+               editor.load(filename);
+               this.editors.put(filename, editor);
            }
         }else{
             this.files = new ArrayList<>();
@@ -51,14 +53,14 @@ public class Session {
     }
 
     public void load(String filename) {
-        Editor editor = new Editor(filename);
+        Editor editor = new Editor();
+        editor.load(filename);
         editors.put(filename, editor);
         files.add(filename);
         activeEditor = editor;
     }
 
     public void save(String filename) {
-        // TODO: save file
         editors.get(filename).save();
     }
 
@@ -68,7 +70,8 @@ public class Session {
 
     public void close() {
         if (activeEditor != null) {
-            editors.remove(activeEditor.getName());
+            editors.remove(activeEditor.getFileName());
+            files.remove(activeEditor.getFileName());
             activeEditor = editors.isEmpty() ? null : editors.get(0);
         }
     }
@@ -79,10 +82,15 @@ public class Session {
 
     public void activateEditor(String filename) {
         activeEditor = editors.get(filename);
-
     }
 
-    private String getDirTreeFormat(File dir, int level) {
+    public Editor getActiveEditor() {
+        return this.activeEditor;
+    }
+
+    public String getDirTreeFormat(int level) {
+        File activeFile = new File(activeEditor.getFileName());
+        File dir = activeFile.getParentFile();
         if (!dir.isDirectory()) {
             return "";
         }
@@ -91,18 +99,15 @@ public class Session {
             sb.append("  ");
         }
         sb.append(dir.getName()).append("\n");
-        for (File file : dir.listFiles()) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
-                sb.append(getDirTreeFormat(file, level + 1));
+                sb.append(getDirTreeFormat(level + 1));
             } else {
                 for (int i = 0; i < level + 1; i++) {
                     sb.append("  ");
                 }
 
                 sb.append(file.getName());
-                if (this.editors.get(file.getName()).get_showid() ) {
-                    sb.append("#" + this.editors.get(file.getName()).get_id());
-                }
                 if (this.files.contains(file.getName())) {
                     sb.append(" *");
                 }
@@ -112,7 +117,9 @@ public class Session {
         return sb.toString();
     }
 
-    private String getDirIndentFormat(File dir, int indent) {
+    public String getDirIndentFormat(int indent) {
+        File activeFile = new File(activeEditor.getFileName());
+        File dir = activeFile.getParentFile();
         if (!dir.isDirectory()) {
             return "";
         }
@@ -121,18 +128,15 @@ public class Session {
             sb.append("  ");
         }
         sb.append(dir.getName()).append("\n");
-        for (File file : dir.listFiles()) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
-                sb.append(getDirIndentFormat(file, indent + 1));
+                sb.append(getDirIndentFormat(indent + 1));
             } else {
                 for (int i = 0; i < indent + 1; i++) {
                     sb.append("  ");
                 }
     
                 sb.append(file.getName());
-                if (this.editors.get(file.getName()).get_showid()) {
-                    sb.append("#" + this.editors.get(file.getName()).get_id());
-                }
                 if (this.files.contains(file.getName())) {
                     sb.append(" *");
                 }
