@@ -95,13 +95,17 @@ public class Session {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("  ".repeat(Math.max(0, level)));
+        for (int i = 0; i < level; i++) {
+            sb.append("  ");
+        }
         sb.append(dir.getName()).append("\n");
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
                 sb.append(getDirTreeFormat(level + 1));
             } else {
-                sb.append("  ".repeat(Math.max(0, level + 1)));
+                for (int i = 0; i < level + 1; i++) {
+                    sb.append("  ");
+                }
 
                 sb.append(file.getName());
                 if (this.files.contains(file.getName())) {
