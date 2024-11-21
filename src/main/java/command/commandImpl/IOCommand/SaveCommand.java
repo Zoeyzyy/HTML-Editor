@@ -36,6 +36,10 @@ public class SaveCommand implements Command {
     public void execute() {
         String currentPath = System.getProperty("user.dir");
         String absoluteFilePath = currentPath + filePath;
-        session.save(absoluteFilePath);
+        try {
+            session.save(absoluteFilePath);
+        }catch (Exception e){
+
+        }
     }
 }
