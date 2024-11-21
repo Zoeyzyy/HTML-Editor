@@ -3,11 +3,11 @@ package command.CommandImpl.editCommand;
 import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import editor.Editor;
+import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppendCommandTest {
     @Test
@@ -22,6 +22,6 @@ public class AppendCommandTest {
 
         // test undo insert
         appendCommand.undo();
-        assertNull(editor.getDocument().findElementById("id1"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
     }
 }
