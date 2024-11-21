@@ -28,7 +28,8 @@ public class Console {
                     continue;
                 }
                 // TODO : add command parser
-//                commandParser.processCommand(input);
+//                Command command = commandParser.processCommand(input);
+//                command.execute();
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
