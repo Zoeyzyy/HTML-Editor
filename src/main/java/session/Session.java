@@ -3,38 +3,39 @@ package session;
 import java.util.*;
 
 import editor.Editor;
+import lombok.Getter;
 
 import java.io.*;
 
 
 public class Session {
+    @Getter
     private String id;
     private List<String> files;
     private Map<String, Editor> editors;
+    @Getter
     private Editor activeEditor;
 
     public Session(String id) {
-        
-        this.editors = new HashMap<>();
-        this.activeEditor = null;
-        if (this.recover(id) != null) {
-           for (String filename : this.files) {
-               Editor editor = new Editor();
-               editor.load(filename);
-               this.editors.put(filename, editor);
-           }
-        }else{
+        if (this.recover("./data" + id) == null) {
             this.files = new ArrayList<>();
+            this.editors = new HashMap<>();
+            this.activeEditor = null;
         }
         this.id = id;
     }
 
     public void dump(String filename) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
-            out.writeObject(this.files);
+            List<String> saved = this.files;
+            if (activeEditor != null) {
+                saved.add(0, activeEditor.getFileName());
+            }
+
+            out.writeObject(saved);
             System.out.println("Object dumped to file: " + filename);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("fail to dump session: " + e);
         }
     }
 
@@ -44,24 +45,35 @@ public class Session {
             List<String> list = (List<String>) in.readObject();
 
             System.out.println("Object loaded from file: " + filename);
-            this.files = list;
+            if (list.isEmpty()) {
+                return null;
+            }
+            this.files = list.subList(1, list.size());
+            this.editors = new HashMap<>();
+            for (String file : this.files) {
+                Editor editor = new Editor();
+                editor.load(file);
+                this.editors.put(file, editor);
+            }
+            this.activeEditor = this.editors.get(list.get(0));
             return list;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return null;
         }
     }
 
-    public void load(String filename) {
+    public void load(String filename) throws IOException {
         Editor editor = new Editor();
         editor.load(filename);
+
         editors.put(filename, editor);
         files.add(filename);
         activeEditor = editor;
     }
 
-    public void save(String filename) {
-//        editors.get(filename).save();
+    public void save(String filename) throws IOException {
+        activeEditor.save(filename);
     }
 
     public boolean confirm() {
@@ -72,7 +84,7 @@ public class Session {
         if (activeEditor != null) {
             editors.remove(activeEditor.getFileName());
             files.remove(activeEditor.getFileName());
-            activeEditor = editors.isEmpty() ? null : editors.get(0);
+            activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
         }
     }
 
@@ -82,10 +94,6 @@ public class Session {
 
     public void activateEditor(String filename) {
         activeEditor = editors.get(filename);
-    }
-
-    public Editor getActiveEditor() {
-        return this.activeEditor;
     }
 
     public String getDirTreeFormat(int level) {
@@ -151,6 +159,6 @@ public class Session {
     }
 
     public void exit() {
-        this.dump(this.id);
+        this.dump("./data" + this.id);
     }
 }
