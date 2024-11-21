@@ -24,6 +24,7 @@ public class DeleteCommandTest {
 
         // test undo
         deleteCommand.undo();
+        assertNotNull(editor.getDocument().findElementById("id1"));
         assertEquals("id1", editor.getDocument().findElementById("id1").getId());
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
 //        assertEquals("body", doc.findElementById("id1").getParentNode());

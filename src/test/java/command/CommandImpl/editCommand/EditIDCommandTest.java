@@ -4,10 +4,10 @@ import command.commandImpl.editCommand.EditIDCommand;
 import command.commandImpl.editCommand.InsertCommand;
 import document.HTMLDocument;
 import editor.Editor;
+import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EditIDCommandTest {
     @Test
@@ -21,12 +21,12 @@ public class EditIDCommandTest {
 
         EditIDCommand editIDCommand = new EditIDCommand(editor, "id1", "id2");
         editIDCommand.execute();
-        assertNull(editor.getDocument().findElementById("id1"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
         assertEquals("id2", editor.getDocument().findElementById("id2").getId());
 
         // test undo
         editIDCommand.undo();
         assertEquals("id1", editor.getDocument().findElementById("id1").getId());
-        assertNull(editor.getDocument().findElementById("id2"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
     }
 }
