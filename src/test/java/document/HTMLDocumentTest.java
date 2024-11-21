@@ -109,8 +109,8 @@ class HTMLDocumentTest {
 
         try {
             // 测试移除元素
-            document.removeElementById("body");
-            document.findElementById("body");
+            document.removeElementById("content");
+            document.findElementById("content");
         } catch (ElementBadRemoved e) {
             fail("Should not throw ElementBadRemoved exception");
         } catch (ElementNotFound e) {

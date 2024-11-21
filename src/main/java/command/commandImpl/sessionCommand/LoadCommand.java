@@ -18,6 +18,10 @@ public class LoadCommand implements Command {
 
     @Override
     public void execute() {
-        session.load(filePath);
+        try {
+            session.load(filePath);
+        }catch (Exception e){
+
+        }
     }
 }

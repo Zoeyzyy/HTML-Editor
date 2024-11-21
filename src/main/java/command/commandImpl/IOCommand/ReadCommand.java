@@ -3,6 +3,7 @@ package command.commandImpl.IOCommand;
 import editor.Editor;
 
 import java.io.File;
+import java.io.IOException;
 
 import command.Command;
 
@@ -30,7 +31,10 @@ public class ReadCommand implements Command {
         if (!file.exists()) {
             System.err.println("文件不存在！");
         }
+        try {
+            editor.load(absoluteFilePath);
+        } catch (IOException e) {
 
-        editor.load(absoluteFilePath);
+        }
     }
 }

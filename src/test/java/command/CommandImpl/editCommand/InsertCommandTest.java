@@ -5,11 +5,11 @@ import command.commandImpl.editCommand.EditTextCommand;
 import command.commandImpl.editCommand.InsertCommand;
 import document.HTMLDocument;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import editor.Editor;
+import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InsertCommandTest {
 
@@ -23,11 +23,12 @@ public class InsertCommandTest {
         appendCommand.execute();
         insertCommand.execute();
         assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
-        // TODO: test id2 is before id1
+        // test id2 is before id1
+        assertEquals("id1", editor.getDocument().findElementById("id2").getNextSibling().getId());
 
         // test undo insert
         insertCommand.undo();
-        assertNull(editor.getDocument().findElementById("id2"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
     }
 }

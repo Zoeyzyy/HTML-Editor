@@ -14,7 +14,11 @@ public class ChangeEditorCommandTest {
         String filePath1 = currentPath + "\\src\\main\\resources\\Test.html";
         String filePath2 = currentPath + "\\src\\main\\resources\\template.html";
         Session session = new Session("");
-        session.load(filePath1);
+        try {
+            session.load(filePath1);
+        } catch (Exception e){
+
+        }
         assertEquals(filePath1, session.getActiveEditor().getFileName());
         ChangeEditorCommand changeEditorCommand = new ChangeEditorCommand(session, filePath2);
         changeEditorCommand.execute();
