@@ -65,17 +65,14 @@ public class Session {
 
     public void load(String filename) throws IOException {
         Editor editor = new Editor();
-        try {
-            editor.load(filename);
-        }catch (Exception e){
-            throw new IOException("文件读取失败：" + e.getMessage());
-        }
+        editor.load(filename);
+
         editors.put(filename, editor);
         files.add(filename);
         activeEditor = editor;
     }
 
-    public void save(String filename) {
+    public void save(String filename) throws IOException {
         activeEditor.save(filename);
     }
 
@@ -87,7 +84,7 @@ public class Session {
         if (activeEditor != null) {
             editors.remove(activeEditor.getFileName());
             files.remove(activeEditor.getFileName());
-            activeEditor = editors.isEmpty() ? null : editors.get(0);
+            activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
         }
     }
 
