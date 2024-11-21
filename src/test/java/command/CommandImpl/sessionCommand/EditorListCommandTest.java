@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EditorListCommandTest {
     @Test
     public void execute() {
-        Session session = new Session("example.html");
+        Session session = new Session("./src/main/java/resource/Test.html");
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
@@ -21,7 +21,7 @@ public class EditorListCommandTest {
         editorListCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals("example.html\n", output);
+        assertEquals(">./src/main/java/resource/Test.html", output);
         printStream.close();
 
         // TODO: 新增编辑器，再次检测

@@ -1,45 +1,44 @@
 package command.commandImpl.editCommand;
 
-import document.HTMLDocument;
 import command.CanUndoCommand;
 import command.Command;
-import exception.ElementBadRemoved;
+import editor.Editor;
 import exception.ElementNotFound;
 
 public class AppendCommand implements CanUndoCommand {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final String tagName;
     private final String idValue;
     private final String parentElement; // parent element id
     private final String textContent; // optional
 
-    public AppendCommand(HTMLDocument document, String tagName, String idValue, String parentElement, String textContent) {
-        this.document = document;
+    public AppendCommand(Editor editor, String tagName, String idValue, String parentElement, String textContent) {
+        this.editor = editor;
         this.tagName = tagName;
         this.idValue = idValue;
         this.parentElement = parentElement;
         this.textContent = textContent;
     }
 
-    public static Command create(HTMLDocument document, String tagName, String idValue, String parentElement, String textContent) {
-        return new AppendCommand(document, tagName, idValue, parentElement, textContent);
+    public static Command create(Editor editor, String tagName, String idValue, String parentElement, String textContent) {
+        return new AppendCommand(editor, tagName, idValue, parentElement, textContent);
     }
 
     @Override
     public void execute() {
         try {
-            document.appendElement(tagName, idValue, textContent, parentElement);
-        }catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
+            editor.append(tagName, idValue, textContent, parentElement);
+        }catch (Error e) {
+            System.err.println(e.getMessage());
         }
     }
 
     @Override
     public void undo() {
         try {
-            document.removeElementById(idValue);
-        }catch (ElementBadRemoved e) {
-            System.out.println(e.getMessage());
+            editor.delete(idValue);
+        }catch (Error e) {
+            System.err.println(e.getMessage());
         }
     }
 }

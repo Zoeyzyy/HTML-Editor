@@ -2,6 +2,7 @@ package command.CommandImpl.displayCommand;
 
 import command.commandImpl.displayCommand.PrintTreeCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -12,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PrintTreeCommandTest {
     @Test
     public void execute() {
-        HTMLDocument doc = new HTMLDocument(null);
-        doc.init();
+        Editor editor = new Editor();
+        editor.init();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintTreeCommand printTreeCommand = new PrintTreeCommand(doc, printStream);
+        PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
 
         String output = byteArrayOutputStream.toString();

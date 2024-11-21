@@ -4,6 +4,7 @@ import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.RedoCommand;
 import command.commandImpl.historyCommand.UndoCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import history.CommandHistory;
 import org.junit.jupiter.api.Test;
 
@@ -13,23 +14,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class RedoCommandTest {
     @Test
     void execute() {
-        HTMLDocument document = new HTMLDocument(null);
-        document.init();
-        CommandHistory commandHistory = new CommandHistory();
+        Editor editor = new Editor();
+        editor.init();
 
         // Test all undoable commands
-        InsertCommand insertCommand = new InsertCommand(document, "div", "id1", "body", "Hello HTML");
+        InsertCommand insertCommand = new InsertCommand(editor, "div", "id1", "body", "Hello HTML");
         insertCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id1").getTextContent());
-        commandHistory.push(insertCommand);
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id1").getTextContent());
 
-        UndoCommand undoCommand = new UndoCommand(commandHistory);
+        UndoCommand undoCommand = new UndoCommand(editor);
         undoCommand.execute();
-        assertNull(document.findElementById("id1"));
+        assertNull(editor.getDocument().findElementById("id1"));
 
         // Test redo
-        RedoCommand redoCommand = new RedoCommand(commandHistory);
+        RedoCommand redoCommand = new RedoCommand(editor);
         redoCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id1").getTextContent());
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id1").getTextContent());
     }
 }

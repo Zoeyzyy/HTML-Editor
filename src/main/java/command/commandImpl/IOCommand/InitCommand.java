@@ -1,22 +1,21 @@
 package command.commandImpl.IOCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
 import command.Command;
+import editor.Editor;
 
 public class InitCommand implements Command {
-    private final HTMLDocument document;
+    private final Editor editor;
 
-    public InitCommand(HTMLDocument document) {
-        this.document = document;
+    public InitCommand(Editor editor) {
+        this.editor = editor;
     }
 
-    public static Command create(HTMLDocument document) {
-        return new InitCommand(document);
+    public static Command create(Editor editor) {
+        return new InitCommand(editor);
     }
 
     @Override
     public void execute() {
-        document.init();
+        editor.init();
     }
 }

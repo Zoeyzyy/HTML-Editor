@@ -1,22 +1,22 @@
 package command.commandImpl.historyCommand;
 
 import command.Command;
-import history.CommandHistory;
+import editor.Editor;
 
 
 public class UndoCommand implements Command {
-    private final CommandHistory commandHistory;
+    private final Editor editor;
 
-    public UndoCommand(CommandHistory commandHistory) {  
-        this.commandHistory = commandHistory;
+    public UndoCommand(Editor editor) {
+        this.editor = editor;
     }
 
-    public static Command create(CommandHistory commandHistory) {
-        return new UndoCommand(commandHistory);
+    public static Command create(Editor editor) {
+        return new UndoCommand(editor);
     }
 
     @Override
     public void execute() {
-        commandHistory.undo();
+        editor.undo();
     }
 }

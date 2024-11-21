@@ -1,7 +1,5 @@
 package command.commandImpl.IOCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
 
 import java.io.File;
 import java.io.StringReader;
@@ -14,41 +12,30 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import editor.Editor;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import command.Command;
+import session.Session;
 
 public class SaveCommand implements Command {
-    private final HTMLDocument document;
+    private final Session session;
     private final String filePath;
 
-    public SaveCommand(HTMLDocument document, String filePath) {
-        this.document = document;
+    public SaveCommand(Session session, String filePath) {
+        this.session = session;
         this.filePath = filePath;
     }
 
-    public static Command create(HTMLDocument document, String filePath) {
-        return new SaveCommand(document, filePath);
+    public static Command create(Session session, String filePath) {
+        return new SaveCommand(session, filePath);
     }
 
     @Override
     public void execute() {
-        String file = document.save();
-        // save file into filePath
-        // TODO
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = (Document) dBuilder.parse(new InputSource(new StringReader(file)));
-
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.transform(new DOMSource((Node) doc), new StreamResult(new File(filePath)));
-            
-            System.out.println("XML content written to " + filePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String currentPath = System.getProperty("user.dir");
+        String absoluteFilePath = currentPath + filePath;
+        session.save(absoluteFilePath);
     }
 }

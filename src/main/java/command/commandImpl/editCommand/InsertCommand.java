@@ -1,47 +1,47 @@
 package command.commandImpl.editCommand;
 
-import document.HTMLDocument;
 import command.CanUndoCommand;
 import command.Command;
+import editor.Editor;
 import exception.ElementBadRemoved;
 import exception.ElementNotFound;
 
 public class InsertCommand implements CanUndoCommand {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final String tagName;
     private final String idValue;
     private final String insertLocation; // new element is inserted before the element with this id
     private final String textContent; // optional
 
-    public InsertCommand(HTMLDocument document, String tagName, String idValue, String insertLocation,
+    public InsertCommand(Editor editor, String tagName, String idValue, String insertLocation,
                          String textContent) {
-        this.document = document;
+        this.editor = editor;
         this.tagName = tagName;
         this.idValue = idValue;
         this.insertLocation = insertLocation;
         this.textContent = textContent;
     }
 
-    public static Command create(HTMLDocument document, String tagName, String idValue, String insertLocation,
+    public static Command create(Editor editor, String tagName, String idValue, String insertLocation,
                                  String textContent) {
-        return new InsertCommand(document, tagName, idValue, insertLocation, textContent);
+        return new InsertCommand(editor, tagName, idValue, insertLocation, textContent);
     }
 
     @Override
     public void execute() {
         try {
-            document.insertElement(tagName, idValue, insertLocation, textContent);
-        }catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
+            editor.insert(tagName, idValue, insertLocation, textContent);
+        }catch (Error e) {
+            System.err.println(e.getMessage());
         }
     }
 
     @Override
     public void undo() {
         try {
-            document.removeElementById(idValue);
-        }catch (ElementBadRemoved e) {
-            System.out.println(e.getMessage());
+            editor.delete(idValue);
+        }catch (Error e) {
+            System.err.println(e.getMessage());
         }
     }
 }

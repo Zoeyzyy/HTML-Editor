@@ -1,7 +1,7 @@
 package command.CommandImpl.IOCommand;
 
 import command.commandImpl.IOCommand.SaveCommand;
-import document.HTMLDocument;
+import session.Session;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -13,13 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SaveCommandTest {
     @Test
     public void execute() {
-        HTMLDocument document = new HTMLDocument(null);
-        document.init();
+        Session session = new Session("");
+        session.load("\\src\\main\\resources\\Test.html");
 
-        SaveCommand saveCommand = new SaveCommand(document, "test.html");
+        SaveCommand saveCommand = new SaveCommand(session, "\\src\\main\\resources\\test.html");
         saveCommand.execute();
 
-        String filePath = "test.txt";
+        String currentPath = System.getProperty("user.dir");
+        String filePath = currentPath + "\\src\\main\\resources\\test.txt";
         StringBuilder content = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

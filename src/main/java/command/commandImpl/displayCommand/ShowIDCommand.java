@@ -1,24 +1,24 @@
 package command.commandImpl.displayCommand;
 
-import document.HTMLDocument;
 import command.Command;
+import editor.Editor;
 
 public class ShowIDCommand implements Command {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final boolean showID;
 
 
-    public ShowIDCommand(HTMLDocument document, boolean showID) {
-        this.document = document;
+    public ShowIDCommand(Editor editor, boolean showID) {
+        this.editor = editor;
         this.showID = showID;
     }
 
-    public static Command create(HTMLDocument document, boolean showID) {
-        return new ShowIDCommand(document, showID);
+    public static Command create(Editor editor, boolean showID) {
+        return new ShowIDCommand(editor, showID);
     }
 
     @Override
     public void execute() {
-        document.setShowID(showID);
+        editor.showId(showID);
     }
 }

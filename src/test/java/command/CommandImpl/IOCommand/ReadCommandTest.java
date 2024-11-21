@@ -3,6 +3,7 @@ package command.CommandImpl.IOCommand;
 import command.commandImpl.IOCommand.ReadCommand;
 import command.commandImpl.displayCommand.PrintIndentCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,15 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ReadCommandTest {
     @Test
     public void execute() {
-        HTMLDocument document = new HTMLDocument(null);
+        Editor editor = new Editor();
 
-        ReadCommand readCommand = new ReadCommand(document, "\\src\\main\\resources\\Test.html");
+        ReadCommand readCommand = new ReadCommand(editor, "\\src\\main\\resources\\Test.html");
         readCommand.execute();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(document, 1);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1);
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();

@@ -2,6 +2,7 @@ package command.CommandImpl.displayCommand;
 
 import command.commandImpl.displayCommand.PrintIndentCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -12,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PrintIndentCommandTest {
     @Test
     public void execute() {
-        HTMLDocument doc = new HTMLDocument(null);
-        doc.init();
+        Editor editor = new Editor();
+        editor.init();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(doc, 1, printStream);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1, printStream);
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();

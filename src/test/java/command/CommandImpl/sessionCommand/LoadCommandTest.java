@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import session.Session;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LoadCommandTest {
     @Test
     public void execute() {
-        Session session = new Session("example.html");
-        assertEquals("example.html", session.getActiveEditor().getFileName());
+        Session session = new Session("");
+        assertNull(session.getActiveEditor());
         LoadCommand command = new LoadCommand(session, "example2.html");
         command.execute();
         assertEquals("example2.html", session.getActiveEditor().getFileName());

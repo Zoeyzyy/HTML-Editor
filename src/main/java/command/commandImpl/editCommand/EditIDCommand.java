@@ -1,31 +1,31 @@
 package command.commandImpl.editCommand;
 
-import document.HTMLDocument;
+import editor.Editor;
 import command.CanUndoCommand;
 import command.Command;
 
 public class EditIDCommand implements CanUndoCommand {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final String oldID;
     private final String newID;
 
-    public EditIDCommand(HTMLDocument document, String oldID, String newID) {
-        this.document = document;
+    public EditIDCommand(Editor editor, String oldID, String newID) {
+        this.editor = editor;
         this.oldID = oldID;
         this.newID = newID;
     }
 
-    public static Command create(HTMLDocument document, String oldID, String newID) {
-        return new EditIDCommand(document, oldID, newID);
+    public static Command create(Editor editor, String oldID, String newID) {
+        return new EditIDCommand(editor, oldID, newID);
     }
 
     @Override
     public void execute() {
-        document.editID(oldID, newID);
+        editor.editId(oldID, newID);
     }
 
     @Override
     public void undo() {
-        document.editID(newID, oldID); 
+        editor.editId(newID, oldID);
     }
 }

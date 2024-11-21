@@ -1,34 +1,34 @@
 package command.commandImpl.displayCommand;
 
-import document.HTMLDocument;
 import command.Command;
+import editor.Editor;
 
 import java.io.PrintStream;
 
 public class PrintTreeCommand implements Command {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final PrintStream printStream;
 
-    public PrintTreeCommand(HTMLDocument document, PrintStream printStream) {
-        this.document = document;
+    public PrintTreeCommand(Editor editor, PrintStream printStream) {
+        this.editor = editor;
         this.printStream = printStream;
     }
 
-    public PrintTreeCommand(HTMLDocument document) {
-        this.document = document;
+    public PrintTreeCommand(Editor editor) {
+        this.editor = editor;
         this.printStream = System.out;
     }
 
-    public static Command create(HTMLDocument document) {
-        return new PrintTreeCommand(document, System.out);
+    public static Command create(Editor editor) {
+        return new PrintTreeCommand(editor, System.out);
     }
 
-    public static Command create(HTMLDocument document, PrintStream printStream) {
-        return new PrintTreeCommand(document, printStream);
+    public static Command create(Editor editor, PrintStream printStream) {
+        return new PrintTreeCommand(editor, printStream);
     }
 
     @Override
     public void execute() {
-        printStream.println(document.getTreeFormat(true));
+        printStream.println(editor.printTree());
     }
 }

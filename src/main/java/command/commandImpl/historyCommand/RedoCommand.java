@@ -1,22 +1,22 @@
 package command.commandImpl.historyCommand;
 
 import command.Command;
-import history.CommandHistory;
+import editor.Editor;
 
 
 public class RedoCommand implements Command {
-    private final CommandHistory commandHistory;
+    private final Editor editor;
 
-    public RedoCommand(CommandHistory commandHistory) {
-        this.commandHistory = commandHistory;
+    public RedoCommand(Editor editor) {
+        this.editor = editor;
     }
 
-    public static Command create(CommandHistory commandHistory) {
-        return new RedoCommand(commandHistory);
+    public static Command create(Editor editor) {
+        return new RedoCommand(editor);
     }
 
     @Override
     public void execute() {
-        commandHistory.redo();
+        editor.redo();
     }
 }

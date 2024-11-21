@@ -1,29 +1,29 @@
 package command.commandImpl.displayCommand;
 
-import document.HTMLDocument;
 import command.Command;
+import editor.Editor;
 
 import java.io.PrintStream;
 
 public class SpellCheckCommand implements Command {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final PrintStream printStream;
 
-    public SpellCheckCommand(HTMLDocument document, PrintStream printStream) {
-        this.document = document;
+    public SpellCheckCommand(Editor editor, PrintStream printStream) {
+        this.editor = editor;
         this.printStream = printStream;
     }
 
-    public static Command create(HTMLDocument document, PrintStream printStream) {
-        return new SpellCheckCommand(document, printStream);
+    public static Command create(Editor editor, PrintStream printStream) {
+        return new SpellCheckCommand(editor, printStream);
     }
 
-    public static Command create(HTMLDocument document) {
-        return new SpellCheckCommand(document, System.out);
+    public static Command create(Editor editor) {
+        return new SpellCheckCommand(editor, System.out);
     }
 
     @Override
     public void execute() {
-        printStream.println(document.getSpellCheck());
+        printStream.println(editor.spellCheck());
     }
 }

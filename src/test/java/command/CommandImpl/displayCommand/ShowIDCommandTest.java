@@ -3,6 +3,7 @@ package command.CommandImpl.displayCommand;
 import command.commandImpl.displayCommand.PrintTreeCommand;
 import command.commandImpl.displayCommand.ShowIDCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,17 +14,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ShowIDCommandTest {
     @Test
     public void execute() {
-        HTMLDocument doc = new HTMLDocument(null);
-        doc.init();
+        Editor editor = new Editor();
+        editor.init();
 
-        ShowIDCommand showIDCommand = new ShowIDCommand(doc, true);
+        ShowIDCommand showIDCommand = new ShowIDCommand(editor, true);
         showIDCommand.execute();
-        assertTrue(doc.getShowID());
+        assertTrue(editor.getDocument().getShowID());
 
         // test printTree
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
-        PrintTreeCommand printTreeCommand = new PrintTreeCommand(doc, printStream);
+        PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +
@@ -35,14 +36,14 @@ public class ShowIDCommandTest {
                 "</html>#html", output);
         printStream.close();
 
-        showIDCommand = new ShowIDCommand(doc, false);
+        showIDCommand = new ShowIDCommand(editor, false);
         showIDCommand.execute();
-        assertFalse(doc.getShowID());
+        assertFalse(editor.getDocument().getShowID());
 
         // test printTree
         byteArrayOutputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(byteArrayOutputStream);
-        printTreeCommand = new PrintTreeCommand(doc, printStream);
+        printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +

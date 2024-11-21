@@ -1,47 +1,36 @@
 package command.commandImpl.IOCommand;
 
-import document.HTMLDocument;
-import document.HTMLElement;
+import editor.Editor;
 
 import java.io.File;
-import java.io.StringWriter;
-
-import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Node;
 
 import command.Command;
 
 public class ReadCommand implements Command {
-    private final HTMLDocument document;
+    private final Editor editor;
     private final String filePath;
 
-    public ReadCommand(HTMLDocument document, String filePath) {
-        this.document = document;
+    public ReadCommand(Editor editor, String filePath) {
+        this.editor = editor;
         this.filePath = filePath;
     }
 
-    public static Command create(HTMLDocument document, String filePath) {
-        return new ReadCommand(document, filePath);
+    public static Command create(Editor editor, String filePath) {
+        return new ReadCommand(editor, filePath);
     }
 
     @Override
     public void execute() {
         // Read the HTML file
         String currentPath = System.getProperty("user.dir");
-        File file = new File(currentPath + filePath);
+        String absoluteFilePath = currentPath + filePath;
+        File file = new File(absoluteFilePath);
 
         // 检查文件是否存在
         if (!file.exists()) {
             System.err.println("文件不存在！");
         }
 
-        document.read(file);
+        editor.load(absoluteFilePath);
     }
 }

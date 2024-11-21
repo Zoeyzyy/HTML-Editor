@@ -2,6 +2,7 @@ package command.CommandImpl.displayCommand;
 
 import command.commandImpl.displayCommand.SpellCheckCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -12,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SpellCheckCommandTest {
     @Test
     public void execute() {
-        HTMLDocument doc = new HTMLDocument(null);
-        doc.init();
+        Editor editor = new Editor();
+        editor.init();
 
         // printStream to capture output
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        SpellCheckCommand spellCheckCommand = new SpellCheckCommand(doc, printStream);
+        SpellCheckCommand spellCheckCommand = new SpellCheckCommand(editor, printStream);
         spellCheckCommand.execute();
 
         String output = byteArrayOutputStream.toString();

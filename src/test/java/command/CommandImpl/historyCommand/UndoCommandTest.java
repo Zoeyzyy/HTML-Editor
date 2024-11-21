@@ -3,8 +3,7 @@ package command.CommandImpl.historyCommand;
 import command.commandImpl.displayCommand.PrintTreeCommand;
 import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.UndoCommand;
-import document.HTMLDocument;
-import history.CommandHistory;
+import editor.Editor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,56 +12,49 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class UndoCommandTest {
     @Test
     void execute() {
-        HTMLDocument document = new HTMLDocument(null);
-        document.init();
-        CommandHistory commandHistory = new CommandHistory();
+        Editor editor = new Editor();
+        editor.init();
 
         // Test all undoable commands
-        AppendCommand appendCommand = new AppendCommand(document, "div", "id1", "body", "Hello World");
+        AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         appendCommand.execute();
-        assertEquals("Hello World", document.findElementById("id1").getTextContent());
-        commandHistory.push(appendCommand);
+        assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
 
-        InsertCommand insertCommand = new InsertCommand(document, "div", "id2", "body", "Hello HTML");
+        InsertCommand insertCommand = new InsertCommand(editor, "div", "id2", "body", "Hello HTML");
         insertCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id2").getTextContent());
-        commandHistory.push(insertCommand);
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
 
-        EditIDCommand editIDCommand = new EditIDCommand(document, "id1", "id3");
+        EditIDCommand editIDCommand = new EditIDCommand(editor, "id1", "id3");
         editIDCommand.execute();
-        assertNull(document.findElementById("id1"));
-        assertEquals("id3", document.findElementById("id3").getId());
-        commandHistory.push(editIDCommand);
+        assertNull(editor.getDocument().findElementById("id1"));
+        assertEquals("id3", editor.getDocument().findElementById("id3").getId());
 
-        EditTextCommand editTextCommand = new EditTextCommand(document, "id3", "Hello HTML");
+        EditTextCommand editTextCommand = new EditTextCommand(editor, "id3", "Hello HTML");
         editTextCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id4").getTextContent());
-        commandHistory.push(editTextCommand);
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id4").getTextContent());
 
         // Test not undoable commands
-        PrintTreeCommand printTreeCommand = new PrintTreeCommand(document);
+        PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor);
         printTreeCommand.execute();
-        commandHistory.push(printTreeCommand);
 
-        DeleteCommand deleteCommand = new DeleteCommand(document, "id4");
+        DeleteCommand deleteCommand = new DeleteCommand(editor, "id4");
         deleteCommand.execute();
-        assertNull(document.findElementById("id4"));
-        commandHistory.push(deleteCommand);
+        assertNull(editor.getDocument().findElementById("id4"));
 
-        UndoCommand undoCommand = new UndoCommand(commandHistory);
+        UndoCommand undoCommand = new UndoCommand(editor);
         undoCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id4").getTextContent());
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id4").getTextContent());
         undoCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id3").getTextContent());
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id3").getTextContent());
         undoCommand.execute();
-        assertEquals("Hello HTML", document.findElementById("id2").getTextContent());
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
         undoCommand.execute();
-        assertEquals("Hello world", document.findElementById("id1").getTextContent());
+        assertEquals("Hello world", editor.getDocument().findElementById("id1").getTextContent());
         undoCommand.execute();
-        assertNull(document.findElementById("id1"));
+        assertNull(editor.getDocument().findElementById("id1"));
         undoCommand.execute();
-        assertNull(document.findElementById("id2"));
+        assertNull(editor.getDocument().findElementById("id2"));
         undoCommand.execute();
-        assertNull(document.findElementById("id3"));
+        assertNull(editor.getDocument().findElementById("id3"));
     }
 }
