@@ -113,7 +113,7 @@ public class Session {
             throw new IllegalArgumentException("folder is not a Directory");
         }
         sb.append(getIndentString(indent));
-        sb.append("+--");
+        sb.append("├── ");
         sb.append(folder.getName());
         sb.append("/");
         sb.append("\n");
@@ -127,7 +127,7 @@ public class Session {
     }
     private void printFile(File file, int indent, StringBuilder sb) {
         sb.append(getIndentString(indent));
-        sb.append("+--");
+        sb.append("├── ");
         sb.append(file.getName());
         if (isEditing(file)) {
             sb.append("*");
@@ -138,7 +138,7 @@ public class Session {
     private static String getIndentString(int indent) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < indent; i++) {
-            sb.append("|  ");
+            sb.append("│   ");
         }
         return sb.toString();
     }
