@@ -198,7 +198,7 @@ public class HTMLDocument {
         sb.append(element.getTagName());
 
         // 如果有ID，添加ID
-        if (element.getId() != null && !element.getId().isEmpty()) {
+        if (element.getId() != null && !element.getId().isEmpty() && getShowID()) {
             sb.append("#").append(element.getId());
         }
         sb.append("\n");

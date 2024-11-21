@@ -151,6 +151,11 @@ class HTMLDocumentTest {
 
         String treeFormat = document.getTreeFormat(false);
         assertNotNull(treeFormat);
+        assertTrue(treeFormat.contains("html"));
+        assertTrue(treeFormat.contains("body"));
+        assertTrue(treeFormat.contains("div"));
+        document.setShowID(true);
+        treeFormat = document.getTreeFormat(false);
         assertTrue(treeFormat.contains("html#root"));
         assertTrue(treeFormat.contains("body#body"));
         assertTrue(treeFormat.contains("div#content"));
