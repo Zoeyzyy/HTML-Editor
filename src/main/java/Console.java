@@ -1,16 +1,19 @@
-import editor.Editor;
+import session.Session;
 
 import java.util.Scanner;
 
-public class HTMLEditorApplication {
+public class Console {
     private static final String PROMPT = "shell> ";
     private boolean isRunning = true;
     private final Scanner scanner;
-    private final Editor editor;
+    private final Session session;
+    // TODO : add command parser
+//    private final CommandParser commandParser;
 
-    public HTMLEditorApplication() {
-        editor=new Editor();
-        scanner = new Scanner(System.in);
+    public Console() {
+        this.session = new Session("default");
+        this.scanner = new Scanner(System.in);
+//        this.commandParser = new CommandParser();
     }
 
     public void run() {
@@ -24,7 +27,8 @@ public class HTMLEditorApplication {
                 if (input.isEmpty()) {
                     continue;
                 }
-                processCommand(input);
+                // TODO : add command parser
+//                commandParser.processCommand(input);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
@@ -32,19 +36,6 @@ public class HTMLEditorApplication {
 
         scanner.close();
         System.out.println("Goodbye!");
-    }
-
-    private void processCommand(String command) {
-        switch (command.toLowerCase()) {
-            case "exit":
-                isRunning = false;
-                break;
-            case "clear":
-                clearScreen();
-                break;
-            default:
-                editor.executeCommand(command);
-        }
     }
 
 
@@ -55,7 +46,7 @@ public class HTMLEditorApplication {
     }
 
     public static void main(String[] args) {
-        HTMLEditorApplication shell = new HTMLEditorApplication();
+        Console shell = new Console();
         shell.run();
     }
 }
