@@ -17,7 +17,7 @@ public class Session {
     private Editor activeEditor;
 
     public Session(String id) {
-        if (this.recover("./data" + id) == null) {
+        if (this.recover("./data/" + id) == null) {
             this.files = new ArrayList<>();
             this.editors = new HashMap<>();
             this.activeEditor = null;
@@ -65,6 +65,8 @@ public class Session {
 
     public void load(String filename) throws IOException {
         Editor editor = new Editor();
+        File file = new File(filename);
+        filename = file.getAbsolutePath();
         editor.load(filename);
 
         editors.put(filename, editor);
@@ -96,62 +98,87 @@ public class Session {
         activeEditor = editors.get(filename);
     }
 
-    public String getDirTreeFormat(int level) {
+    public String getDirTreeFormat(int level){
         File activeFile = new File(activeEditor.getFileName());
-        File dir = activeFile.getParentFile();
-        if (!dir.isDirectory()) {
-            return "";
-        }
+        File dir = activeFile.getAbsoluteFile().getParentFile();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < level; i++) {
-            sb.append("  ");
-        }
-        sb.append(dir.getName()).append("\n");
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.isDirectory()) {
-                sb.append(getDirTreeFormat(level + 1));
-            } else {
-                for (int i = 0; i < level + 1; i++) {
-                    sb.append("  ");
-                }
 
-                sb.append(file.getName());
-                if (this.files.contains(file.getName())) {
-                    sb.append(" *");
-                }
-                sb.append("\n");
+         getDirTreeFormat(dir, level, sb);
+         return sb.toString();
+    }
+
+    private void getDirTreeFormat(File folder, int indent,
+                                           StringBuilder sb) {
+        if (!folder.isDirectory()) {
+            throw new IllegalArgumentException("folder is not a Directory");
+        }
+        sb.append(getIndentString(indent));
+        sb.append("+--");
+        sb.append(folder.getName());
+        sb.append("/");
+        sb.append("\n");
+        for (File file : folder.listFiles()) {
+            if (file.isDirectory()) {
+                getDirTreeFormat(file, indent + 1, sb);
+            } else {
+                printFile(file, indent + 1, sb);
             }
+        }
+    }
+    private void printFile(File file, int indent, StringBuilder sb) {
+        sb.append(getIndentString(indent));
+        sb.append("+--");
+        sb.append(file.getName());
+        if (isEditing(file)) {
+            sb.append("*");
+        }
+        sb.append("\n");
+    }
+
+    private static String getIndentString(int indent) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < indent; i++) {
+            sb.append("|  ");
         }
         return sb.toString();
     }
 
     public String getDirIndentFormat(int indent) {
         File activeFile = new File(activeEditor.getFileName());
-        File dir = activeFile.getParentFile();
-        if (!dir.isDirectory()) {
-            return "";
-        }
+        File dir = activeFile.getAbsoluteFile().getParentFile();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < indent; i++) {
-            sb.append("  ");
-        }
         sb.append(dir.getName()).append("\n");
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
+        printIndent(dir, indent+1, sb);
+        return sb.toString();
+    }
+
+    private void printIndent(File dir, int indent, StringBuilder sb) {
+        if (!dir.isDirectory()) {
+            return;
+        }
+
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        for (File file : files) {
+            // 打印缩进和文件名
+            for (int i = 0; i < indent; i++) {
+                sb.append(" ");
+            }
+            sb.append(file.getName()).append(isEditing(file) ? "*" : "");
+            sb.append("\n");
+
+            // 递归打印子目录
             if (file.isDirectory()) {
-                sb.append(getDirIndentFormat(indent + 1));
-            } else {
-                for (int i = 0; i < indent + 1; i++) {
-                    sb.append("  ");
-                }
-    
-                sb.append(file.getName());
-                if (this.files.contains(file.getName())) {
-                    sb.append(" *");
-                }
-                sb.append("\n");
+                printIndent(file, indent + 4, sb);
             }
         }
-        return sb.toString();
+    }
+
+    private boolean isEditing(File file) {
+        return file.getAbsolutePath().equals(this.activeEditor.getFileName());
     }
 
     public Session enter(String id) {
@@ -159,6 +186,6 @@ public class Session {
     }
 
     public void exit() {
-        this.dump("./data" + this.id);
+        this.dump("./data/" + this.id);
     }
 }

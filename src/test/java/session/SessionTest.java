@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +23,13 @@ public class SessionTest {
     void tearDown() {
         session.close();
         session = null;
+        Path filePath = Paths.get("./data/A_session");
+        try {
+            Files.delete(filePath);
+            System.out.println("File deleted successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to delete the file: " + e.getMessage());
+        }
     }
 
     @Test
@@ -29,26 +39,74 @@ public class SessionTest {
 
     @Test
     void testDumpAndRecover() throws IOException {
-        session.dump("./data" + session.getId());
+        session.dump("./data/" + session.getId());
         session = new Session("A_session");
         assertEquals("A_session", session.getId());
 
         session.load("./dataexample.html");
-        assertEquals("/dataexample.html", session.getActiveEditor().getFileName());
+        assertEquals("./dataexample.html", session.getActiveEditor().getFileName());
 
-        session.dump("./data" + session.getId());
+        session.dump("./data/" + session.getId());
+        System.out.println(session.getEditorList().size());
+
         session = new Session("A_session");
         assertEquals("A_session", session.getId());
+        System.out.println(session.getEditorList().size());
+        assertNotNull(session.getActiveEditor());
         assertEquals("./dataexample.html", session.getActiveEditor().getFileName());
 
     }
 
     @Test
-    void testExitAndEnter(){
+    void testExitAndEnter() throws IOException {
         String id = session.getId();
+        session.load("example.html");
         session.exit();
-        assertNull(session.getActiveEditor());
+        assertNotNull(session.getActiveEditor());
         session = new Session(id);
         assertNotNull(session.getActiveEditor());
+
+        assertEquals("example.html", session.getActiveEditor().getFileName());
+    }
+
+    @Test
+    void testGetEditor() throws IOException {
+
+        assertNull(session.getActiveEditor());
+        session.load("example.html");
+        session.load("example2.html");
+        assertEquals("example2.html", session.getActiveEditor().getFileName());
+
+
+        assertTrue(session.getEditorList().contains("example.html"));
+        assertTrue(session.getEditorList().contains("example2.html"));
+    }
+
+    @Test
+    void testCloseFile() throws IOException {
+        session.load("example.html");
+        session.close();
+        assertNull(session.getActiveEditor());
+
+        session.load("example.html");
+        session.load("example2.html");
+        session.close();
+        assertEquals("example.html", session.getActiveEditor().getFileName());
+    }
+
+    @Test
+    void testGetDirTreeFormat() throws IOException {
+        session.load("./src/main/java/Console");
+        assertNotNull(session.getActiveEditor());
+        System.out.println("active editor: " + session.getActiveEditor().getFileName());
+        System.out.println("result: \n" + session.getDirTreeFormat(0));
+    }
+
+    @Test
+    void testGetDirIndentFormat() throws IOException {
+        session.load("src/main/java/Console");
+        assertNotNull(session.getActiveEditor());
+        System.out.println("active editor: " + session.getActiveEditor().getFileName());
+        System.out.println("result: \n" + session.getDirIndentFormat(0));
     }
 }
