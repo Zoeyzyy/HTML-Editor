@@ -299,4 +299,15 @@ public class HTMLDocument {
         findElementById(oldID).setId(newID);
     }
 
+    /**
+     * 编辑元素的文本内容
+     * @param id 要编辑的元素ID
+     * @param newText 新的文本内容
+     * @throws ElementNotFound 如果找不到指定ID的元素
+     */
+    public void editText(String id, String newText) throws ElementNotFound {
+        HTMLElement element = findElementById(id);
+        element.setTextContent(newText);
+    }
+
 }
