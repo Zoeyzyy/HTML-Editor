@@ -19,6 +19,7 @@ public class HTMLDocument {
 
     @Setter
     private boolean showID=false;
+    private final boolean[] isLastChild = new boolean[100];
     private final StringBuilder sb=new StringBuilder();
     private final String templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
 
@@ -174,15 +175,15 @@ public class HTMLDocument {
         printIndent(level, indent);
 
         String eleTagHeader = String.format("<%s",ele.getTagName());
-        if(ele.getTagName()!=null){
+        if(ele.getId()!=null && getShowID()){
             eleTagHeader+=String.format(" id=\"%s\">\n",ele.getId());
         }else
             eleTagHeader+=">\n";
 
         sb.append(eleTagHeader);
 
-        if(ele.getTextContent()!=null){
-            printIndent(level+1, indent);
+        if(ele.getTextContent()!=null && !ele.getTextContent().isEmpty()){
+            printIndent(level, indent);
             sb.append(ele.getTextContent()).append("\n");
         }
         for(HTMLElement child : ele.getChildren()){
@@ -190,12 +191,29 @@ public class HTMLDocument {
         }
 
         printIndent(level, indent);
-        sb.append(String.format("</%s>\n",ele.getTagName()));
+        sb.append(String.format("</%s>",ele.getTagName()));
+        if(level!=0)
+            sb.append("\n");
     }
 
-    private void getTreeFormat(HTMLElement element,  int level) {
+    private void getTreeFormat(HTMLElement element, int level) {
         // 打印当前元素的标签名和ID
-        printIndent(2, level);
+        if (level > 0) {
+            // 添加正确的缩进和连接符
+            for (int i = 0; i < level - 1; i++) {
+                if (isLastChild[i]) {
+                    sb.append("  ");
+                } else {
+                    sb.append("│ ");
+                }
+            }
+            if (isLastChild[level - 1]) {
+                sb.append("└── ");
+            } else {
+                sb.append("├── ");
+            }
+        }
+
         sb.append(element.getTagName());
 
         // 如果有ID，添加ID
@@ -204,30 +222,13 @@ public class HTMLDocument {
         }
         sb.append("\n");
 
-        // 如果有文本内容，添加文本内容
-        if (element.getTextContent() != null && !element.getTextContent().isEmpty()) {
-            printIndent(2, level + 1);
-            sb.append("└── ").append(element.getTextContent()).append("\n");
-        }
-
         // 处理子元素
         List<HTMLElement> children = element.getChildren();
         if (children != null && !children.isEmpty()) {
             for (int i = 0; i < children.size(); i++) {
-                HTMLElement child = children.get(i);
                 boolean isLast = (i == children.size() - 1);
-
-                // 为子元素添加适当的前缀
-                printIndent(2, level + 1);
-
-                if (isLast) {
-                    sb.append("└── ");
-                } else {
-                    sb.append("├── ");
-                }
-
-                // 递归处理子元素
-                getTreeFormat(child, level + 1);
+                isLastChild[level] = isLast;  // 记录当前层级是否是最后一个子元素
+                getTreeFormat(children.get(i), level + 1);
             }
         }
     }
