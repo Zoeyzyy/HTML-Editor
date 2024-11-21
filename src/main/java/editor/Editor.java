@@ -43,29 +43,21 @@ public class Editor {
      * 加载文档内容
      * 如果文件不存在，则新建文件
      * @param filename 要加载的文件名
+     * @throws IOException 如果文件操作失败
      */
-    public void load(String filename) {
+    public void load(String filename) throws IOException {
         this.filename = filename;
         File file = new File(filename);
         
         if (!file.exists()) {
-            // 如果文件不存在，初始化新文档并创建文件
             document.init();
-            try {
-                createNewHtmlFile(file);
-                System.out.println("新建文件：" + filename);
-            } catch (IOException e) {
-                System.out.println("创建文件失败：" + e.getMessage());
-                return;
-            }
+            createNewHtmlFile(file);
         } else {
             try {
                 document.read(file);
-                System.out.println("文件加载成功");
             } catch (Exception e) {
-                // 如果读取失败，初始化新文档
                 document.init();
-                System.out.println("文件读取失败，已创建新文档");
+                throw new IOException("文件读取失败：" + e.getMessage());
             }
         }
         modified = false;
@@ -86,29 +78,26 @@ public class Editor {
     /**
      * 保存文档内容到指定文件
      * @param filename 要保存的文件名
+     * @throws IOException 如果文件操作失败
      */
-    public void save(String filename) {
+    public void save(String filename) throws IOException {
         if (filename != null) {
             this.filename = filename;
         }
 
-        try {
-            String content = document.save();
-            File file = new File(this.filename);
-            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-                writer.write(content);
-            }
-            modified = false;
-            System.out.println("文件保存成功");
-        } catch (Exception e) {
-            System.out.println("文件保存失败：" + e.getMessage());
+        String content = document.save();
+        File file = new File(this.filename);
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+            writer.write(content);
         }
+        modified = false;
     }
 
     /**
      * 关闭编辑器
+     * @throws IOException 如果保存文件时发生错误
      */
-    public void close() {
+    public void close() throws IOException {
         if (modified) {
             System.out.println("文档已修改，是否保存？(Y/N)");
             Scanner scanner = new Scanner(System.in);
@@ -120,7 +109,6 @@ public class Editor {
         }
         document.init();
         this.filename = null;
-        System.out.println("编辑器已关闭");
     }
 
     /**
@@ -231,62 +219,48 @@ public class Editor {
 
     /**
      * 添加元素
+     * @throws ElementNotFound 如果找不到父元素
      */
-    public void append(String tagName, String idValue, String parentElement, String textContent) {
-        try {
-            document.appendElement(tagName, idValue, textContent, parentElement);
-            updateModifiedState();
-        } catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
-        }
+    public void append(String tagName, String idValue, String parentElement, String textContent) throws ElementNotFound {
+        document.appendElement(tagName, idValue, textContent, parentElement);
+        updateModifiedState();
     }
 
     /**
      * 插入元素
+     * @throws ElementNotFound 如果找不到目标位置
      */
-    public void insert(String tagName, String idValue, String insertLocation, String textContent) {
-        try {
-            document.insertElement(tagName, idValue, insertLocation, textContent);
-            updateModifiedState();
-        } catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
-        }
+    public void insert(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
+        document.insertElement(tagName, idValue, insertLocation, textContent);
+        updateModifiedState();
     }
 
     /**
      * 删除元素
+     * @throws ElementNotFound 如果找不到要删除的元素
+     * @throws ElementBadRemoved 如果元素不能被删除
      */
-    public void delete(String id) {
-        try {
-            document.removeElementById(id);
-            updateModifiedState();
-        } catch (ElementBadRemoved | ElementNotFound e) {
-            System.out.println(e.getMessage());
-        }
+    public void delete(String id) throws ElementNotFound, ElementBadRemoved {
+        document.removeElementById(id);
+        updateModifiedState();
     }
 
     /**
      * 编辑ID
+     * @throws ElementNotFound 如果找不到要编辑的元素
      */
-    public void editId(String oldId, String newId) {
-        try {
-            document.editID(oldId, newId);
-            updateModifiedState();
-        } catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
-        }
+    public void editId(String oldId, String newId) throws ElementNotFound {
+        document.editID(oldId, newId);
+        updateModifiedState();
     }
 
     /**
      * 编辑文本内容
+     * @throws ElementNotFound 如果找不到要编辑的元素
      */
-    public void editText(String id, String newText) {
-        try {
-            document.editText(id, newText);
-            updateModifiedState();
-        } catch (ElementNotFound e) {
-            System.out.println(e.getMessage());
-        }
+    public void editText(String id, String newText) throws ElementNotFound {
+        document.editText(id, newText);
+        updateModifiedState();
     }
 
     /**
