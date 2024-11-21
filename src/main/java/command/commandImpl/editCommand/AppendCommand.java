@@ -27,7 +27,7 @@ public class AppendCommand implements CanUndoCommand {
     @Override
     public void execute() {
         try {
-            editor.append(tagName, idValue, textContent, parentElement);
+            editor.append(tagName, idValue, parentElement, textContent);
         }catch (Error e) {
             System.err.println(e.getMessage());
         }
