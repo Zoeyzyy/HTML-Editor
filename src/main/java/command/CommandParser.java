@@ -1,8 +1,10 @@
 package command;
 
 import document.HTMLDocument;
+import editor.Editor;
 import exception.ElementNotFound;
 import history.CommandHistory;
+import session.Session;
 
 import java.util.Arrays;
 
@@ -13,11 +15,9 @@ import java.util.Arrays;
  */
 public class CommandParser {
     CommandFactory commandFactory;
-    CommandHistory commandHistory;
 
-    public CommandParser(HTMLDocument document) {
-        commandHistory=new CommandHistory();
-        commandFactory=new CommandFactory(document,commandHistory);
+    public CommandParser(Session session, Editor editor) {
+        commandFactory=new CommandFactory(session, editor);
     }
 
     /**
