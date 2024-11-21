@@ -113,6 +113,11 @@ public class HTMLElementImpl extends HTMLElement {
     @Override
     public void insertElementBefore(HTMLElement element, String targetId) {
         List<HTMLElement> children = getChildren();
+        if (targetId == null) {
+            // 直接添加到末尾
+            addChild(element);
+            return;
+        }
         for (int i = 0; i < children.size(); i++) {
             if (targetId.equals(children.get(i).getId())) {
                 HTMLElement target = children.get(i);
