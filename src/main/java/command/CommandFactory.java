@@ -10,7 +10,9 @@ import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.RedoCommand;
 import command.commandImpl.historyCommand.UndoCommand;
 import document.HTMLDocument;
+import editor.Editor;
 import history.CommandHistory;
+import session.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,14 +47,14 @@ public class CommandFactory {
 
     private final Map<String, CommandCreator> commandMap = new HashMap<>();
     private final Map<String, CommandFormat> commandFormats = new HashMap<>();
-    private final HTMLDocument document;
-    private final CommandHistory commandHistory;
+    private final Editor editor;
+    private final Session session;
 
 
 
-    public CommandFactory(HTMLDocument document, CommandHistory commandHistory) {
-        this.document = document;
-        this.commandHistory = commandHistory;
+    public CommandFactory(Session session, Editor editor) {
+        this.editor = editor;
+        this.session = session;
         this.initCommandFormats();
         this.registerCommands();
     }
@@ -93,44 +95,44 @@ public class CommandFactory {
      */
     private void registerCommands() {
         registerCommand("insert",
-                args -> InsertCommand.create(document,args[0],args[1],args[2],args[3]));
+                args -> InsertCommand.create(editor,args[0],args[1],args[2],args[3]));
 
         registerCommand("append",
-                args -> AppendCommand.create(document,args[0],args[1],args[2],args[3]));
+                args -> AppendCommand.create(editor,args[0],args[1],args[2],args[3]));
 
         registerCommand("edit-id",
-                args -> EditIDCommand.create(document,args[0],args[1]));
+                args -> EditIDCommand.create(editor,args[0],args[1]));
 
         registerCommand("edit-text",
-                args -> EditTextCommand.create(document,args[0],args[1]));
+                args -> EditTextCommand.create(editor,args[0],args[1]));
 
         registerCommand("delete",
-                args -> DeleteCommand.create(document,args[0]));
+                args -> DeleteCommand.create(editor,args[0]));
 
         registerCommand("print-indent",
-                args -> PrintIndentCommand.create(document,Integer.parseInt(args[0])));
+                args -> PrintIndentCommand.create(editor,Integer.parseInt(args[0])));
 
         registerCommand("print-tree",
-                args -> PrintTreeCommand.create(document));
+                args -> PrintTreeCommand.create(editor));
 
         registerCommand("spell-check",
-                args -> SpellCheckCommand.create(document));
+                args -> SpellCheckCommand.create(editor));
 
         registerCommand("read",
-                args -> ReadCommand.create(document,args[0]));
+                args -> ReadCommand.create(editor,args[0]));
 
         registerCommand("save",
-                args -> SaveCommand.create(document,args[0]));
+                args -> SaveCommand.create(session,args[0]));
 
         registerCommand("init",
-                args -> InitCommand.create(document));
+                args -> InitCommand.create(editor));
 
 
         registerCommand("redo",
-                args -> RedoCommand.create(commandHistory));
+                args -> RedoCommand.create(editor));
 
         registerCommand("undo",
-                args -> UndoCommand.create(commandHistory));
+                args -> UndoCommand.create(editor));
     }
 
 
