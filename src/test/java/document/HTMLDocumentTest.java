@@ -158,12 +158,16 @@ class HTMLDocumentTest {
 
     @Test
     void testGetIndentFormat() {
-        document.read(testFile);
+        document.init();
 
         String indentFormat = document.getIndentFormat(2);
         assertNotNull(indentFormat);
         assertTrue(indentFormat.contains("<html"));
         assertTrue(indentFormat.contains("</html>"));
+        assertTrue(indentFormat.contains("id=\"html\""));
+        assertTrue(indentFormat.contains("id=\"head\""));
+        assertTrue(indentFormat.contains("id=\"title\""));
+        assertTrue(indentFormat.contains("id=\"body\""));
     }
 
 }

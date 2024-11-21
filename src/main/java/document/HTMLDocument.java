@@ -18,23 +18,17 @@ public class HTMLDocument {
     private HTMLElement root;
 
     @Setter
-    private boolean showID;
-    private final StringBuilder sb;
-    private final String templatePath;
+    private boolean showID=false;
+    private final StringBuilder sb=new StringBuilder();
+    private final String templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
-        this.showID = false;
-        this.sb = new StringBuilder();
-        this.templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
 
     }
 
     public HTMLDocument() {
         root=null;
-        showID = false;
-        sb = new StringBuilder();
-        this.templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
     }
 
     public boolean getShowID(){
@@ -194,6 +188,7 @@ public class HTMLDocument {
             getIndentFormat(child,indent,level+1);
         }
 
+        printIndent(level, indent);
         sb.append(String.format("</%s>\n",ele.getTagName()));
     }
 
@@ -281,7 +276,7 @@ public class HTMLDocument {
         // 创建新的HTMLElement构建器
         HTMLElement.Builder builder = HTMLElement.builder()
                 .setTagName(jsoupElement.tagName())
-                .setId(jsoupElement.id())
+                .setId(jsoupElement.id().isEmpty() ?jsoupElement.tagName():jsoupElement.id())
                 .setTextContent(jsoupElement.ownText());
 
 
