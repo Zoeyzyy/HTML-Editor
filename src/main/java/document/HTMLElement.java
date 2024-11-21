@@ -20,7 +20,7 @@ public abstract class HTMLElement {
     private HTMLElement parent; // Parent element pointer
     private HTMLElement previousSibling; // Previous sibling pointer
     private HTMLElement nextSibling; // Next sibling pointer
-    private int insertLocation = -1; // Index in the parent's children list
+    private int index = -1; // Index in the parent's children list
 
     // 用于存储拼写检查结果
     @Getter
@@ -45,6 +45,27 @@ public abstract class HTMLElement {
      */
     public static Builder builder() {
         return new HTMLElementImpl.BuilderImpl();
+    }
+
+    /**
+     * Initialize with head and tail elements.
+     * 用父节点的id进行命名
+     */
+    public void initializeChildren() {
+        HTMLElement head = HTMLElement.builder()
+                .setTagName("head")
+                .setId(getId() + "-head")
+                .build();
+        HTMLElement tail = HTMLElement.builder()
+                .setTagName("tail")
+                .setId(getId() + "-tail")
+                .build();
+
+        head.setNextSibling(tail);
+        tail.setPreviousSibling(head);
+
+        children.add(head);
+        children.add(tail);
     }
 
     /**
