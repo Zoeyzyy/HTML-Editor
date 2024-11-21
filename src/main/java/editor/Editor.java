@@ -148,13 +148,21 @@ public class Editor {
     }
 
     /**
+     * 存储命令到历史记录
+     * @param command 要存储的命令
+     */
+    public void storeCommand(Command command) {
+        commandHistory.push(command);
+        updateModifiedState();
+    }
+
+    /**
      * 执行命令并记录历史
      * @param command 要执行的命令
      */
     public void executeCommand(Command command) {
         command.execute();
-        commandHistory.push(command);
-        updateModifiedState();
+        storeCommand(command);
     }
 
     /**
