@@ -17,27 +17,30 @@ import java.util.List;
 public class HTMLElementImpl extends HTMLElement {
     private String className;
 
+    public HTMLElementImpl() {
+        initializeChildren();
+    }
+
     @Override
     public void addChild(HTMLElement child) {
         if (child == null) return;
 
         // 确保 children 不为 null
         List<HTMLElement> children = getChildren();
-        if (children == null) {
-            children = new ArrayList<>();
-            super.setChildren(children);
-        }
+        HTMLElement tail = children.get(children.size() - 1); // Get the tail element
+
+        // Update sibling pointers
+        HTMLElement prev = tail.getPreviousSibling();
+        prev.setNextSibling(child);
+        child.setPreviousSibling(prev);
+
+        child.setNextSibling(tail);
+        tail.setPreviousSibling(child);
 
         child.setParent(this);
+        child.setIndex(children.size() - 1);
 
-        if (!children.isEmpty()) {
-            HTMLElement lastChild = children.get(children.size() - 1);
-            lastChild.setNextSibling(child);
-            child.setPreviousSibling(lastChild);
-        }
-
-        child.setInsertLocation(children.size());
-        children.add(child);
+        children.add(children.size() - 1, child); // Insert before the tail
     }
 
     @Override
@@ -45,17 +48,14 @@ public class HTMLElementImpl extends HTMLElement {
         if (child == null || !getChildren().contains(child)) return;
 
         List<HTMLElement> children = getChildren();
-        int index = child.getInsertLocation();
+        int index = child.getIndex();
 
-        // Update siblings
-        if (index > 0) {
-            children.get(index - 1).setNextSibling(child.getNextSibling());
-        }
-        if (index < children.size() - 1) {
-            children.get(index + 1).setPreviousSibling(child.getPreviousSibling());
-        }
+        HTMLElement prev = child.getPreviousSibling();
+        HTMLElement next = child.getNextSibling();
 
-        // Remove the child
+        if (prev != null) prev.setNextSibling(next);
+        if (next != null) next.setPreviousSibling(prev);
+
         children.remove(index);
 
         // Reset the child's relations
@@ -63,9 +63,9 @@ public class HTMLElementImpl extends HTMLElement {
         child.setPreviousSibling(null);
         child.setNextSibling(null);
 
-        // Update insertLocation for all subsequent siblings
-        for (int i = index; i < children.size(); i++) {
-            children.get(i).setInsertLocation(i);
+        // Update indexes
+        for (int i = index; i < children.size() - 1; i++) {
+            children.get(i).setIndex(i);
         }
     }
 
@@ -105,7 +105,9 @@ public class HTMLElementImpl extends HTMLElement {
         }
         // 检查子元素
         for (HTMLElement child : getChildren()) {
-            results.addAll(child.checkSpelling(spellChecker));
+            if (!"head".equals(child.getTagName()) && !"tail".equals(child.getTagName())) {
+                results.addAll(child.checkSpelling(spellChecker));
+            }
         }
         return results;
     }
@@ -122,11 +124,10 @@ public class HTMLElementImpl extends HTMLElement {
             if (targetId.equals(children.get(i).getId())) {
                 HTMLElement target = children.get(i);
 
-                // Update siblings for the new element
                 element.setParent(this);
                 element.setNextSibling(target);
                 element.setPreviousSibling(target.getPreviousSibling());
-                element.setInsertLocation(i);
+                element.setIndex(i);
 
                 if (target.getPreviousSibling() != null) {
                     target.getPreviousSibling().setNextSibling(element);
@@ -135,9 +136,8 @@ public class HTMLElementImpl extends HTMLElement {
 
                 children.add(i, element);
 
-                // Update insertLocation for subsequent elements
-                for (int j = i + 1; j < children.size(); j++) {
-                    children.get(j).setInsertLocation(j);
+                for (int j = i + 1; j < children.size() - 1; j++) {
+                    children.get(j).setIndex(j);
                 }
                 return;
             }
