@@ -61,7 +61,7 @@ public class Session {
     }
 
     public void save(String filename) {
-        editors.get(filename).save();
+//        editors.get(filename).save();
     }
 
     public boolean confirm() {

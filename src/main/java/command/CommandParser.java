@@ -16,8 +16,8 @@ import java.util.Arrays;
 public class CommandParser {
     CommandFactory commandFactory;
 
-    public CommandParser(Session session, Editor editor) {
-        commandFactory=new CommandFactory(session, editor);
+    public CommandParser(Session session) {
+        commandFactory=new CommandFactory(session, session.getActiveEditor());
     }
 
     /**
