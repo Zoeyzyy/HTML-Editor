@@ -143,7 +143,8 @@ public class HTMLDocument {
         if(root.getId().equals(id)){
             throw new ElementBadRemoved("Cannot remove the root element.");
         }
-        removeElementById(id,root);
+        HTMLElement element = findElementById(id);
+        element.getParent().removeChild(element);
     }
 
 
@@ -250,9 +251,6 @@ public class HTMLDocument {
         return null;
     }
 
-    private void removeElementById(String id, HTMLElement ele) {
-        ele.removeChild(id);
-    }
 
     private void printIndent(int indent,int level){
         StringBuilder spaces = new StringBuilder();
