@@ -14,8 +14,11 @@ public class SaveCommandTest {
     @Test
     public void execute() {
         Session session = new Session("");
-        session.load("\\src\\main\\resources\\Test.html");
+        try {
+            session.load("\\src\\main\\resources\\Test.html");
+        } catch (Exception e) {
 
+        }
         SaveCommand saveCommand = new SaveCommand(session, "\\src\\main\\resources\\test.html");
         saveCommand.execute();
 

@@ -15,7 +15,11 @@ public class CloseCommandTest {
         Session session = new Session("");
         String currentPath = System.getProperty("user.dir");
         String filePath = currentPath + "\\src\\main\\resources\\template.html";
-        session.load(filePath);
+        try {
+            session.load(filePath);
+        } catch (Exception e){
+
+        }
         assertEquals(filePath, session.getActiveEditor().getFileName());
         CloseCommand closeCommand = new CloseCommand(session);
         closeCommand.execute();
@@ -27,9 +31,13 @@ public class CloseCommandTest {
         Session session = new Session("");
         String currentPath = System.getProperty("user.dir");
         String filePath = currentPath + "\\src\\main\\resources\\template.html";
-        session.load(filePath);
+        try{
+            session.load(filePath);
+        } catch (Exception e){
+
+        }
         assertEquals(filePath, session.getActiveEditor().getFileName());
-        InsertCommand insertCommand = new InsertCommand(session.getActiveEditor().getDocument(), "div", "id1", "body", "Hello HTML");
+        InsertCommand insertCommand = new InsertCommand(session.getActiveEditor(), "div", "id1", "body", "Hello HTML");
         insertCommand.execute();
         CloseCommand closeCommand = new CloseCommand(session);
         closeCommand.execute();
