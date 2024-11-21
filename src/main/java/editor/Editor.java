@@ -206,23 +206,27 @@ public class Editor {
 
     /**
      * 拼写检查
+     * @return 拼写检查结果字符串
      */
-    public void spellCheck() {
-        System.out.println(document.getSpellCheck());
+    public String spellCheck() {
+        return document.getSpellCheck();
     }
 
     /**
      * 树形显示
+     * @return 树形格式的文档字符串
      */
-    public void printTree() {
-        System.out.println(document.getTreeFormat(false));
+    public String printTree() {
+        return document.getTreeFormat(false);
     }
 
     /**
      * 缩进显示
+     * @param indent 缩进空格数
+     * @return 缩进格式的文档字符串
      */
-    public void printIndent(int indent) {
-        System.out.println(document.getIndentFormat(indent));
+    public String printIndent(int indent) {
+        return document.getIndentFormat(indent);
     }
 
     /**
@@ -256,7 +260,7 @@ public class Editor {
         try {
             document.removeElementById(id);
             updateModifiedState();
-        } catch (ElementBadRemoved e) {
+        } catch (ElementBadRemoved | ElementNotFound e) {
             System.out.println(e.getMessage());
         }
     }
