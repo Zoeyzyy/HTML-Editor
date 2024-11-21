@@ -42,6 +42,6 @@ public class PrintIndentCommand implements Command {
 
     @Override
     public void execute() {
-        printStream.println(editor.printIndent(indent));
+        printStream.print(editor.printIndent(indent));
     }
 }

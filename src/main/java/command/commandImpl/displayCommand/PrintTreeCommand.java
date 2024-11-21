@@ -29,6 +29,6 @@ public class PrintTreeCommand implements Command {
 
     @Override
     public void execute() {
-        printStream.println(editor.printTree());
+        printStream.print(editor.printTree());
     }
 }
