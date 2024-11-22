@@ -27,29 +27,29 @@ public class HTMLElementImpl extends HTMLElement {
 
         List<HTMLElement> children = getChildren();
 
-        // 如果 children 为空，直接添加 child
-        if (children.isEmpty()) {
-            children.add(child);
-            child.setParent(this);
-            child.setIndex(0);
-            return;
+        // 确保children初始化
+        if (children==null) {
+            initializeChildren();
+            children = getChildren();
+        }
+
+        // 确保至少有 "start" 和 "tail"
+        if (children.size() < 2) {
+            throw new IllegalStateException("Children must contain at least 'start' and 'tail' elements.");
         }
 
         HTMLElement tail = children.get(children.size() - 1); // 获取尾部元素
-        // 更新 sibling 指针，仅更新必要关系
-        if (!"tail".equals(tail.getTagName())) {
-            HTMLElement prev = tail.getPreviousSibling();
-            if (prev != null) prev.setNextSibling(child);
-            child.setPreviousSibling(prev);
-            child.setNextSibling(tail);
-            tail.setPreviousSibling(child);
-        }
+        // 插入到 "tail" 前
+        HTMLElement lastValidNode = children.get(children.size() - 2); // "tail" 的前一个节点
+        lastValidNode.setNextSibling(child);
+        child.setPreviousSibling(lastValidNode);
+        child.setNextSibling(tail);
+        tail.setPreviousSibling(child);
 
         child.setParent(this);
         child.setIndex(children.size() - 1);
 
-        // 插入到尾部前
-        children.add(children.size() - 1, child);
+        children.add(children.size() - 1, child); // 插入到 "tail" 前
     }
 
     @Override
@@ -83,13 +83,6 @@ public class HTMLElementImpl extends HTMLElement {
         getChildren().removeIf(child -> id.equals(child.getId()));
     }
 
-    @Override
-    public List<HTMLElement> getChildren() {
-        if (super.getChildren() == null) {
-            return new ArrayList<>();
-        }
-        return super.getChildren();
-    }
 
     @Override
     public void display() {
@@ -117,7 +110,7 @@ public class HTMLElementImpl extends HTMLElement {
         }
         // 检查子元素
         for (HTMLElement child : getChildren()) {
-            if (!"head".equals(child.getTagName()) && !"tail".equals(child.getTagName())) {
+            if (!"start".equals(child.getTagName()) && !"tail".equals(child.getTagName())) {
                 results.addAll(child.checkSpelling(spellChecker));
             }
         }
@@ -159,7 +152,21 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public String getInsertLocation(HTMLElement element) {
-        return element.getNextSibling() != null ? element.getNextSibling().getId() : null;
+        HTMLElement nextSibling = element.getNextSibling();
+        if (nextSibling != null) {
+            return nextSibling.getId();
+        }
+
+        // 如果没有标准的 nextSibling，返回 "tail" 的 ID
+        List<HTMLElement> children = getChildren();
+        if (children != null && !children.isEmpty()) {
+            HTMLElement tail = children.get(children.size() - 1);
+            if ("tail".equals(tail.getTagName())) {
+                return tail.getId();
+            }
+        }
+
+        return null; // 极端情况下，返回 null
     }
 
     /**

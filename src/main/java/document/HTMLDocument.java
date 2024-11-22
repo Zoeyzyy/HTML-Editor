@@ -243,6 +243,9 @@ public class HTMLDocument {
         if(ele.getId().equals(id)){
             return ele;
         }
+//        System.out.println("This is element:" + ele.getTagName() + ", ID: " + ele.getId());
+//        System.out.println("Children: " + ele.getChildren());
+
         for(HTMLElement child : ele.getChildren()){
             HTMLElement found = findElementById(id, child);
             if(found != null){

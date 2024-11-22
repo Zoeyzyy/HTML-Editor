@@ -16,7 +16,8 @@ public abstract class HTMLElement {
     private String tagName; // such as <html> <la> and so on 只要存储tag 名称，<>不用存储
     private String Id;
     private String textContent;
-    private List<HTMLElement> children = new ArrayList<>(); // child elements
+
+    private List<HTMLElement> children = null; // child elements
     private HTMLElement parent; // Parent element pointer
     private HTMLElement previousSibling; // Previous sibling pointer
     private HTMLElement nextSibling; // Next sibling pointer
@@ -28,6 +29,9 @@ public abstract class HTMLElement {
 
     // 是否已经初始化了子节点，避免stackoverflow
     private boolean childrenInitialized = false;
+    //默认需要初始化，对于start和tail特殊节点不进行Children的初始化
+    @Getter
+    private boolean requiresInitialization = true; // 默认需要初始化
 
     /**
      * Builder模式
@@ -55,27 +59,45 @@ public abstract class HTMLElement {
      * 用父节点的id进行命名
      */
     public void initializeChildren() {
-        if (childrenInitialized) return; // 防止重复初始化
+        if (!requiresInitialization ||children != null) return; // 防止重复初始化
 
-        // 清除已有子节点，避免重复初始化
-        children.clear();
+        System.out.println("Initializing children for element: " + this.getTagName());
 
-        HTMLElement head = HTMLElement.builder()
-                .setTagName("head")
-                .setId(getId() + "-head")
+        children = new ArrayList<>(); // 初始化列表
+
+        HTMLElement start = HTMLElement.builder()
+                .setTagName("start")
+                .setId(getId() + "-start")
                 .build();
+        start.setRequiresInitialization(false);
         HTMLElement tail = HTMLElement.builder()
                 .setTagName("tail")
                 .setId(getId() + "-tail")
                 .build();
+        tail.setRequiresInitialization(false);
 
-        head.setNextSibling(tail);
-        tail.setPreviousSibling(head);
+        start.setNextSibling(tail);
+        tail.setPreviousSibling(start);
 
-        children.add(head);
+        children.add(start);
         children.add(tail);
+    }
 
-        childrenInitialized = true; // 标记为已初始化
+    /**
+     * 获取子元素列表，延迟初始化
+     *
+     * @return 子元素列表
+     */
+    public List<HTMLElement> getChildren(){
+        if (!childrenInitialized) {
+            synchronized (this) { // 确保多线程安全
+                if (!childrenInitialized) {
+                    initializeChildren();
+                    childrenInitialized = true; // 设置为已初始化
+                }
+            }
+        }
+        return children != null ? children : new ArrayList<>();
     }
 
     /**
@@ -91,16 +113,6 @@ public abstract class HTMLElement {
     public abstract void removeChild(HTMLElement child);
 
     public abstract void removeChild(String id);
-
-    /**
-     * @return 该element下的所有一级children
-     */
-    public List<HTMLElement> getChildren() {
-        if (!childrenInitialized) {
-            initializeChildren();
-        }
-        return children;
-    }
 
     /**
      * 打印当前元素
