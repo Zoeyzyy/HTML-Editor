@@ -27,13 +27,10 @@ public class ShowIDCommandTest {
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         String output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                "  <head>\n" +
-                "    <title>" +
-                "    </title>#title\n" +
-                "  </head>#head\n" +
-                "  <body></body>#body\n" +
-                "</html>#html", output);
+        assertEquals("html#html\n" +
+                "├── head#head\n" +
+                "│ └── title#title\n" +
+                "└── body#body\n", output);
         printStream.close();
 
         showIDCommand = new ShowIDCommand(editor, false);
@@ -46,13 +43,10 @@ public class ShowIDCommandTest {
         printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                "  <head>\n" +
-                "    <title>\n" +
-                "    </title>\n" +
-                "  </head>\n" +
-                "  <body></body>\n" +
-                "</html>", output);
+        assertEquals("html\n" +
+                "├── head\n" +
+                "│ └── title\n" +
+                "└── body\n", output);
         printStream.close();
     }
 }

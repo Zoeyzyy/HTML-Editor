@@ -4,10 +4,10 @@ import command.commandImpl.displayCommand.PrintTreeCommand;
 import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.UndoCommand;
 import editor.Editor;
+import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UndoCommandTest {
     @Test
@@ -29,38 +29,35 @@ public class UndoCommandTest {
         EditIDCommand editIDCommand = new EditIDCommand(editor, "id1", "id3");
         editIDCommand.execute();
         editor.storeCommand(editIDCommand);
-        assertNull(editor.getDocument().findElementById("id1"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
         assertEquals("id3", editor.getDocument().findElementById("id3").getId());
 
         EditTextCommand editTextCommand = new EditTextCommand(editor, "id3", "Hello HTML");
         editTextCommand.execute();
         editor.storeCommand(editTextCommand);
-        assertEquals("Hello HTML", editor.getDocument().findElementById("id4").getTextContent());
+        assertEquals("Hello HTML", editor.getDocument().findElementById("id3").getTextContent());
 
         // Test not undoable commands
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor);
         printTreeCommand.execute();
         editor.storeCommand(printTreeCommand);
 
-        DeleteCommand deleteCommand = new DeleteCommand(editor, "id4");
+        DeleteCommand deleteCommand = new DeleteCommand(editor, "id3");
         deleteCommand.execute();
         editor.storeCommand(deleteCommand);
-        assertNull(editor.getDocument().findElementById("id4"));
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id3"));
 
         UndoCommand undoCommand = new UndoCommand(editor);
-        undoCommand.execute();
-        assertEquals("Hello HTML", editor.getDocument().findElementById("id4").getTextContent());
-        undoCommand.execute();
+        undoCommand.execute();//undo delete
         assertEquals("Hello HTML", editor.getDocument().findElementById("id3").getTextContent());
-        undoCommand.execute();
-        assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
-        undoCommand.execute();
-        assertEquals("Hello world", editor.getDocument().findElementById("id1").getTextContent());
-        undoCommand.execute();
-        assertNull(editor.getDocument().findElementById("id1"));
-        undoCommand.execute();
-        assertNull(editor.getDocument().findElementById("id2"));
-        undoCommand.execute();
-        assertNull(editor.getDocument().findElementById("id3"));
+        undoCommand.execute();// drop PrintTreeCommand,undo editText
+        assertEquals("Hello World", editor.getDocument().findElementById("id3").getTextContent());
+        undoCommand.execute();//undo editID
+        assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id3"));
+        undoCommand.execute();// undo insert
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
+        undoCommand.execute();// undo append
+        assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
     }
 }

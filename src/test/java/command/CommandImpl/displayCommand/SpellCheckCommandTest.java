@@ -1,6 +1,7 @@
 package command.CommandImpl.displayCommand;
 
 import command.commandImpl.displayCommand.SpellCheckCommand;
+import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 import editor.Editor;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ public class SpellCheckCommandTest {
         Editor editor = new Editor();
         editor.init();
 
+        AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello Wrold");
+        appendCommand.execute();
+
         // printStream to capture output
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
@@ -24,13 +28,7 @@ public class SpellCheckCommandTest {
         spellCheckCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                "  <head>\n" +
-                "    <title></title>\n" +
-                "  </head>\n" +
-                "  <body>\n" +
-                "  </body>\n" +
-                "</html>", output);
+        assertEquals("Hello Wrold", output);
         printStream.close();
     }
 }
