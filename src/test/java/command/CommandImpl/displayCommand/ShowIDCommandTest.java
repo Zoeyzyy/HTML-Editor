@@ -52,7 +52,9 @@ public class ShowIDCommandTest {
         assertEquals("html\n" +
                 "├── head\n" +
                 "│ └── title\n" +
-                "└── body\n", output);
+                "└── body\n" +
+                "    └── div\n" +
+                "        └── Hello World\n",output);
         printStream.close();
     }
 }
