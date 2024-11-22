@@ -21,7 +21,7 @@ public class HTMLDocument {
     private boolean showID=false;
     private final boolean[] isLastChild = new boolean[100];
     private final StringBuilder sb=new StringBuilder();
-    private final String templatePath=System.getProperty("user.dir")+"\\src\\main\\resources\\template.html";
+    private final String templatePath=System.getProperty("user.dir")+"/src/main/resources/template.html";
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
@@ -186,8 +186,13 @@ public class HTMLDocument {
             printIndent(level, indent);
             sb.append(ele.getTextContent()).append("\n");
         }
-        for(HTMLElement child : ele.getChildren()){
-            getIndentFormat(child,indent,level+1);
+
+        // 处理子元素
+        List<HTMLElement> children = ele.getChildren();
+        if (children != null && !children.isEmpty()) {
+            for (int i = 1; i < children.size()-1; i++) {
+                getIndentFormat(children.get(i),indent,level+1);
+            }
         }
 
         printIndent(level, indent);
@@ -225,8 +230,8 @@ public class HTMLDocument {
         // 处理子元素
         List<HTMLElement> children = element.getChildren();
         if (children != null && !children.isEmpty()) {
-            for (int i = 0; i < children.size(); i++) {
-                boolean isLast = (i == children.size() - 1);
+            for (int i = 1; i < children.size()-1; i++) {
+                boolean isLast = (i == children.size() - 2);
                 isLastChild[level] = isLast;  // 记录当前层级是否是最后一个子元素
                 getTreeFormat(children.get(i), level + 1);
             }
