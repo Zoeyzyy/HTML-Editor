@@ -202,14 +202,15 @@ public class HTMLDocument {
     }
 
     private void getTreeFormat(HTMLElement element, int level) {
+        List<HTMLElement> children = element.getChildren();
         // 打印当前元素的标签名和ID
         if (level > 0) {
             // 添加正确的缩进和连接符
             for (int i = 0; i < level - 1; i++) {
                 if (isLastChild[i]) {
-                    sb.append("  ");
+                    sb.append("    ");
                 } else {
-                    sb.append("│ ");
+                    sb.append("│   ");
                 }
             }
             if (isLastChild[level - 1]) {
@@ -218,17 +219,38 @@ public class HTMLDocument {
                 sb.append("├── ");
             }
         }
+        if(element.getSpellCheckResults()!=null && !element.getSpellCheckResults().isEmpty())
+            sb.append("[x]");
 
         sb.append(element.getTagName());
 
         // 如果有ID，添加ID
-        if (element.getId() != null && !element.getId().isEmpty() && getShowID()) {
+        if (element.getId() != null && !element.getId().isEmpty() && getShowID() && !isSpecialElement(element)) {
             sb.append("#").append(element.getId());
         }
         sb.append("\n");
 
+        // 处理文本内容
+        String textContent = element.getTextContent();
+        if (textContent != null && !textContent.trim().isEmpty()) {
+            // 为文本内容添加缩进
+            for (int i = 0; i < level; i++) {
+                if (isLastChild[i]) {
+                    sb.append("    ");
+                } else {
+                    sb.append("│   ");
+                }
+            }
+            // 如果有子元素，使用├──，否则使用└──
+            if (children!=null && children.size()>2) {
+                sb.append("├── ");
+            } else {
+                sb.append("└── ");
+            }
+            sb.append(textContent.trim()).append("\n");
+        }
+
         // 处理子元素
-        List<HTMLElement> children = element.getChildren();
         if (children != null && !children.isEmpty()) {
             for (int i = 1; i < children.size()-1; i++) {
                 boolean isLast = (i == children.size() - 2);
@@ -243,6 +265,9 @@ public class HTMLDocument {
         return "";
     }
 
+    private boolean isSpecialElement(HTMLElement element) {
+        return element.getTagName()!=null && element.getTagName().equals(element.getId());
+    }
 
     private HTMLElement findElementById(String id, HTMLElement ele) {
         if(ele.getId().equals(id)){
