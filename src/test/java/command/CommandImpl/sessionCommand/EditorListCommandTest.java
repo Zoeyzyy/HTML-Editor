@@ -1,5 +1,6 @@
 package command.CommandImpl.sessionCommand;
 
+import command.commandImpl.editCommand.AppendCommand;
 import command.commandImpl.sessionCommand.EditorListCommand;
 import org.junit.jupiter.api.Test;
 import session.Session;
@@ -38,6 +39,9 @@ public class EditorListCommandTest {
             session.load(filePath2);
         } catch (Exception e) {
         }
+        AppendCommand appendCommand = new AppendCommand(session.getActiveEditor(), "div", "id1", "body", "Hello World");
+        appendCommand.execute();
+
         ByteArrayOutputStream byteArrayOutputStream2 = new ByteArrayOutputStream();
         PrintStream printStream2 = new PrintStream(byteArrayOutputStream2);
 
@@ -45,7 +49,7 @@ public class EditorListCommandTest {
         editorListCommand2.execute();
 
         String output2 = byteArrayOutputStream2.toString();
-        assertEquals(filePath + "\n" + ">" + filePath2, output);
+        assertEquals(filePath + "\n" + ">" + filePath2 + "*", output2);
         printStream.close();
     }
 }
