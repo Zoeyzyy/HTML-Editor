@@ -61,7 +61,7 @@ public abstract class HTMLElement {
     public void initializeChildren() {
         if (!requiresInitialization ||children != null) return; // 防止重复初始化
 
-        System.out.println("Initializing children for element: " + this.getTagName());
+//        System.out.println("Initializing children for element: " + this.getTagName());
 
         children = new ArrayList<>(); // 初始化列表
 
@@ -70,11 +70,13 @@ public abstract class HTMLElement {
                 .setId(getId() + "-start")
                 .build();
         start.setRequiresInitialization(false);
+        start.setParent(this); // 设置父节点
         HTMLElement tail = HTMLElement.builder()
                 .setTagName("tail")
                 .setId(getId() + "-tail")
                 .build();
         tail.setRequiresInitialization(false);
+        tail.setParent(this); // 设置父节点
 
         start.setNextSibling(tail);
         tail.setPreviousSibling(start);
