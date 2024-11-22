@@ -40,7 +40,7 @@ public class CommandHistory {
         
         CanUndoCommand command = undoStack.pop();
         redoStack.push(command);
-        command.execute();
+        command.undo();
     }
 
     /**
