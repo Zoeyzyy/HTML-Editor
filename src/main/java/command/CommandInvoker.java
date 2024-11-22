@@ -1,2 +1,15 @@
-package command;public class CommandInvoker {
+package command;
+
+import session.Session;
+
+public class CommandInvoker {
+    private Session session;
+    public CommandInvoker(Session session) {
+        this.session = session;
+    }
+
+    public void executeAndStore(Command command) {
+        command.execute();
+        session.getActiveEditor().storeCommand(command);
+    }
 }
