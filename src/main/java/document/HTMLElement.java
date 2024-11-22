@@ -26,6 +26,9 @@ public abstract class HTMLElement {
     @Getter
     private List<String> spellCheckResults;
 
+    // 是否已经初始化了子节点，避免stackoverflow
+    private boolean childrenInitialized = false;
+
     /**
      * Builder模式
      * 外部创建HTMLElement对象就只会调用这个接口里面定义的函数
@@ -52,6 +55,11 @@ public abstract class HTMLElement {
      * 用父节点的id进行命名
      */
     public void initializeChildren() {
+        if (childrenInitialized) return; // 防止重复初始化
+
+        // 清除已有子节点，避免重复初始化
+        children.clear();
+
         HTMLElement head = HTMLElement.builder()
                 .setTagName("head")
                 .setId(getId() + "-head")
@@ -66,6 +74,8 @@ public abstract class HTMLElement {
 
         children.add(head);
         children.add(tail);
+
+        childrenInitialized = true; // 标记为已初始化
     }
 
     /**
@@ -86,8 +96,8 @@ public abstract class HTMLElement {
      * @return 该element下的所有一级children
      */
     public List<HTMLElement> getChildren() {
-        if (children == null) {
-            children = new ArrayList<>();
+        if (!childrenInitialized) {
+            initializeChildren();
         }
         return children;
     }

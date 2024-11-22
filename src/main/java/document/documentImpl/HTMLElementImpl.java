@@ -17,30 +17,39 @@ import java.util.List;
 public class HTMLElementImpl extends HTMLElement {
     private String className;
 
+
     public HTMLElementImpl() {
-        initializeChildren();
     }
 
     @Override
     public void addChild(HTMLElement child) {
         if (child == null) return;
 
-        // 确保 children 不为 null
         List<HTMLElement> children = getChildren();
-        HTMLElement tail = children.get(children.size() - 1); // Get the tail element
 
-        // Update sibling pointers
-        HTMLElement prev = tail.getPreviousSibling();
-        prev.setNextSibling(child);
-        child.setPreviousSibling(prev);
+        // 如果 children 为空，直接添加 child
+        if (children.isEmpty()) {
+            children.add(child);
+            child.setParent(this);
+            child.setIndex(0);
+            return;
+        }
 
-        child.setNextSibling(tail);
-        tail.setPreviousSibling(child);
+        HTMLElement tail = children.get(children.size() - 1); // 获取尾部元素
+        // 更新 sibling 指针，仅更新必要关系
+        if (!"tail".equals(tail.getTagName())) {
+            HTMLElement prev = tail.getPreviousSibling();
+            if (prev != null) prev.setNextSibling(child);
+            child.setPreviousSibling(prev);
+            child.setNextSibling(tail);
+            tail.setPreviousSibling(child);
+        }
 
         child.setParent(this);
         child.setIndex(children.size() - 1);
 
-        children.add(children.size() - 1, child); // Insert before the tail
+        // 插入到尾部前
+        children.add(children.size() - 1, child);
     }
 
     @Override
@@ -76,6 +85,9 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public List<HTMLElement> getChildren() {
+        if (super.getChildren() == null) {
+            return new ArrayList<>();
+        }
         return super.getChildren();
     }
 
