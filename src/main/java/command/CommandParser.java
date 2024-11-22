@@ -24,7 +24,7 @@ public class CommandParser {
      * 执行命令
      * @param input 用户输入的完整命令
      */
-    public void run(String input) throws ElementNotFound {
+    public Command processCommand(String input) throws ElementNotFound {
             String[] parts = parseInput(input);
             if (parts.length == 0) {
                 throw new IllegalArgumentException("Empty command");
@@ -33,8 +33,7 @@ public class CommandParser {
             String commandName = parts[0];
             String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
-            Command command = commandFactory.createCommand(commandName,args);
-            command.execute();
+            return commandFactory.createCommand(commandName,args);
     }
 
     private String[] parseInput(String input) {

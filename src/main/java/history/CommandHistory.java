@@ -1,15 +1,17 @@
 package history;
 
+import command.CanUndoCommand;
 import command.Command;
+import command.commandImpl.historyCommand.UndoCommand;
 import exception.NoRedoableOperationException;
 import exception.NoUndoableOperationException;
 import java.util.Stack;
 
 public class CommandHistory {
     // 撤销栈，存储可以撤销的命令
-    private Stack<Command> undoStack;
+    private Stack<CanUndoCommand> undoStack;
     // 重做栈，存储可以重做的命令
-    private Stack<Command> redoStack;
+    private Stack<CanUndoCommand> redoStack;
 
     public CommandHistory() {
         undoStack = new Stack<>();
@@ -21,7 +23,9 @@ public class CommandHistory {
      * @param command 要执行的命令
      */
     public void push(Command command) {
-        undoStack.push(command);
+        if(command instanceof CanUndoCommand) {
+            undoStack.push((CanUndoCommand) command);
+        }
         // 清空重做栈，因为新命令执行后原来的重做记录就失效了
         redoStack.clear();
     }
@@ -34,7 +38,7 @@ public class CommandHistory {
             throw new NoUndoableOperationException();
         }
         
-        Command command = undoStack.pop();
+        CanUndoCommand command = undoStack.pop();
         redoStack.push(command);
         command.execute();
     }
@@ -47,7 +51,7 @@ public class CommandHistory {
             throw new NoRedoableOperationException();
         }
 
-        Command command = redoStack.pop();
+        CanUndoCommand command = redoStack.pop();
         undoStack.push(command);
         command.execute();
     }
