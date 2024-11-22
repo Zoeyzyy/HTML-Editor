@@ -50,7 +50,7 @@ public class PrintTreeCommandTest {
                 "├── head\n" +
                 "│ └── title\n" +
                 "└── body\n"+
-                "  └── [X]div#id1\n"+
+                "  └── [X]div\n"+
                 "      └── Hello Wrold\n", output);
         printStream.close();
     }
