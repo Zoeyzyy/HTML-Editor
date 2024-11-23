@@ -1,5 +1,6 @@
 package command.CommandImpl.editCommand;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 
@@ -21,7 +22,7 @@ public class AppendCommandTest {
 
         // deal with same id
         AppendCommand appendCommand2 = new AppendCommand(editor, "div", "id1", "body", "Hello HTML");
-        appendCommand2.execute();
+        assertThrows(DuplicateRequestException.class, ()->appendCommand2.execute());
 
         // test undo insert
         appendCommand.undo();
