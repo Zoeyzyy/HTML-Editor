@@ -34,10 +34,8 @@ public class SaveCommand implements Command {
 
     @Override
     public void execute() {
-        String currentPath = System.getProperty("user.dir");
-        String absoluteFilePath = currentPath + filePath;
-        try {
-            session.save(absoluteFilePath);
+        try { // let session to check filepath
+            session.save(filePath);
         }catch (Exception e){
             e.printStackTrace();
         }
