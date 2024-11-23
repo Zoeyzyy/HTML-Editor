@@ -44,7 +44,8 @@ public class SessionTest {
         assertEquals("A_session", session.getId());
 
         session.load("./dataexample.html");
-        assertEquals("./dataexample.html", session.getActiveEditor().getFileName());
+        String absolutePath = Paths.get("./dataexample.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
 
         session.dump("./data/" + session.getId());
         System.out.println(session.getEditorList().size());
@@ -53,7 +54,8 @@ public class SessionTest {
         assertEquals("A_session", session.getId());
         System.out.println(session.getEditorList().size());
         assertNotNull(session.getActiveEditor());
-        assertEquals("./dataexample.html", session.getActiveEditor().getFileName());
+        absolutePath = Paths.get("./dataexample.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
 
     }
 
@@ -65,8 +67,8 @@ public class SessionTest {
         assertNotNull(session.getActiveEditor());
         session = new Session(id);
         assertNotNull(session.getActiveEditor());
-
-        assertEquals("example.html", session.getActiveEditor().getFileName());
+        String absolutePath = Paths.get("example.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
     }
 
     @Test
@@ -75,11 +77,14 @@ public class SessionTest {
         assertNull(session.getActiveEditor());
         session.load("example.html");
         session.load("example2.html");
-        assertEquals("example2.html", session.getActiveEditor().getFileName());
+        String absolutePath = Paths.get("example2.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
 
+        absolutePath = Paths.get("example.html").toAbsolutePath().toString();
+        assertTrue(session.getEditorList().contains(absolutePath));
 
-        assertTrue(session.getEditorList().contains("example.html"));
-        assertTrue(session.getEditorList().contains("example2.html"));
+        absolutePath = Paths.get("example2.html").toAbsolutePath().toString();
+        assertTrue(session.getEditorList().contains(absolutePath));
     }
 
     @Test
@@ -91,7 +96,8 @@ public class SessionTest {
         session.load("example.html");
         session.load("example2.html");
         session.close();
-        assertEquals("example.html", session.getActiveEditor().getFileName());
+        String absolutePath = Paths.get("example.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
     }
 
     @Test
