@@ -219,8 +219,14 @@ public class HTMLDocument {
                 sb.append("├── ");
             }
         }
-        if(element.getSpellCheckResults()!=null && !element.getSpellCheckResults().isEmpty())
+        if(element.getSpellCheckResults()!=null
+                && !element.getSpellCheckResults().isEmpty()
+                && !element.getTextContent().equals(element.getSpellCheckResults().get(0))){
+//            System.out.println("detected spell faults, expected: "+element.getSpellCheckResults().get(0)+" but was: "
+//            + element.getTextContent());
             sb.append("[x]");
+        }
+
 
         sb.append(element.getTagName());
 
@@ -314,6 +320,7 @@ public class HTMLDocument {
 
         // 构建当前元素
         HTMLElement element = builder.build();
+
 
         // 递归处理所有子元素
         for (Element child : jsoupElement.children()) {
