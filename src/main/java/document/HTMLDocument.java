@@ -1,6 +1,7 @@
 package document;
 
 import exception.ElementBadRemoved;
+import exception.ElementDuplicateID;
 import exception.ElementNotFound;
 import lombok.Data;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class HTMLDocument {
     private final boolean[] isLastChild = new boolean[100];
     private final StringBuilder sb=new StringBuilder();
     private final String templatePath=System.getProperty("user.dir")+"/src/main/resources/template.html";
+    private final Set<String> idSet=new HashSet<>();
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
@@ -64,7 +66,7 @@ public class HTMLDocument {
     }
 
     public String save() {
-        return getTreeFormat(false);
+        return getIndentFormat(2);
     }
 
     /**
@@ -89,6 +91,9 @@ public class HTMLDocument {
      */
 
     public void appendElement(String tagName, String idValue, String textContent, String parentElement) throws ElementNotFound {
+        if(idSet.contains(idValue)){
+            throw new ElementDuplicateID("Element: Id "+idValue+" has existed.");
+        }
         HTMLElement newElement = HTMLElement.builder()
                                             .setId(idValue)
                                             .setTagName(tagName)
@@ -101,6 +106,7 @@ public class HTMLDocument {
             throw new ElementNotFound("Element: Id "+parentElement+" Not Found");
         }
         parent.addChild(newElement);
+        idSet.add(idValue);
     }
 
     /**
@@ -114,12 +120,16 @@ public class HTMLDocument {
 
 
     public void insertElement(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
+        if(idSet.contains(idValue)){
+            throw new ElementDuplicateID("Element: Id "+idValue+" has existed.");
+        }
         // 创建新元素
         HTMLElement newElement = HTMLElement.builder()
                 .setId(idValue)
                 .setTagName(tagName)
                 .setTextContent(textContent)
                 .build();
+
 
         // 如果root为空，直接将新元素设为root
         if (root == null) {
@@ -132,6 +142,7 @@ public class HTMLDocument {
         }
 
         sibling.getParent().insertElementBefore(newElement,insertLocation);
+        idSet.add(idValue);
     }
 
 
@@ -266,7 +277,27 @@ public class HTMLDocument {
 
 
     public String getSpellCheck() {
-        return "";
+        sb.setLength(0);
+        getSpellCheck(this.root);
+        return sb.toString();
+    }
+
+    private void getSpellCheck(HTMLElement element) {
+        if (element == null) {
+            return;
+        }
+        List<String> spellCheckResults=element.getSpellCheckResults();
+        if (spellCheckResults != null && !spellCheckResults.isEmpty()) {
+            sb.append("Id: ");
+            sb.append(element.getId());
+            sb.append(element.getSpellCheckResults());
+            sb.append("\n");
+        }
+        List<HTMLElement> children = element.getChildren();
+        // 递归处理所有子元素
+        for (int i = 1; i < children.size()-1; i++) {
+            getSpellCheck(children.get(i));
+        }
     }
 
     private boolean isSpecialElement(HTMLElement element) {
@@ -315,10 +346,9 @@ public class HTMLDocument {
                 .setId(jsoupElement.id().isEmpty() ?jsoupElement.tagName():jsoupElement.id())
                 .setTextContent(jsoupElement.ownText());
 
-
         // 构建当前元素
         HTMLElement element = builder.build();
-
+        idSet.add(element.getId());
 
         // 递归处理所有子元素
         for (Element child : jsoupElement.children()) {

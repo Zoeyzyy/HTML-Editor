@@ -28,7 +28,7 @@ public class SpellCheckCommandTest {
         spellCheckCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals("Hello Wrold", output);
+        assertEquals("Id: id1[Hello World]\n", output);
         printStream.close();
     }
 }
