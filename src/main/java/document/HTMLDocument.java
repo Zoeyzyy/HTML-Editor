@@ -182,7 +182,7 @@ public class HTMLDocument {
 
         sb.append(eleTagHeader);
 
-        if(ele.getTextContent()!=null && !ele.getTextContent().isEmpty()){
+        if(ele.getTextContent()!=null && !ele.getTextContent().isEmpty() &&isSpecialElement(ele)){
             printIndent(level, indent);
             sb.append(ele.getTextContent()).append("\n");
         }

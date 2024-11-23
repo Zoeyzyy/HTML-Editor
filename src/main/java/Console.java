@@ -1,3 +1,6 @@
+import command.Command;
+import command.CommandInvoker;
+import command.CommandParser;
 import session.Session;
 
 import java.util.Scanner;
@@ -8,12 +11,15 @@ public class Console {
     private final Scanner scanner;
     private final Session session;
     // TODO : add command parser
-//    private final CommandParser commandParser;
+    private final CommandParser commandParser;
+    private final CommandInvoker commandInvoker;
 
     public Console() {
-        this.session = new Session("default");
+        this.session = new Session("");
+        session.enter("default");
         this.scanner = new Scanner(System.in);
-//        this.commandParser = new CommandParser();
+        this.commandParser = new CommandParser(session);
+        this.commandInvoker = new CommandInvoker(session);
     }
 
     public void run() {
@@ -28,8 +34,8 @@ public class Console {
                     continue;
                 }
                 // TODO : add command parser
-//                Command command = commandParser.processCommand(input);
-//                command.execute();
+                Command command = commandParser.processCommand(input);
+                commandInvoker.executeAndStore(command);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
