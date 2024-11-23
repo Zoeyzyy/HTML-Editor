@@ -5,6 +5,7 @@ import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 
 import editor.Editor;
+import exception.ElementDuplicateID;
 import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class AppendCommandTest {
 
         // deal with same id
         AppendCommand appendCommand2 = new AppendCommand(editor, "div", "id1", "body", "Hello HTML");
-        assertThrows(DuplicateRequestException.class, ()->appendCommand2.execute());
+        assertThrows(ElementDuplicateID.class, ()->appendCommand2.execute());
 
         // test undo insert
         appendCommand.undo();
