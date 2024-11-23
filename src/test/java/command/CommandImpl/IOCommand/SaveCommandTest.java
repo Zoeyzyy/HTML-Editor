@@ -1,6 +1,9 @@
 package command.CommandImpl.IOCommand;
 
 import command.commandImpl.IOCommand.SaveCommand;
+import command.commandImpl.editCommand.AppendCommand;
+import command.commandImpl.editCommand.EditTextCommand;
+import editor.Editor;
 import session.Session;
 import org.junit.jupiter.api.Test;
 
@@ -14,16 +17,19 @@ public class SaveCommandTest {
     @Test
     public void execute() {
         Session session = new Session("");
+        String currentPath = System.getProperty("user.dir");
+        String fileName = "\\src\\main\\resources\\template.html";
+        String filePath = currentPath + fileName;
         try {
-            session.load("\\src\\main\\resources\\Test.html");
+            session.load(filePath);
         } catch (Exception e) {
 
         }
-        SaveCommand saveCommand = new SaveCommand(session, "\\src\\main\\resources\\test.html");
+        EditTextCommand editTextCommand = new EditTextCommand(session.getActiveEditor(), "body", "Hello World");
+        editTextCommand.execute();
+        SaveCommand saveCommand = new SaveCommand(session, fileName);
         saveCommand.execute();
 
-        String currentPath = System.getProperty("user.dir");
-        String filePath = currentPath + "\\src\\main\\resources\\test.txt";
         StringBuilder content = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -35,11 +41,13 @@ public class SaveCommandTest {
         }
 
         assertEquals("<html>\n" +
-                " <head>\n" +
-                "  <title></title>\n" +
-                " </head>\n" +
-                " <body>\n" +
-                " </body>\n" +
+                "  <head>\n" +
+                "    <title>\n" +
+                "    </title>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    Hello World\n" +
+                "  </body>\n" +
                 "</html>", content.toString());
     }
 }

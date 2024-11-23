@@ -39,7 +39,7 @@ public class SaveCommand implements Command {
         try {
             session.save(absoluteFilePath);
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 }
