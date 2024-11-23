@@ -37,7 +37,7 @@ public class SaveCommand implements Command {
         try { // let session to check filepath
             session.save(filePath);
         }catch (Exception e){
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }

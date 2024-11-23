@@ -21,7 +21,7 @@ public class LoadCommand implements Command {
         try { // let session to check filepath
             session.load(filePath);
         }catch (Exception e){
-
+            System.err.println(e.getMessage());
         }
     }
 }

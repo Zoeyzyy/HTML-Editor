@@ -26,7 +26,7 @@ public class ReadCommand implements Command {
         try { // let editor to check filepath
             editor.load(filePath);
         } catch (IOException e) {
-
+            System.err.println(e.getMessage());
         }
     }
 }
