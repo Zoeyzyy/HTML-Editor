@@ -28,7 +28,8 @@ public class PrintIndentCommandTest {
                 "  <title>\n" +
                 "  </title>\n" +
                 " </head>\n" +
-                " <body></body>\n" +
+                " <body>\n" +
+                " </body>\n" +
                 "</html>", output);
         printStream.close();
     }

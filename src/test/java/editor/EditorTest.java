@@ -1,12 +1,19 @@
 package editor;
 
+import command.Command;
+import command.commandImpl.editCommand.*;
+import exception.ElementNotFound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.io.File;
+import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
-import editor.Editor;
 
 public class EditorTest {
     private Editor editor;
+    @TempDir
+    File tempDir;
 
     @BeforeEach
     void setUp() {
@@ -20,61 +27,91 @@ public class EditorTest {
     }
 
     @Test
-    void testLoadFile() {
-        String filename = "test.html";
-        editor.load(filename);
-        assertEquals(filename, editor.getFileName(), "加载文件后文件名应该匹配");
+    void testLoadFile() throws IOException {
+        File testFile = new File(tempDir, "Test.html");
+        editor.load(testFile.getAbsolutePath());
+        assertEquals(testFile.getAbsolutePath(), editor.getFileName(), "文件名应该匹配");
         assertFalse(editor.isModified(), "加载文件后不应该标记为已修改");
     }
 
     @Test
-    void testExecuteCommand() {
-        editor.executeCommand("append p 测试文本");
+    void testExecuteCommand() throws ElementNotFound {
+        editor.init();
+        
+        Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
+        editor.executeCommand(command);
         assertTrue(editor.isModified(), "执行命令后应该标记为已修改");
     }
 
     @Test
-    void testToggleModified() {
+    void testModifiedState() throws ElementNotFound {
+        editor.init();
+        
         assertFalse(editor.isModified(), "初始状态应该是未修改");
-        editor.toggleModified();
-        assertTrue(editor.isModified(), "切换后应该是已修改");
-        editor.toggleModified();
-        assertFalse(editor.isModified(), "再次切换后应该是未修改");
+        Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
+        editor.executeCommand(command);
+        assertTrue(editor.isModified(), "执行命令后应该是已修改");
     }
 
     @Test
-    void testSaveWithoutFilename() {
-        editor.executeCommand("append p 测试文本");
+    void testSaveWithoutFilename() throws IOException {
+        Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
+        editor.executeCommand(command);
         assertTrue(editor.isModified());
-        editor.save();  // 尝试保存没有文件名的文档
-        assertTrue(editor.isModified(), "没有文件名时保存应该保持修改状态");
+        assertThrows(IOException.class, () -> editor.save(null), 
+            "没有文件名时保存应该抛出异常");
     }
 
     @Test
-    void testSaveWithFilename() {
-        String filename = "test.html";
-        editor.load(filename);
-        editor.executeCommand("append p 测试文本");
-        assertTrue(editor.isModified());
-        editor.save();
-        assertFalse(editor.isModified(), "保存后应该取消修改状态");
-    }
-
-    @Test
-    void testSetShowId() {
-        editor.setShowId(true);
+    void testSaveWithFilename() throws IOException {
+        File testFile = new File(tempDir, "test.html");
+        editor.load(testFile.getAbsolutePath());
+        Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
+        editor.executeCommand(command);
         assertTrue(editor.isModified(), "执行命令后应该标记为已修改");
+        editor.save(testFile.getAbsolutePath());
+        assertFalse(editor.isModified(), "保存后修改状态应该被重置");
     }
 
     @Test
-    void testDisplay() {
-        // 测试普通显示
-        editor.display();
-        assertFalse(editor.isModified(), "显示不应改变修改状态");
+    void testShowId() {
+        // 初始状态
+        assertFalse(editor.isModified(), "初始状态应该是未修改");
+        
+        // 测试 showId 方法 - 不应该改变修改状态
+        editor.showId(true);
+     assertFalse(editor.isModified(), "showId不应该改变修改状态");
+        
+        // 验证显示功能
+        String result = editor.printTree();
+        assertNotNull(result, "树形显示不应返回null");
+    }
 
-        // 测试显示ID
-        editor.setShowId(true);
-        editor.display();
-        assertTrue(editor.isModified(), "设置显示ID后应该标记为已修改");
+    @Test
+    void testDisplayFormats() {
+        String treeFormat = editor.printTree();
+        assertNotNull(treeFormat, "树形显示不应返回null");
+
+        String indentFormat = editor.printIndent(2);
+        assertNotNull(indentFormat, "缩进显示不应返回null");
+    }
+
+    @Test
+    void testUndoRedo() throws ElementNotFound {
+        Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
+        editor.executeCommand(command);
+        assertTrue(editor.isModified(), "执行命令后应该标记为已修改");
+        
+        editor.undo();
+        assertFalse(editor.isModified(), "撤销后应该标记为未修改");
+        
+        editor.redo();
+        assertTrue(editor.isModified(), "重做后应该标记为已修改");
+    }
+
+    @Test
+    void testSpellCheck() {
+        String result = editor.spellCheck();
+        assertNotNull(result, "拼写检查不应返回null");
     }
 }

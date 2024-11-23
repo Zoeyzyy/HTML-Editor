@@ -28,7 +28,8 @@ public class InitCommandTest {
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +
                 " <head>\n" +
-                "  <title></title>\n" +
+                "  <title>\n" +
+                "  </title>\n" +
                 " </head>\n" +
                 " <body>\n" +
                 " </body>\n" +

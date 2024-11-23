@@ -16,15 +16,22 @@ public abstract class HTMLElement {
     private String tagName; // such as <html> <la> and so on 只要存储tag 名称，<>不用存储
     private String Id;
     private String textContent;
-    private List<HTMLElement> children = new ArrayList<>(); // child elements
+
+    private List<HTMLElement> children = null; // child elements
     private HTMLElement parent; // Parent element pointer
     private HTMLElement previousSibling; // Previous sibling pointer
     private HTMLElement nextSibling; // Next sibling pointer
-    private int insertLocation = -1; // Index in the parent's children list
+    private int index = -1; // Index in the parent's children list
 
     // 用于存储拼写检查结果
     @Getter
     private List<String> spellCheckResults;
+
+    // 是否已经初始化了子节点，避免stackoverflow
+    private boolean childrenInitialized = false;
+    //默认需要初始化，对于start和tail特殊节点不进行Children的初始化
+    @Getter
+    private boolean requiresInitialization = true; // 默认需要初始化
 
     /**
      * Builder模式
@@ -36,6 +43,7 @@ public abstract class HTMLElement {
         Builder setClassName(String className);
         Builder setTextContent(String content);
         Builder addChild(HTMLElement child);
+        Builder setSpellChecker(SpellChecker spellChecker);
         HTMLElement build();
     }
 
@@ -45,6 +53,54 @@ public abstract class HTMLElement {
      */
     public static Builder builder() {
         return new HTMLElementImpl.BuilderImpl();
+    }
+
+    /**
+     * Initialize with head and tail elements.
+     * 用父节点的id进行命名
+     */
+    public void initializeChildren() {
+        if (!requiresInitialization ||children != null) return; // 防止重复初始化
+
+//        System.out.println("Initializing children for element: " + this.getTagName());
+
+        children = new ArrayList<>(); // 初始化列表
+
+        HTMLElement start = HTMLElement.builder()
+                .setTagName("start")
+                .setId(getId() + "-start")
+                .build();
+        start.setRequiresInitialization(false);
+        start.setParent(this); // 设置父节点
+        HTMLElement tail = HTMLElement.builder()
+                .setTagName("tail")
+                .setId(getId() + "-tail")
+                .build();
+        tail.setRequiresInitialization(false);
+        tail.setParent(this); // 设置父节点
+
+        start.setNextSibling(tail);
+        tail.setPreviousSibling(start);
+
+        children.add(start);
+        children.add(tail);
+    }
+
+    /**
+     * 获取子元素列表，延迟初始化
+     *
+     * @return 子元素列表
+     */
+    public List<HTMLElement> getChildren(){
+        if (!childrenInitialized) {
+            synchronized (this) { // 确保多线程安全
+                if (!childrenInitialized) {
+                    initializeChildren();
+                    childrenInitialized = true; // 设置为已初始化
+                }
+            }
+        }
+        return children != null ? children : new ArrayList<>();
     }
 
     /**
@@ -62,16 +118,6 @@ public abstract class HTMLElement {
     public abstract void removeChild(String id);
 
     /**
-     * @return 该element下的所有一级children
-     */
-    public List<HTMLElement> getChildren() {
-        if (children == null) {
-            children = new ArrayList<>();
-        }
-        return children;
-    }
-
-    /**
      * 打印当前元素
      */
     public abstract void display();
@@ -80,10 +126,6 @@ public abstract class HTMLElement {
      * 拼写检查
      */
     public abstract List<String> checkSpelling(SpellChecker spellChecker) throws IOException;
-
-    public void updateSpellCheckResults(SpellChecker spellChecker) throws IOException {
-        this.spellCheckResults = checkSpelling(spellChecker);
-    }
 
     /**
      * 在指定id的元素之前插入新元素

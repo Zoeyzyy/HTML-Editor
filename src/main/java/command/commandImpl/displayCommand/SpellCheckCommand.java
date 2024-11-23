@@ -24,6 +24,6 @@ public class SpellCheckCommand implements Command {
 
     @Override
     public void execute() {
-        printStream.println(editor.spellCheck());
+        printStream.print(editor.spellCheck());
     }
 }

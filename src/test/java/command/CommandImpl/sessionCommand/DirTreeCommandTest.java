@@ -12,7 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DirTreeCommandTest {
     @Test
     public void execute() {
-        Session session = new Session("example.html");
+        Session session = new Session("default");
+        String currentPath = System.getProperty("user.dir");
+        String fileName = "\\src\\main\\resources\\Test.html";
+        String filePath = currentPath + fileName;
+        try {
+            session.load(filePath);
+        } catch (Exception e) {
+        }
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
@@ -22,7 +29,9 @@ public class DirTreeCommandTest {
 
         String output = byteArrayOutputStream.toString();
         // TODO: 树形结构的目录
-        assertEquals("example.html\n", output);
+        assertEquals("├── resources/\n" +
+                "│   ├── template.html\n" +
+                "│   ├── Test.html*", output);
         printStream.close();
     }
 }

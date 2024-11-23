@@ -2,6 +2,7 @@ package command.CommandImpl.displayCommand;
 
 import command.commandImpl.displayCommand.PrintTreeCommand;
 import command.commandImpl.displayCommand.ShowIDCommand;
+import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 import editor.Editor;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,9 @@ public class ShowIDCommandTest {
         Editor editor = new Editor();
         editor.init();
 
+        AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
+        appendCommand.execute();
+
         ShowIDCommand showIDCommand = new ShowIDCommand(editor, true);
         showIDCommand.execute();
         assertTrue(editor.getDocument().getShowID());
@@ -27,13 +31,12 @@ public class ShowIDCommandTest {
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         String output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                "  <head>\n" +
-                "    <title>" +
-                "    </title>#title\n" +
-                "  </head>#head\n" +
-                "  <body></body>#body\n" +
-                "</html>#html", output);
+        assertEquals("html\n" +
+                "├── head\n" +
+                "│ └── title\n" +
+                "└── body\n" +
+                "    └── div#id1\n" +
+                "        └── Hello World\n",output);
         printStream.close();
 
         showIDCommand = new ShowIDCommand(editor, false);
@@ -46,13 +49,12 @@ public class ShowIDCommandTest {
         printTreeCommand = new PrintTreeCommand(editor, printStream);
         printTreeCommand.execute();
         output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n" +
-                "  <head>\n" +
-                "    <title>\n" +
-                "    </title>\n" +
-                "  </head>\n" +
-                "  <body></body>\n" +
-                "</html>", output);
+        assertEquals("html\n" +
+                "├── head\n" +
+                "│ └── title\n" +
+                "└── body\n" +
+                "    └── div\n" +
+                "        └── Hello World\n",output);
         printStream.close();
     }
 }

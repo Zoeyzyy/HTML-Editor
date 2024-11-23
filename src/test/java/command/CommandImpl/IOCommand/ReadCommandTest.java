@@ -16,17 +16,17 @@ public class ReadCommandTest {
     public void execute() {
         Editor editor = new Editor();
 
-        ReadCommand readCommand = new ReadCommand(editor, "\\src\\main\\resources\\Test.html");
+        ReadCommand readCommand = new ReadCommand(editor, "\\src\\main\\resources\\template.html");
         readCommand.execute();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1,printStream);
         printIndentCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals("<html>\n<head>\n<title></title>\n</head>\n<body>\n</body>\n</html>", output);
+        assertEquals("<html>\n <head>\n  <title>\n  </title>\n </head>\n <body>\n </body>\n</html>", output);
         printStream.close();
     }
 }

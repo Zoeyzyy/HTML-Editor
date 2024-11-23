@@ -17,27 +17,39 @@ import java.util.List;
 public class HTMLElementImpl extends HTMLElement {
     private String className;
 
+
+    public HTMLElementImpl() {
+    }
+
     @Override
     public void addChild(HTMLElement child) {
         if (child == null) return;
 
-        // 确保 children 不为 null
         List<HTMLElement> children = getChildren();
-        if (children == null) {
-            children = new ArrayList<>();
-            super.setChildren(children);
+
+        // 确保children初始化
+        if (children==null) {
+            initializeChildren();
+            children = getChildren();
         }
+
+        // 确保至少有 "start" 和 "tail"
+        if (children.size() < 2) {
+            throw new IllegalStateException("Children must contain at least 'start' and 'tail' elements.");
+        }
+
+        HTMLElement tail = children.get(children.size() - 1); // 获取尾部元素
+        // 插入到 "tail" 前
+        HTMLElement lastValidNode = children.get(children.size() - 2); // "tail" 的前一个节点
+        lastValidNode.setNextSibling(child);
+        child.setPreviousSibling(lastValidNode);
+        child.setNextSibling(tail);
+        tail.setPreviousSibling(child);
 
         child.setParent(this);
+        child.setIndex(children.size() - 1);
 
-        if (!children.isEmpty()) {
-            HTMLElement lastChild = children.get(children.size() - 1);
-            lastChild.setNextSibling(child);
-            child.setPreviousSibling(lastChild);
-        }
-
-        child.setInsertLocation(children.size());
-        children.add(child);
+        children.add(children.size() - 1, child); // 插入到 "tail" 前
     }
 
     @Override
@@ -45,17 +57,14 @@ public class HTMLElementImpl extends HTMLElement {
         if (child == null || !getChildren().contains(child)) return;
 
         List<HTMLElement> children = getChildren();
-        int index = child.getInsertLocation();
+        int index = child.getIndex();
 
-        // Update siblings
-        if (index > 0) {
-            children.get(index - 1).setNextSibling(child.getNextSibling());
-        }
-        if (index < children.size() - 1) {
-            children.get(index + 1).setPreviousSibling(child.getPreviousSibling());
-        }
+        HTMLElement prev = child.getPreviousSibling();
+        HTMLElement next = child.getNextSibling();
 
-        // Remove the child
+        if (prev != null) prev.setNextSibling(next);
+        if (next != null) next.setPreviousSibling(prev);
+
         children.remove(index);
 
         // Reset the child's relations
@@ -63,9 +72,9 @@ public class HTMLElementImpl extends HTMLElement {
         child.setPreviousSibling(null);
         child.setNextSibling(null);
 
-        // Update insertLocation for all subsequent siblings
-        for (int i = index; i < children.size(); i++) {
-            children.get(i).setInsertLocation(i);
+        // Update indexes
+        for (int i = index; i < children.size() - 1; i++) {
+            children.get(i).setIndex(i);
         }
     }
 
@@ -74,10 +83,6 @@ public class HTMLElementImpl extends HTMLElement {
         getChildren().removeIf(child -> id.equals(child.getId()));
     }
 
-    @Override
-    public List<HTMLElement> getChildren() {
-        return super.getChildren();
-    }
 
     @Override
     public void display() {
@@ -98,16 +103,14 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public List<String> checkSpelling(SpellChecker spellChecker) throws IOException {
-        List<String> results = new ArrayList<>();
-        // 检查当前元素的文本内容
-        if (getTextContent() != null && !getTextContent().isEmpty()) {
-            results.addAll(spellChecker.checkSpelling(getTextContent()));
+        List<String> correctedResults = new ArrayList<>();
+        // 仅检查当前元素的文本内容
+        if (getTextContent() != null && !getTextContent().isEmpty() && spellChecker != null) {
+            // 获取修正后的文本
+            String correctedText = spellChecker.checkSpelling(getTextContent());
+            correctedResults.add(correctedText);
         }
-        // 检查子元素
-        for (HTMLElement child : getChildren()) {
-            results.addAll(child.checkSpelling(spellChecker));
-        }
-        return results;
+        return correctedResults;
     }
 
     @Override
@@ -122,11 +125,10 @@ public class HTMLElementImpl extends HTMLElement {
             if (targetId.equals(children.get(i).getId())) {
                 HTMLElement target = children.get(i);
 
-                // Update siblings for the new element
                 element.setParent(this);
                 element.setNextSibling(target);
                 element.setPreviousSibling(target.getPreviousSibling());
-                element.setInsertLocation(i);
+                element.setIndex(i);
 
                 if (target.getPreviousSibling() != null) {
                     target.getPreviousSibling().setNextSibling(element);
@@ -135,9 +137,8 @@ public class HTMLElementImpl extends HTMLElement {
 
                 children.add(i, element);
 
-                // Update insertLocation for subsequent elements
-                for (int j = i + 1; j < children.size(); j++) {
-                    children.get(j).setInsertLocation(j);
+                for (int j = i + 1; j < children.size() - 1; j++) {
+                    children.get(j).setIndex(j);
                 }
                 return;
             }
@@ -147,7 +148,21 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public String getInsertLocation(HTMLElement element) {
-        return element.getNextSibling() != null ? element.getNextSibling().getId() : null;
+        HTMLElement nextSibling = element.getNextSibling();
+        if (nextSibling != null) {
+            return nextSibling.getId();
+        }
+
+        // 如果没有标准的 nextSibling，返回 "tail" 的 ID
+        List<HTMLElement> children = getChildren();
+        if (children != null && !children.isEmpty()) {
+            HTMLElement tail = children.get(children.size() - 1);
+            if ("tail".equals(tail.getTagName())) {
+                return tail.getId();
+            }
+        }
+
+        return null; // 极端情况下，返回 null
     }
 
     /**
@@ -155,6 +170,7 @@ public class HTMLElementImpl extends HTMLElement {
      */
     public static class BuilderImpl implements Builder {
         private final HTMLElementImpl element;
+        private SpellChecker spellChecker;
 
         public BuilderImpl() {
             this.element = new HTMLElementImpl();
@@ -191,7 +207,23 @@ public class HTMLElementImpl extends HTMLElement {
         }
 
         @Override
+        public Builder setSpellChecker(SpellChecker spellChecker) {
+            this.spellChecker = spellChecker;
+            return this;
+        }
+
+        @Override
         public HTMLElement build() {
+            // 拼写检查并存储结果
+            spellChecker = new SpellChecker();
+            try {
+                List<String> results = element.checkSpelling(spellChecker);
+
+                element.setSpellCheckResults(results);
+            } catch (IOException e) {
+                e.printStackTrace();
+                element.setSpellCheckResults(new ArrayList<>());
+            }
             return element;
         }
     }

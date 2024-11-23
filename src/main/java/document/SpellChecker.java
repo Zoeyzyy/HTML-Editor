@@ -17,21 +17,27 @@ public class SpellChecker {
     }
 
     /**
-     * 检查拼写错误
+     * 检查拼写错误并返回修正后的文本
+     *
      * @param text 要检查的文本
-     * @return 拼写检查结果列表
+     * @return 修正后的文本
      * @throws IOException 异常处理
      */
-    public List<String> checkSpelling(String text) throws IOException {
-        List<String> results = new ArrayList<>();
+    public String checkSpelling(String text) throws IOException {
         List<RuleMatch> matches = languageTool.check(text);
-        for (RuleMatch match : matches) {
-            results.add(String.format(
-                    "Error at position %d-%d: %s. Suggested correction(s): %s",
-                    match.getFromPos(), match.getToPos(),
-                    match.getMessage(), match.getSuggestedReplacements()
-            ));
+        StringBuilder correctedText = new StringBuilder(text);
+
+        // 从后向前替换以避免位置偏移问题
+        for (int i = matches.size() - 1; i >= 0; i--) {
+            RuleMatch match = matches.get(i);
+            List<String> suggestions = match.getSuggestedReplacements();
+            if (!suggestions.isEmpty()) {
+                // 使用第一个建议作为修正
+                String suggestion = suggestions.get(0);
+                correctedText.replace(match.getFromPos(), match.getToPos(), suggestion);
+            }
         }
-        return results;
+
+        return correctedText.toString();
     }
 }

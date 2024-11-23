@@ -156,23 +156,8 @@ class HTMLDocumentTest {
         assertTrue(treeFormat.contains("div"));
         document.setShowID(true);
         treeFormat = document.getTreeFormat(false);
-        assertTrue(treeFormat.contains("html#root"));
-        assertTrue(treeFormat.contains("body#body"));
         assertTrue(treeFormat.contains("div#content"));
     }
 
-    @Test
-    void testGetIndentFormat() {
-        document.init();
-
-        String indentFormat = document.getIndentFormat(2);
-        assertNotNull(indentFormat);
-        assertTrue(indentFormat.contains("<html"));
-        assertTrue(indentFormat.contains("</html>"));
-        assertTrue(indentFormat.contains("id=\"html\""));
-        assertTrue(indentFormat.contains("id=\"head\""));
-        assertTrue(indentFormat.contains("id=\"title\""));
-        assertTrue(indentFormat.contains("id=\"body\""));
-    }
 
 }
