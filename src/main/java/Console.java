@@ -1,6 +1,8 @@
 import command.Command;
 import command.CommandInvoker;
 import command.CommandParser;
+import command.commandImpl.sessionCommand.EnterSessionCommand;
+import exception.InvalidCommandException;
 import session.Session;
 
 import java.util.Scanner;
@@ -15,8 +17,7 @@ public class Console {
     private final CommandInvoker commandInvoker;
 
     public Console() {
-        this.session = new Session("");
-        session.enter("default");
+        this.session = new Session("default");
         this.scanner = new Scanner(System.in);
         this.commandParser = new CommandParser(session);
         this.commandInvoker = new CommandInvoker(session);
@@ -24,7 +25,8 @@ public class Console {
 
     public void run() {
         System.out.println("Welcome to HTML Editor! (Type 'exit' to quit)");
-
+        Command enterSessionCommand = EnterSessionCommand.create(session);
+        enterSessionCommand.execute();
         while (isRunning) {
             try {
                 System.out.print(PROMPT);
@@ -32,6 +34,9 @@ public class Console {
 
                 if (input.isEmpty()) {
                     continue;
+                }
+                if(input == "exit") {
+                    isRunning = false;
                 }
                 // TODO : add command parser
                 Command command = commandParser.processCommand(input);
