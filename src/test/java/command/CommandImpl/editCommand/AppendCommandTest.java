@@ -18,7 +18,10 @@ public class AppendCommandTest {
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         appendCommand.execute();
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
-        // TODO: test id1's parent is body
+
+        // deal with same id
+        AppendCommand appendCommand2 = new AppendCommand(editor, "div", "id1", "body", "Hello HTML");
+        appendCommand2.execute();
 
         // test undo insert
         appendCommand.undo();
