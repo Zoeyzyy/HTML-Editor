@@ -222,8 +222,6 @@ public class HTMLDocument {
         if(element.getSpellCheckResults()!=null
                 && !element.getSpellCheckResults().isEmpty()
                 && !element.getTextContent().equals(element.getSpellCheckResults().get(0))){
-//            System.out.println("detected spell faults, expected: "+element.getSpellCheckResults().get(0)+" but was: "
-//            + element.getTextContent());
             sb.append("[x]");
         }
 
