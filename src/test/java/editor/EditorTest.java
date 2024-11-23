@@ -36,13 +36,17 @@ public class EditorTest {
 
     @Test
     void testExecuteCommand() throws ElementNotFound {
+        editor.init();
+        
         Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
         editor.executeCommand(command);
         assertTrue(editor.isModified(), "执行命令后应该标记为已修改");
     }
 
     @Test
-    void testModifiedState() {
+    void testModifiedState() throws ElementNotFound {
+        editor.init();
+        
         assertFalse(editor.isModified(), "初始状态应该是未修改");
         Command command = AppendCommand.create(editor, "p", "p1", "body", "测试文本");
         editor.executeCommand(command);
@@ -71,8 +75,14 @@ public class EditorTest {
 
     @Test
     void testShowId() {
+        // 初始状态
+        assertFalse(editor.isModified(), "初始状态应该是未修改");
+        
+        // 测试 showId 方法 - 不应该改变修改状态
         editor.showId(true);
-        assertTrue(editor.isModified(), "设置显示ID后应该标记为已修改");
+     assertFalse(editor.isModified(), "showId不应该改变修改状态");
+        
+        // 验证显示功能
         String result = editor.printTree();
         assertNotNull(result, "树形显示不应返回null");
     }
