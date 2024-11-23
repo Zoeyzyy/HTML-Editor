@@ -7,7 +7,6 @@ import lombok.Getter;
 
 import java.io.*;
 
-
 public class Session {
     @Getter
     private String id;
@@ -27,9 +26,12 @@ public class Session {
 
     public void dump(String filename) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
-            List<String> saved = this.files;
+            List<DumpType> saved = new ArrayList<>();
+            for (String file : this.files) {
+                saved.add(new DumpType(file, this.editors.get(file).getDocument().getShowID()));
+            }
             if (activeEditor != null) {
-                saved.add(0, activeEditor.getFileName());
+                saved.add(0, new DumpType(activeEditor.getFileName(), activeEditor.getDocument().getShowID()));
             }
 
             out.writeObject(saved);
@@ -42,21 +44,25 @@ public class Session {
     public List<String> recover(String filename) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
             @SuppressWarnings("unchecked")
-            List<String> list = (List<String>) in.readObject();
+            List<DumpType> list = (List<DumpType>) in.readObject();
 
             System.out.println("Object loaded from file: " + filename);
             if (list.isEmpty()) {
                 return null;
             }
-            this.files = list.subList(1, list.size());
+            this.files = new ArrayList<>();
             this.editors = new HashMap<>();
-            for (String file : this.files) {
+
+            for (DumpType dump : list) {
+                this.files.add(dump.getFileName());
                 Editor editor = new Editor();
-                editor.load(file);
-                this.editors.put(file, editor);
+                editor.load(dump.getFileName());
+                editor.setShowId(dump.isShowID());
+                this.editors.put(dump.getFileName(), editor);
             }
-            this.activeEditor = this.editors.get(list.get(0));
-            return list;
+
+            this.activeEditor = this.editors.get(list.get(0).getFileName());
+            return this.files;
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
             return null;
@@ -103,33 +109,47 @@ public class Session {
         File dir = activeFile.getAbsoluteFile().getParentFile();
         StringBuilder sb = new StringBuilder();
 
-         getDirTreeFormat(dir, level, sb);
+         getDirTreeFormat(dir, level, sb, "├── ");
+         sb.deleteCharAt(sb.length() - 1);
          return sb.toString();
     }
 
     private void getDirTreeFormat(File folder, int indent,
-                                           StringBuilder sb) {
+                                           StringBuilder sb, String prefix) {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("folder is not a Directory");
         }
         sb.append(getIndentString(indent));
-        sb.append("├── ");
+        sb.append(prefix);
         sb.append(folder.getName());
         sb.append("/");
         sb.append("\n");
+        int i = 0;
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
-                getDirTreeFormat(file, indent + 1, sb);
+                if (i == folder.listFiles().length - 1)
+                    getDirTreeFormat(file, indent + 1, sb, "└── ");
+                else {
+                    getDirTreeFormat(file, indent + 1, sb, "├── ");
+                }
             } else {
-                printFile(file, indent + 1, sb);
+                if (i == folder.listFiles().length - 1) {
+                    printFile(file, indent + 1, sb, "└── ");
+                } else {
+                    printFile(file, indent + 1, sb, "├── ");
+                }
             }
+            i++;
         }
     }
-    private void printFile(File file, int indent, StringBuilder sb) {
+    private void printFile(File file, int indent, StringBuilder sb, String sep) {
         sb.append(getIndentString(indent));
-        sb.append("├── ");
+        sb.append(sep);
+        if(isEditing(file)){
+            sb.append(">");
+        }
         sb.append(file.getName());
-        if (isEditing(file)) {
+        if (isModified(file)) {
             sb.append("*");
         }
         sb.append("\n");
@@ -148,7 +168,7 @@ public class Session {
         File dir = activeFile.getAbsoluteFile().getParentFile();
         StringBuilder sb = new StringBuilder();
         sb.append(dir.getName()).append("\n");
-        printIndent(dir, indent+1, sb);
+        printIndent(dir, indent, sb);
         return sb.toString();
     }
 
@@ -167,7 +187,10 @@ public class Session {
             for (int i = 0; i < indent; i++) {
                 sb.append(" ");
             }
-            sb.append(file.getName()).append(isEditing(file) ? "*" : "");
+            if (isEditing(file)) {
+                sb.append(">");
+            }
+            sb.append(file.getName()).append(isModified(file) ? "*" : "");
             sb.append("\n");
 
             // 递归打印子目录
@@ -178,7 +201,17 @@ public class Session {
     }
 
     private boolean isEditing(File file) {
+        if (this.activeEditor == null) {
+            return false;
+        }
         return file.getAbsolutePath().equals(this.activeEditor.getFileName());
+    }
+
+    private boolean isModified(File file) {
+        if (!editors.containsKey(file.getAbsolutePath())) {
+            return false;
+        }
+        return editors.get(file.getAbsolutePath()).isModified();
     }
 
     public Session enter(String id) {
