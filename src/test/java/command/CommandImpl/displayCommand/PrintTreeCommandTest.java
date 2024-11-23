@@ -49,10 +49,10 @@ public class PrintTreeCommandTest {
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +
-                "│ └── title\n" +
+                "│   └── title\n" +
                 "└── body\n"+
-                "  └── [X]div\n"+
-                "      └── Hello Wrold\n", output);
+                "    └── [x]div\n"+
+                "        └── Hello Wrold\n", output);
         printStream.close();
     }
 
@@ -90,7 +90,7 @@ public class PrintTreeCommandTest {
                 "    │   │   └── Item 2\n" +
                 "    │   └── li#item3\n" +
                 "    │       └── Item 3\n" +
-                "    └── div#footer\n" +
+                "    └── [x]div#footer\n" +
                 "        ├── this is a text contect in div\n" +
                 "        ├── p#last-updated\n" +
                 "        │   └── Last updated: 2024-01-01\n" +

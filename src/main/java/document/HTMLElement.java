@@ -43,6 +43,7 @@ public abstract class HTMLElement {
         Builder setClassName(String className);
         Builder setTextContent(String content);
         Builder addChild(HTMLElement child);
+        Builder setSpellChecker(SpellChecker spellChecker);
         HTMLElement build();
     }
 
@@ -125,10 +126,6 @@ public abstract class HTMLElement {
      * 拼写检查
      */
     public abstract List<String> checkSpelling(SpellChecker spellChecker) throws IOException;
-
-    public void updateSpellCheckResults(SpellChecker spellChecker) throws IOException {
-        this.spellCheckResults = checkSpelling(spellChecker);
-    }
 
     /**
      * 在指定id的元素之前插入新元素

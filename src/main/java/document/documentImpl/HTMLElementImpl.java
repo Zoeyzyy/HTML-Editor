@@ -103,18 +103,14 @@ public class HTMLElementImpl extends HTMLElement {
 
     @Override
     public List<String> checkSpelling(SpellChecker spellChecker) throws IOException {
-        List<String> results = new ArrayList<>();
-        // 检查当前元素的文本内容
-        if (getTextContent() != null && !getTextContent().isEmpty()) {
-            results.addAll(spellChecker.checkSpelling(getTextContent()));
+        List<String> correctedResults = new ArrayList<>();
+        // 仅检查当前元素的文本内容
+        if (getTextContent() != null && !getTextContent().isEmpty() && spellChecker != null) {
+            // 获取修正后的文本
+            String correctedText = spellChecker.checkSpelling(getTextContent());
+            correctedResults.add(correctedText);
         }
-        // 检查子元素
-        for (HTMLElement child : getChildren()) {
-            if (!"start".equals(child.getTagName()) && !"tail".equals(child.getTagName())) {
-                results.addAll(child.checkSpelling(spellChecker));
-            }
-        }
-        return results;
+        return correctedResults;
     }
 
     @Override
@@ -174,6 +170,7 @@ public class HTMLElementImpl extends HTMLElement {
      */
     public static class BuilderImpl implements Builder {
         private final HTMLElementImpl element;
+        private SpellChecker spellChecker;
 
         public BuilderImpl() {
             this.element = new HTMLElementImpl();
@@ -210,7 +207,23 @@ public class HTMLElementImpl extends HTMLElement {
         }
 
         @Override
+        public Builder setSpellChecker(SpellChecker spellChecker) {
+            this.spellChecker = spellChecker;
+            return this;
+        }
+
+        @Override
         public HTMLElement build() {
+            // 拼写检查并存储结果
+            spellChecker = new SpellChecker();
+            try {
+                List<String> results = element.checkSpelling(spellChecker);
+
+                element.setSpellCheckResults(results);
+            } catch (IOException e) {
+                e.printStackTrace();
+                element.setSpellCheckResults(new ArrayList<>());
+            }
             return element;
         }
     }
