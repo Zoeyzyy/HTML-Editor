@@ -19,7 +19,8 @@ public class LoadCommand implements Command {
     @Override
     public void execute() {
         try {
-            session.load(filePath);
+            String currentPath = System.getProperty("user.dir");
+            session.load(currentPath + filePath);
         }catch (Exception e){
 
         }
