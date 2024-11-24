@@ -88,9 +88,9 @@ public class Editor {
         }
         
         // 如果提供了新文件名，则更新文件名
-        if (filename != null) {
-            this.filename = filename.replace("\\", "/");
-        }
+//        if (filename != null) {
+//            this.filename = filename.replace("\\", "/");
+//        }
         
         // 确保文件名存在
         if (this.filename == null) {

@@ -107,13 +107,13 @@ public class Session {
         File file = new File(filename);
         filename = file.getAbsolutePath();
         editor.load(filename);
-
         editors.put(filename, editor);
         files.add(filename);
         activeEditor = editor;
     }
 
     public void save(String filename) throws IOException {
+        filename = new File(filename).getAbsolutePath();
         activeEditor.save(filename);
     }
 
@@ -123,11 +123,6 @@ public class Session {
 
     public void close() {
         if (activeEditor != null) {
-//            System.out.println(activeEditor.getFileName());
-//            files.stream().map(file -> {
-//                System.out.println(file);
-//                return null;
-//            });
             editors.remove(activeEditor.getFileName());
             files.remove(activeEditor.getFileName());
             activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
