@@ -12,4 +12,8 @@ public class CommandInvoker {
         command.execute();
         session.getActiveEditor().storeCommand(command);
     }
+
+    public void execute(Command command) {
+        command.execute();
+    }
 }
