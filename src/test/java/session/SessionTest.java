@@ -83,7 +83,8 @@ public class SessionTest {
         absolutePath = Paths.get("example.html").toAbsolutePath().toString();
         assertTrue(session.getEditorList().contains(absolutePath));
 
-        absolutePath = Paths.get("example2.html").toAbsolutePath().toString();
+        absolutePath = ">" + Paths.get("example2.html").toAbsolutePath().toString();
+        System.out.println(session.getEditorList());
         assertTrue(session.getEditorList().contains(absolutePath));
     }
 

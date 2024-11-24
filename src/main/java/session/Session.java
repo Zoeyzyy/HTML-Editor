@@ -6,6 +6,7 @@ import editor.Editor;
 import lombok.Getter;
 
 import java.io.*;
+import java.util.stream.Collectors;
 
 public class Session {
     @Getter
@@ -16,7 +17,7 @@ public class Session {
     private Editor activeEditor;
 
     public Session(String id) {
-        if (this.recover("./data/" + id) == null) {
+        if (this.recover("./data/session_dump" ) == null) {
             this.files = new ArrayList<>();
             this.editors = new HashMap<>();
             this.activeEditor = null;
@@ -24,7 +25,16 @@ public class Session {
         this.id = id;
     }
 
+    public void enter (String id) {
+        Session session = new Session(id);
+        this.id = session.id;
+        this.files = new ArrayList<>(session.files);
+        this.editors = new HashMap<>(session.editors);
+        this.activeEditor = session.activeEditor;
+    }
+
     public void dump(String filename) {
+        filename = "./data/session_dump";
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
             List<DumpType> saved = new ArrayList<>();
             for (String file : this.files) {
@@ -42,6 +52,7 @@ public class Session {
     }
 
     public List<String> recover(String filename) {
+        filename = "./data/session_dump";
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
             @SuppressWarnings("unchecked")
             List<DumpType> list = (List<DumpType>) in.readObject();
@@ -62,11 +73,23 @@ public class Session {
             }
 
             this.activeEditor = this.editors.get(list.get(0).getFileName());
-            return this.files;
+
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
             return null;
         }
+        File file = new File(filename);
+        if (file.exists()) {
+            boolean isDeleted = file.delete();
+            if (isDeleted) {
+                System.out.println("Dump file deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        } else {
+            System.out.println("File does not exist.");
+        }
+        return this.files;
     }
 
     public void load(String filename) throws IOException {
@@ -97,7 +120,17 @@ public class Session {
     }
 
     public List<String> getEditorList() {
-        return this.files;
+        return this.files.stream().map(file -> {
+            File f = new File(file);
+            if (isModified(f)) {
+                file = file + "*";
+            }
+
+            if (isEditing(f)){
+                file = ">" + file;
+            }
+            return file;
+        }).collect(Collectors.toList());
     }
 
     public void activateEditor(String filename) {
@@ -145,11 +178,8 @@ public class Session {
     private void printFile(File file, int indent, StringBuilder sb, String sep) {
         sb.append(getIndentString(indent));
         sb.append(sep);
-        if(isEditing(file)){
-            sb.append(">");
-        }
         sb.append(file.getName());
-        if (isModified(file)) {
+        if (isInSession(file)) {
             sb.append("*");
         }
         sb.append("\n");
@@ -187,10 +217,8 @@ public class Session {
             for (int i = 0; i < indent; i++) {
                 sb.append(" ");
             }
-            if (isEditing(file)) {
-                sb.append(">");
-            }
-            sb.append(file.getName()).append(isModified(file) ? "*" : "");
+
+            sb.append(file.getName()).append(isInSession(file) ? "*" : "");
             sb.append("\n");
 
             // 递归打印子目录
@@ -214,11 +242,11 @@ public class Session {
         return editors.get(file.getAbsolutePath()).isModified();
     }
 
-    public Session enter(String id) {
-        return new Session(id);
+    private boolean isInSession(File file) {
+        return editors.containsKey(file.getAbsolutePath());
     }
 
     public void exit() {
-        this.dump("./data/" + this.id);
+        this.dump("./data/session_dump");
     }
 }

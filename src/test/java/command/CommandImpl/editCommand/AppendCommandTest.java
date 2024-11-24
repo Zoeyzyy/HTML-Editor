@@ -6,8 +6,8 @@ import exception.ElementDuplicateID;
 import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 public class AppendCommandTest {
     @Test
     public void executeAndUndo() {
@@ -17,7 +17,7 @@ public class AppendCommandTest {
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         appendCommand.execute();
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
-
+        assertTrue(editor.isModified());
         // deal with same id
         AppendCommand appendCommand2 = new AppendCommand(editor, "div", "id1", "body", "Hello HTML");
         assertThrows(ElementDuplicateID.class, ()->appendCommand2.execute());
