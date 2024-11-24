@@ -35,7 +35,7 @@ public class Console {
                 if (input.isEmpty()) {
                     continue;
                 }
-                if(input == "exit") {
+                if(input .equals("exit")) {
                     isRunning = false;
                 }
                 // TODO : add command parser
