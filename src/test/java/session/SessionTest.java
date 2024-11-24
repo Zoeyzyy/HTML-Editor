@@ -23,12 +23,12 @@ public class SessionTest {
     void tearDown() {
         session.close();
         session = null;
-        Path filePath = Paths.get("./data/A_session");
+        Path filePath = Paths.get("./data/session_dump");
         try {
             Files.delete(filePath);
-            System.out.println("File deleted successfully.");
+            System.out.println("tearDown: File deleted successfully.");
         } catch (IOException e) {
-            System.out.println("Failed to delete the file: " + e.getMessage());
+            System.out.println("tearDown: Failed to delete the file: " + e.getMessage());
         }
     }
 
@@ -83,7 +83,8 @@ public class SessionTest {
         absolutePath = Paths.get("example.html").toAbsolutePath().toString();
         assertTrue(session.getEditorList().contains(absolutePath));
 
-        absolutePath = Paths.get("example2.html").toAbsolutePath().toString();
+        absolutePath = ">" + Paths.get("example2.html").toAbsolutePath().toString();
+        System.out.println(session.getEditorList());
         assertTrue(session.getEditorList().contains(absolutePath));
     }
 

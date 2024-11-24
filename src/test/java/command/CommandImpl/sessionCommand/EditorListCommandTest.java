@@ -29,7 +29,7 @@ public class EditorListCommandTest {
         editorListCommand.execute();
 
         String output = byteArrayOutputStream.toString();
-        assertEquals(">" + filePath, output);
+        assertEquals(">" + filePath + "\r\n", output);
         printStream.close();
 
         // TODO: 新增编辑器，再次检测
@@ -49,7 +49,7 @@ public class EditorListCommandTest {
         editorListCommand2.execute();
 
         String output2 = byteArrayOutputStream2.toString();
-        assertEquals(filePath + "\n" + ">" + filePath2 + "*", output2);
+        assertEquals(filePath + "\n" + ">" + filePath2 + "*" + "\r\n", output2);
         printStream.close();
     }
 }
