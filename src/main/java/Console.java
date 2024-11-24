@@ -4,9 +4,14 @@ import command.CommandParser;
 import command.commandImpl.sessionCommand.ExitSessionCommand;
 import session.Session;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Console {
+    private final InputStream inputStream;
+    private final PrintStream printStream;
+
     private static final String PROMPT = "shell> ";
     private boolean isRunning = true;
     private final Scanner scanner;
@@ -15,11 +20,25 @@ public class Console {
     private final CommandParser commandParser;
     private final CommandInvoker commandInvoker;
 
-    public Console() {
+    public Console(PrintStream printStream, InputStream inputStream) {
         this.session = new Session("default");
-        this.scanner = new Scanner(System.in);
-        this.commandParser = new CommandParser(session);
+        this.scanner = new Scanner(inputStream);
+        this.printStream = printStream;
+        this.inputStream = inputStream;
+        this.commandParser = new CommandParser(session, inputStream, printStream);
         this.commandInvoker = new CommandInvoker(session);
+    }
+
+    public Console() {
+        this(System.out, System.in);
+    }
+
+    public Console(PrintStream printStream) {
+        this(printStream, System.in);
+    }
+
+    public Console(InputStream inputStream) {
+        this(System.out, inputStream);
     }
 
     public void run() {
