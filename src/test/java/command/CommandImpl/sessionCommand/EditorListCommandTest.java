@@ -41,6 +41,7 @@ public class EditorListCommandTest {
         }
         AppendCommand appendCommand = new AppendCommand(session.getActiveEditor(), "div", "id1", "body", "Hello World");
         appendCommand.execute();
+        session.getActiveEditor().storeCommand(appendCommand);
 
         ByteArrayOutputStream byteArrayOutputStream2 = new ByteArrayOutputStream();
         PrintStream printStream2 = new PrintStream(byteArrayOutputStream2);
@@ -49,7 +50,7 @@ public class EditorListCommandTest {
         editorListCommand2.execute();
 
         String output2 = byteArrayOutputStream2.toString();
-        assertEquals(filePath + "\n" + ">" + filePath2 + "*" + "\r\n", output2);
+        assertEquals(filePath + "\r\n" + ">" + filePath2 + "*\r\n", output2);
         printStream.close();
     }
 }
