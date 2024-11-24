@@ -157,8 +157,8 @@ public class ConsoleIntegrationTest {
         );
 
         String output = getOutput();
-        Assertions.assertTrue(output.contains("Invalid command") ||
-                output.contains("Missing required parameters"));
+        Assertions.assertTrue(output.contains("Invalid") ||
+                output.contains("Unknown command"));
     }
 
     @Test

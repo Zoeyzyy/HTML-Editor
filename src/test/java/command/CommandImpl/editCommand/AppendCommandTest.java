@@ -1,6 +1,5 @@
 package command.CommandImpl.editCommand;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import command.commandImpl.editCommand.AppendCommand;
 import document.HTMLDocument;
 
