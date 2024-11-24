@@ -97,8 +97,14 @@ public class SessionTest {
         session.load("example.html");
         session.load("example2.html");
         session.close();
+
         String absolutePath = Paths.get("example.html").toAbsolutePath().toString();
         assertEquals(absolutePath, session.getActiveEditor().getFileName());
+
+        absolutePath = Paths.get("example2.html").toAbsolutePath().toString();
+        assertFalse(session.getEditorList().contains(absolutePath));
+
+        assertEquals(1, session.getEditorList().size());
     }
 
     @Test

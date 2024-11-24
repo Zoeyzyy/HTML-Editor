@@ -123,6 +123,11 @@ public class Session {
 
     public void close() {
         if (activeEditor != null) {
+//            System.out.println(activeEditor.getFileName());
+//            files.stream().map(file -> {
+//                System.out.println(file);
+//                return null;
+//            });
             editors.remove(activeEditor.getFileName());
             files.remove(activeEditor.getFileName());
             activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
