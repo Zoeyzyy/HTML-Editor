@@ -1,9 +1,7 @@
 import command.Command;
 import command.CommandInvoker;
 import command.CommandParser;
-import command.commandImpl.sessionCommand.EnterSessionCommand;
 import command.commandImpl.sessionCommand.ExitSessionCommand;
-import exception.InvalidCommandException;
 import session.Session;
 
 import java.util.Scanner;
@@ -26,8 +24,6 @@ public class Console {
 
     public void run() {
         System.out.println("Welcome to HTML Editor! (Type 'exit' to quit)");
-        Command enterSessionCommand = EnterSessionCommand.create(session);
-        enterSessionCommand.execute();
         while (isRunning) {
             try {
                 System.out.print(PROMPT);
@@ -51,13 +47,6 @@ public class Console {
 
         scanner.close();
         System.out.println("Goodbye!");
-    }
-
-
-    private void clearScreen() {
-        // This is a simple way to clear screen, might not work in all terminals
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 
     public static void main(String[] args) {
