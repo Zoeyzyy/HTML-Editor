@@ -33,7 +33,7 @@ public class ShowIDCommandTest {
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +
-                "│ └── title\n" +
+                "│   └── title\n" +
                 "└── body\n" +
                 "    └── div#id1\n" +
                 "        └── Hello World\n",output);
@@ -51,7 +51,7 @@ public class ShowIDCommandTest {
         output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +
-                "│ └── title\n" +
+                "│   └── title\n" +
                 "└── body\n" +
                 "    └── div\n" +
                 "        └── Hello World\n",output);
