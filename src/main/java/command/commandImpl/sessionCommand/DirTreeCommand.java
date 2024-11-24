@@ -28,10 +28,14 @@ public class DirTreeCommand implements Command {
     public static Command create(Session session, PrintStream printStream) {
         return new DirTreeCommand(session, printStream);
     }
-    
+
     @Override
     public void execute() {
         // return String
-        printStream.print(session.getDirTreeFormat(0));
+        try {
+            printStream.print(session.getDirTreeFormat(0));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

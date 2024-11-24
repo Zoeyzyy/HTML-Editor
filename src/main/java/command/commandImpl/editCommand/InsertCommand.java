@@ -31,7 +31,7 @@ public class InsertCommand implements CanUndoCommand {
     public void execute() {
         try {
             editor.insert(tagName, idValue, insertLocation, textContent);
-        }catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -40,7 +40,7 @@ public class InsertCommand implements CanUndoCommand {
     public void undo() {
         try {
             editor.delete(idValue);
-        }catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }

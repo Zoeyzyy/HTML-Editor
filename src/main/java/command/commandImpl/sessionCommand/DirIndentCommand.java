@@ -54,6 +54,10 @@ public class DirIndentCommand implements Command {
     @Override
     public void execute() {
         // return String
-        printStream.print(session.getDirIndentFormat(indent));
+        try {
+            printStream.print(session.getDirIndentFormat(indent));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

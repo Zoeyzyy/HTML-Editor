@@ -30,8 +30,12 @@ public class EditorListCommand implements Command {
     @Override
     public void execute() {
         // return [String1, string2, ...]
-        for (String editorName : session.getEditorList()) {
-            printStream.println(editorName);
+        try {
+            for (String editorName : session.getEditorList()) {
+                printStream.println(editorName);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 }

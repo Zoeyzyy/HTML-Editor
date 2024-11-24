@@ -21,11 +21,19 @@ public class EditIDCommand implements CanUndoCommand {
 
     @Override
     public void execute() {
-        editor.editId(oldID, newID);
+        try {
+            editor.editId(oldID, newID);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
     public void undo() {
-        editor.editId(newID, oldID);
+        try {
+            editor.editId(newID, oldID);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

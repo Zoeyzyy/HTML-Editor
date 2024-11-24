@@ -18,6 +18,10 @@ public class ChangeEditorCommand implements Command {
 
     @Override
     public void execute() {
-        session.activateEditor(filePath);
+        try {
+            session.activateEditor(filePath);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

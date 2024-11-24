@@ -24,11 +24,19 @@ public class EditTextCommand implements CanUndoCommand {
     public void execute() {
         // TODO： whether touch HTMLElement or not
         oldTextContent = editor.getDocument().findElementById(element).getTextContent();
-        editor.editText(element, newTextContent);
+        try {
+            editor.editText(element, newTextContent);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
     public void undo() {
-        editor.editText(element, oldTextContent);
+        try {
+            editor.editText(element, newTextContent);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

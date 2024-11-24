@@ -28,7 +28,7 @@ public class AppendCommand implements CanUndoCommand {
     public void execute() {
         try {
             editor.append(tagName, idValue, parentElement, textContent);
-        }catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -37,7 +37,7 @@ public class AppendCommand implements CanUndoCommand {
     public void undo() {
         try {
             editor.delete(idValue);
-        }catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }

@@ -15,6 +15,10 @@ public class ExitSessionCommand implements Command {
 
     @Override
     public void execute() {
-        session.exit();
+        try {
+            session.exit();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

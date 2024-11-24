@@ -28,11 +28,11 @@ public class DeleteCommand implements CanUndoCommand {
         idValue = editor.getDocument().findElementById(element).getId();
         insertLocation = editor.getDocument().findElementById(element).getInsertLocation(editor.getDocument().findElementById(element));
         textContent = editor.getDocument().findElementById(element).getTextContent();
-        System.out.println("When executing DeleteCommand,the tagName/idValue/textContent: "+tagName+idValue+textContent);
-        System.out.println("After execute DeleteCommand,insertLocation is "+insertLocation);
+        System.out.println("When executing DeleteCommand,the tagName/idValue/textContent: " + tagName + idValue + textContent);
+        System.out.println("After execute DeleteCommand,insertLocation is " + insertLocation);
         try {
             editor.delete(element);
-        } catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -40,9 +40,8 @@ public class DeleteCommand implements CanUndoCommand {
     @Override
     public void undo() {
         try {
-//            System.out.println("history insertLocation is:"+insertLocation);
             editor.insert(tagName, idValue, insertLocation, textContent);
-        }catch (Error e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
