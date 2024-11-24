@@ -16,6 +16,8 @@ public class AppendCommandTest {
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         appendCommand.execute();
+        editor.storeCommand(appendCommand);
+
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
         assertTrue(editor.isModified());
         // deal with same id

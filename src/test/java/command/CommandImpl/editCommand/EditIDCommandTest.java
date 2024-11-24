@@ -17,10 +17,12 @@ public class EditIDCommandTest {
 
         InsertCommand insertCommand = new InsertCommand(editor, "div", "id1", "body", "Hello World");
         insertCommand.execute();
+        editor.storeCommand(insertCommand);
         assertEquals("id1", editor.getDocument().findElementById("id1").getId());
 
         EditIDCommand editIDCommand = new EditIDCommand(editor, "id1", "id2");
         editIDCommand.execute();
+        editor.storeCommand(editIDCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
         assertEquals("id2", editor.getDocument().findElementById("id2").getId());
 

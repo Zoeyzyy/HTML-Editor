@@ -22,6 +22,8 @@ public class InsertCommandTest {
         InsertCommand insertCommand = new InsertCommand(editor, "div", "id2", "id1", "Hello HTML");
         appendCommand.execute();
         insertCommand.execute();
+        editor.storeCommand(insertCommand);
+        editor.storeCommand(appendCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
         // test id2 is before id1
         assertEquals("id1", editor.getDocument().findElementById("id2").getNextSibling().getId());

@@ -17,9 +17,11 @@ public class DeleteCommandTest {
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         appendCommand.execute();
+        editor.storeCommand(appendCommand);
 
         DeleteCommand deleteCommand = new DeleteCommand(editor, "id1");
         deleteCommand.execute();
+        editor.storeCommand(deleteCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
 
         // test undo

@@ -15,9 +15,12 @@ public class EditTextCommandTest {
 
         EditTextCommand editTextCommand1 = new EditTextCommand(editor, "body", "Hello World");
         editTextCommand1.execute();
+        editor.storeCommand(editTextCommand1);
         assertEquals("Hello World", editor.getDocument().findElementById("body").getTextContent());
+
         EditTextCommand editTextCommand2 = new EditTextCommand(editor, "body", "Hello World Again");
         editTextCommand2.execute();
+        editor.storeCommand(editTextCommand2);
         assertEquals("Hello World Again", editor.getDocument().findElementById("body").getTextContent());
 
         // test editTextCommand2 undo
