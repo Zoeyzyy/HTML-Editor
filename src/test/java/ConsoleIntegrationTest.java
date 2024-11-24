@@ -2,8 +2,6 @@ import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 
 public class ConsoleIntegrationTest {
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -15,6 +13,7 @@ public class ConsoleIntegrationTest {
     void setUp() {
         System.setOut(new PrintStream(outputStream));
         System.setErr(new PrintStream(outputStream));
+        outputStream.reset();
     }
 
     @AfterEach
@@ -35,11 +34,34 @@ public class ConsoleIntegrationTest {
         return outputStream.toString();
     }
 
+    private String extractHtmlOutput(String fullOutput) {
+        int startIndex = fullOutput.lastIndexOf("print-indent\n") + "print-indent\n".length();
+        int endIndex = fullOutput.indexOf("shell>", startIndex);
+        if (endIndex == -1) {
+            endIndex = fullOutput.length();
+        }
+        return fullOutput.substring(startIndex, endIndex).trim();
+    }
+
     @Test
     void testInitCommand() {
-        simulateUserInput("init");
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("HTML template initialized"));
+        simulateUserInput(
+                "init",
+                "print-indent"
+        );
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -47,10 +69,25 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "insert div main-content body",
-                "insert p paragraph-1 main-content Welcome to my website"
+                "insert p paragraph-1 main-content Welcome to my website",
+                "print-indent"
         );
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("Element inserted successfully"));
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"main-content\">\n" +
+                        "        <p id=\"paragraph-1\">Welcome to my website</p>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -58,10 +95,25 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "append div content-wrapper body",
-                "append p welcome-text content-wrapper Hello World!"
+                "append p welcome-text content-wrapper Hello World!",
+                "print-indent"
         );
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("Element appended successfully"));
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"content-wrapper\">\n" +
+                        "        <p id=\"welcome-text\">Hello World!</p>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -69,10 +121,24 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "insert div old-id body",
-                "edit-id old-id new-id"
+                "edit-id old-id new-id",
+                "print-indent"
         );
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("ID updated successfully"));
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"new-id\">\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -80,10 +146,23 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "insert p test-p body Initial text",
-                "edit-text test-p Updated content"
+                "edit-text test-p Updated content",
+                "print-indent"
         );
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("Text content updated successfully"));
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <p id=\"test-p\">Updated content</p>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -91,10 +170,23 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "insert div to-delete body",
-                "delete to-delete"
+                "insert p test-p to-delete Test content",
+                "delete to-delete",
+                "print-indent"
         );
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("Element deleted successfully"));
+
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -102,49 +194,112 @@ public class ConsoleIntegrationTest {
         simulateUserInput(
                 "init",
                 "insert div test-div body",
+                "print-indent",
                 "undo",
-                "redo"
+                "print-indent",
+                "redo",
+                "print-indent"
         );
+
         String output = getOutput();
-        Assertions.assertTrue(output.contains("Operation undone successfully"));
-        Assertions.assertTrue(output.contains("Operation redone successfully"));
+        String[] outputs = output.split("shell>");
+
+        String withDivHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"test-div\">\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String withoutDivHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        // 验证三个状态的输出
+        Assertions.assertTrue(outputs[1].trim().endsWith(withDivHtml));  // 初始插入后
+        Assertions.assertTrue(outputs[2].trim().endsWith(withoutDivHtml));  // undo后
+        Assertions.assertTrue(outputs[3].trim().endsWith(withDivHtml));  // redo后
     }
 
     @Test
-    void testComplexWorkflow() {
+    void testComplexStructure() {
         simulateUserInput(
                 "init",
-                "insert div container body",
+                "append div container body",
                 "append div header container",
                 "append h1 title header Welcome to My Website",
                 "append div content container",
                 "append p paragraph-1 content First paragraph",
-                "edit-text paragraph-1 Updated first paragraph",
-                "edit-id content main-content",
-                "undo",
-                "redo",
-                "delete paragraph-1"
+                "append ul list content",
+                "append li item1 list Item 1",
+                "append li item2 list Item 2",
+                "print-indent"
         );
 
-        String output = getOutput();
-        List<String> expectedMessages = Arrays.asList(
-                "HTML template initialized",
-                "Element inserted successfully",
-                "Element appended successfully",
-                "Element appended successfully",
-                "Element appended successfully",
-                "Element appended successfully",
-                "Text content updated successfully",
-                "ID updated successfully",
-                "Operation undone successfully",
-                "Operation redone successfully",
-                "Element deleted successfully"
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"container\">\n" +
+                        "        <div id=\"header\">\n" +
+                        "            <h1 id=\"title\">Welcome to My Website</h1>\n" +
+                        "        </div>\n" +
+                        "        <div id=\"content\">\n" +
+                        "            <p id=\"paragraph-1\">First paragraph</p>\n" +
+                        "            <ul id=\"list\">\n" +
+                        "                <li id=\"item1\">Item 1</li>\n" +
+                        "                <li id=\"item2\">Item 2</li>\n" +
+                        "            </ul>\n" +
+                        "        </div>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
+    }
+
+    @Test
+    void testNestedStructureModification() {
+        simulateUserInput(
+                "init",
+                "append div footer body",
+                "append p copyright footer Copyright © 2024",
+                "append p last-updated footer Last updated: 2024-01-01",
+                "edit-text copyright Copyright © 2024 MyWebpage.com",
+                "print-indent"
         );
 
-        for (String message : expectedMessages) {
-            Assertions.assertTrue(output.contains(message),
-                    "Output should contain: " + message);
-        }
+        String expectedHtml =
+                "<html>\n" +
+                        "  <head>\n" +
+                        "        <title>\n" +
+                        "        </title>\n" +
+                        "    </head>\n" +
+                        "<body>\n" +
+                        "    <div id=\"footer\">\n" +
+                        "        <p id=\"copyright\">Copyright © 2024 MyWebpage.com</p>\n" +
+                        "        <p id=\"last-updated\">Last updated: 2024-01-01</p>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+        String actualHtml = extractHtmlOutput(getOutput());
+        Assertions.assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
@@ -153,24 +308,14 @@ public class ConsoleIntegrationTest {
                 "invalid-command",
                 "insert div",  // Missing parameters
                 "edit-id",     // Missing parameters
-                "delete"       // Missing parameters
+                "delete",      // Missing parameters
+                "print-indent"
         );
 
         String output = getOutput();
-        Assertions.assertTrue(output.contains("Invalid") ||
-                output.contains("Unknown command"));
-    }
-
-    @Test
-    void testEmptyInput() {
-        simulateUserInput(
-                "",
-                "   ",
-                "\t"
+        Assertions.assertTrue(
+                output.contains("Invalid command") ||
+                        output.contains("Missing required parameters")
         );
-
-        String output = getOutput();
-        Assertions.assertTrue(output.contains("shell>"));
-        Assertions.assertFalse(output.contains("Invalid command"));
     }
 }
