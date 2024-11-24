@@ -35,7 +35,17 @@ public class Session {
 
     public void dump(String filename) {
         filename = "./data/session_dump";
+        File dir = new File("./data/");
+        if (!dir.exists()) {
+            boolean mkdirSuccess = dir.mkdirs();
+            if (mkdirSuccess) {
+                System.out.println("Directory created successfully.");
+            } else {
+                System.out.println("Failed to create the directory.");
+            }
+        }
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+
             List<DumpType> saved = new ArrayList<>();
             for (String file : this.files) {
                 saved.add(new DumpType(file, this.editors.get(file).getDocument().getShowID()));
