@@ -43,7 +43,6 @@ public abstract class HTMLElement {
         Builder setClassName(String className);
         Builder setTextContent(String content);
         Builder addChild(HTMLElement child);
-        Builder setSpellChecker(SpellChecker spellChecker);
         HTMLElement build();
     }
 

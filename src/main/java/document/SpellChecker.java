@@ -9,12 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpellChecker {
-    private final JLanguageTool languageTool;
-
-    public SpellChecker() {
-        // 使用英式英语语言模型
-        this.languageTool = new JLanguageTool(new BritishEnglish());
-    }
+    private static final JLanguageTool LANGUAGE_TOOL = new JLanguageTool(new BritishEnglish());
 
     /**
      * 检查拼写错误并返回修正后的文本
@@ -24,7 +19,7 @@ public class SpellChecker {
      * @throws IOException 异常处理
      */
     public String checkSpelling(String text) throws IOException {
-        List<RuleMatch> matches = languageTool.check(text);
+        List<RuleMatch> matches = LANGUAGE_TOOL.check(text);
         StringBuilder correctedText = new StringBuilder(text);
 
         // 从后向前替换以避免位置偏移问题
