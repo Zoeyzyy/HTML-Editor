@@ -14,18 +14,23 @@ public class CloseCommand implements Command {
     private final InputStream inputStream;
     private final Scanner scanner;
 
-    public CloseCommand(Session session) {
+    public CloseCommand(Session session, PrintStream printStream, InputStream inputStream) {
         this.session = session;
-        this.printStream = System.out;
-        this.inputStream = System.in;
+        this.printStream = printStream;
+        this.inputStream = inputStream;
         this.scanner = new Scanner(inputStream);
     }
 
+    public CloseCommand(Session session) {
+        this(session, System.out, System.in);
+    }
+
     public CloseCommand(Session session, PrintStream printStream) {
-        this.session = session;
-        this.printStream = printStream;
-        this.inputStream = System.in;
-        this.scanner = new Scanner(inputStream);
+        this(session, printStream, System.in);
+    }
+
+    public CloseCommand(Session session, InputStream inputStream) {
+        this(session, System.out, inputStream);
     }
 
     public static Command create(Session session) {

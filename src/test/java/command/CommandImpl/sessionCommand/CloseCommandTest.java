@@ -5,6 +5,10 @@ import command.commandImpl.sessionCommand.CloseCommand;
 import org.junit.jupiter.api.Test;
 import session.Session;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -40,6 +44,10 @@ public class CloseCommandTest {
         InsertCommand insertCommand = new InsertCommand(session.getActiveEditor(), "div", "id1", "body", "Hello HTML");
         insertCommand.execute();
         session.getActiveEditor().storeCommand(insertCommand);
+
+        String simulatedInput = "y";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
         CloseCommand closeCommand = new CloseCommand(session);
         closeCommand.execute();
