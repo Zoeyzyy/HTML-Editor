@@ -39,6 +39,8 @@ public class CloseCommandTest {
         assertEquals(filePath, session.getActiveEditor().getFileName());
         InsertCommand insertCommand = new InsertCommand(session.getActiveEditor(), "div", "id1", "body", "Hello HTML");
         insertCommand.execute();
+        session.getActiveEditor().storeCommand(insertCommand);
+
         CloseCommand closeCommand = new CloseCommand(session);
         closeCommand.execute();
         assertNull(session.getActiveEditor());
