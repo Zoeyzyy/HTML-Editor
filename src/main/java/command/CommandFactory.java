@@ -118,7 +118,7 @@ public class CommandFactory {
                 args -> DeleteCommand.create(this.session.getActiveEditor(),args[0]));
 
         registerCommand("print-indent",
-                args -> PrintIndentCommand.create(this.session.getActiveEditor(),Integer.parseInt(args[0]),out));
+                args -> PrintIndentCommand.create(this.session.getActiveEditor(),args.length==1?Integer.parseInt(args[0]):2,out));
 
         registerCommand("print-tree",
                 args -> PrintTreeCommand.create(this.session.getActiveEditor(),out));

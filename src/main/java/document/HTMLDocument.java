@@ -186,15 +186,15 @@ public class HTMLDocument {
         printIndent(level, indent);
 
         String eleTagHeader = String.format("<%s",ele.getTagName());
-        if(ele.getId()!=null && getShowID()){
+        if(ele.getId()!=null && !isSpecialElement(ele)){
             eleTagHeader+=String.format(" id=\"%s\">\n",ele.getId());
         }else
             eleTagHeader+=">\n";
 
         sb.append(eleTagHeader);
 
-        if(ele.getTextContent()!=null && !ele.getTextContent().isEmpty() &&isSpecialElement(ele)){
-            printIndent(level, indent);
+        if(ele.getTextContent()!=null && !ele.getTextContent().isEmpty()){
+            printIndent(level+1, indent);
             sb.append(ele.getTextContent()).append("\n");
         }
 
