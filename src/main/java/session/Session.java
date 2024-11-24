@@ -35,7 +35,17 @@ public class Session {
 
     public void dump(String filename) {
         filename = "./data/session_dump";
+        File dir = new File("./data/");
+        if (!dir.exists()) {
+            boolean mkdirSuccess = dir.mkdirs();
+            if (mkdirSuccess) {
+                System.out.println("Directory created successfully.");
+            } else {
+                System.out.println("Failed to create the directory.");
+            }
+        }
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+
             List<DumpType> saved = new ArrayList<>();
             for (String file : this.files) {
                 saved.add(new DumpType(file, this.editors.get(file).getDocument().getShowID()));
@@ -113,6 +123,11 @@ public class Session {
 
     public void close() {
         if (activeEditor != null) {
+//            System.out.println(activeEditor.getFileName());
+//            files.stream().map(file -> {
+//                System.out.println(file);
+//                return null;
+//            });
             editors.remove(activeEditor.getFileName());
             files.remove(activeEditor.getFileName());
             activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
