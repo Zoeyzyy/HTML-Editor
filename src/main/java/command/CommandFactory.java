@@ -15,6 +15,8 @@ import editor.Editor;
 import history.CommandHistory;
 import session.Session;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -50,12 +52,14 @@ public class CommandFactory {
     private final Map<String, CommandFormat> commandFormats = new HashMap<>();
     private final Editor editor;
     private final Session session;
+    private final PrintStream out;
 
 
 
-    public CommandFactory(Session session, Editor editor) {
+    public CommandFactory(Session session, Editor editor, PrintStream out) {
         this.editor = editor;
         this.session = session;
+        this.out = out;
         this.initCommandFormats();
         this.registerCommands();
     }
@@ -116,10 +120,10 @@ public class CommandFactory {
                 args -> DeleteCommand.create(editor,args[0]));
 
         registerCommand("print-indent",
-                args -> PrintIndentCommand.create(editor,Integer.parseInt(args[0])));
+                args -> PrintIndentCommand.create(editor,Integer.parseInt(args[0]),out));
 
         registerCommand("print-tree",
-                args -> PrintTreeCommand.create(editor));
+                args -> PrintTreeCommand.create(editor,out));
 
         registerCommand("spell-check",
                 args -> SpellCheckCommand.create(editor));

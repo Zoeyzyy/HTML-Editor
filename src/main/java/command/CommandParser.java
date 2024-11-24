@@ -6,6 +6,8 @@ import exception.ElementNotFound;
 import history.CommandHistory;
 import session.Session;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 
@@ -16,8 +18,8 @@ import java.util.Arrays;
 public class CommandParser {
     CommandFactory commandFactory;
 
-    public CommandParser(Session session) {
-        commandFactory=new CommandFactory(session, session.getActiveEditor());
+    public CommandParser(Session session, InputStream in, PrintStream out) {
+        commandFactory=new CommandFactory(session, session.getActiveEditor(),out);
     }
 
     /**
