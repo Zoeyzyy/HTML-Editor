@@ -1,15 +1,13 @@
 package command.CommandImpl.editCommand;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import command.commandImpl.editCommand.AppendCommand;
-import document.HTMLDocument;
-
 import editor.Editor;
 import exception.ElementDuplicateID;
 import exception.ElementNotFound;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 public class AppendCommandTest {
     @Test
     public void executeAndUndo() {
