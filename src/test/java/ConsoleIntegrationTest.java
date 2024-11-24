@@ -181,7 +181,7 @@ public class ConsoleIntegrationTest {
     void testUndoRedoCommands() {
         simulateUserInput(
                 "init",
-                "insert div test-div body",
+                "append div test-div body",
                 "print-indent",
                 "undo",
                 "print-indent",
@@ -189,34 +189,34 @@ public class ConsoleIntegrationTest {
                 "print-indent"
         );
 
-        String output = getOutput();
+        String[] outputs = getOutput().split("<html>");
 
         String withDivHtml =
-                "<html>\n" +
+                "\n" +
                         "  <head>\n" +
-                        "        <title>\n" +
-                        "        </title>\n" +
-                        "    </head>\n" +
-                        "<body>\n" +
+                        "    <title>\n" +
+                        "    </title>\n" +
+                        "  </head>\n" +
+                        "  <body>\n" +
                         "    <div id=\"test-div\">\n" +
                         "    </div>\n" +
-                        "</body>\n" +
+                        "  </body>\n" +
                         "</html>";
+
 
         String withoutDivHtml =
-                "<html>\n" +
+                "\n" +
                         "  <head>\n" +
-                        "        <title>\n" +
-                        "        </title>\n" +
-                        "    </head>\n" +
-                        "<body>\n" +
-                        "</body>\n" +
+                        "    <title>\n" +
+                        "    </title>\n" +
+                        "  </head>\n" +
+                        "  <body>\n" +
+                        "  </body>\n" +
                         "</html>";
-
         // 验证三个状态的输出
-//        Assertions.assertTrue(outputs[1].trim().endsWith(withDivHtml));  // 初始插入后
-//        Assertions.assertTrue(outputs[2].trim().endsWith(withoutDivHtml));  // undo后
-//        Assertions.assertTrue(outputs[3].trim().endsWith(withDivHtml));  // redo后
+        Assertions.assertEquals(withDivHtml,outputs[1]);
+        Assertions.assertEquals(withoutDivHtml,outputs[2]);
+        Assertions.assertEquals(withDivHtml,outputs[3] );
     }
 
     @Test
