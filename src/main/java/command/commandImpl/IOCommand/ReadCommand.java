@@ -23,18 +23,10 @@ public class ReadCommand implements Command {
     @Override
     public void execute() {
         // Read the HTML file
-        String currentPath = System.getProperty("user.dir");
-        String absoluteFilePath = currentPath + filePath;
-        File file = new File(absoluteFilePath);
-
-        // 检查文件是否存在
-        if (!file.exists()) {
-            System.err.println("文件不存在！");
-        }
-        try {
-            editor.load(absoluteFilePath);
+        try { // let editor to check filepath
+            editor.load(filePath);
         } catch (IOException e) {
-
+            System.err.println(e.getMessage());
         }
     }
 }

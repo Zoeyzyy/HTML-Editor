@@ -31,7 +31,7 @@ public class DirTreeCommandTest {
         // TODO: 树形结构的目录
         assertEquals("├── resources/\n" +
                 "│   ├── template.html\n" +
-                "│   ├── Test.html*", output);
+                "│   └── Test.html*", output);
         printStream.close();
     }
 }

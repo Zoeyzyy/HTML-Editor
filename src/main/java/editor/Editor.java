@@ -33,6 +33,7 @@ public class Editor {
         this.showId = false;
         this.document = new HTMLDocument();
         this.commandHistory = new CommandHistory();
+        this.document.init();
     }
 
     public HTMLDocument getDocument(){
@@ -81,15 +82,37 @@ public class Editor {
      * @throws IOException 如果文件操作失败
      */
     public void save(String filename) throws IOException {
-        if (filename != null) {
-            this.filename = filename;
+        // 如果没有提供新文件名，且当前没有文件名，则抛出异常
+        if (filename == null && this.filename == null) {
+            throw new IOException("无法保存：文件名不能为空");
         }
-
+        
+        // 如果提供了新文件名，则更新文件名
+        if (filename != null) {
+            this.filename = filename.replace("\\", "/");
+        }
+        
+        // 确保文件名存在
+        if (this.filename == null) {
+            throw new IOException("无法保存：未指定文件名");
+        }
+        
+        // 获取文件内容并保存
         String content = document.save();
         File file = new File(this.filename);
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            writer.write(content);
+        
+        // 确保父目录存在
+        if (file.getParentFile() != null && !file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
+        
+        // 写入文件
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+            writer.write(content);
+            writer.flush();  // 确保内容被写入
+        }
+        
         modified = false;
     }
 
@@ -118,7 +141,6 @@ public class Editor {
     public void setShowId(boolean showId) {
         this.showId = showId;
         document.setShowID(showId);
-        updateModifiedState();
     }
 
     /**
@@ -197,7 +219,6 @@ public class Editor {
      */
     public void showId(boolean show) {
         document.setShowID(show);
-        updateModifiedState();
     }
 
     /**
