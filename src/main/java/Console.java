@@ -2,6 +2,7 @@ import command.Command;
 import command.CommandInvoker;
 import command.CommandParser;
 import command.commandImpl.sessionCommand.EnterSessionCommand;
+import command.commandImpl.sessionCommand.ExitSessionCommand;
 import exception.InvalidCommandException;
 import session.Session;
 
@@ -35,12 +36,14 @@ public class Console {
                 if (input.isEmpty()) {
                     continue;
                 }
-                if(input .equals("exit")) {
-                    isRunning = false;
-                }
                 // TODO : add command parser
                 Command command = commandParser.processCommand(input);
-                commandInvoker.executeAndStore(command);
+                if (command instanceof ExitSessionCommand) {
+                    isRunning = false;
+                    commandInvoker.execute(command);
+                } else {
+                    commandInvoker.executeAndStore(command);
+                }
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
