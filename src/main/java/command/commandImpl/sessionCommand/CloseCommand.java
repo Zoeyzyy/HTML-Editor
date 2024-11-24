@@ -62,3 +62,4 @@ public class CloseCommand implements Command {
             System.err.println(e.getMessage());
         }
     }
+}
