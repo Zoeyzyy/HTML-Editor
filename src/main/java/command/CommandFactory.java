@@ -50,14 +50,12 @@ public class CommandFactory {
 
     private final Map<String, CommandCreator> commandMap = new HashMap<>();
     private final Map<String, CommandFormat> commandFormats = new HashMap<>();
-    private final Editor editor;
     private final Session session;
     private final PrintStream out;
 
 
 
-    public CommandFactory(Session session, Editor editor, PrintStream out) {
-        this.editor = editor;
+    public CommandFactory(Session session, PrintStream out) {
         this.session = session;
         this.out = out;
         this.initCommandFormats();
@@ -105,44 +103,44 @@ public class CommandFactory {
      */
     private void registerCommands() {
         registerCommand("insert",
-                args -> InsertCommand.create(editor,args[0],args[1],args[2],args[3]));
+                args -> InsertCommand.create(this.session.getActiveEditor(),args[0],args[1],args[2],args[3]));
 
         registerCommand("append",
-                args -> AppendCommand.create(editor,args[0],args[1],args[2],args[3]));
+                args -> AppendCommand.create(this.session.getActiveEditor(),args[0],args[1],args[2],args[3]));
 
         registerCommand("edit-id",
-                args -> EditIDCommand.create(editor,args[0],args[1]));
+                args -> EditIDCommand.create(this.session.getActiveEditor(),args[0],args[1]));
 
         registerCommand("edit-text",
-                args -> EditTextCommand.create(editor,args[0],args[1]));
+                args -> EditTextCommand.create(this.session.getActiveEditor(),args[0],args[1]));
 
         registerCommand("delete",
-                args -> DeleteCommand.create(editor,args[0]));
+                args -> DeleteCommand.create(this.session.getActiveEditor(),args[0]));
 
         registerCommand("print-indent",
-                args -> PrintIndentCommand.create(editor,Integer.parseInt(args[0]),out));
+                args -> PrintIndentCommand.create(this.session.getActiveEditor(),Integer.parseInt(args[0]),out));
 
         registerCommand("print-tree",
-                args -> PrintTreeCommand.create(editor,out));
+                args -> PrintTreeCommand.create(this.session.getActiveEditor(),out));
 
         registerCommand("spell-check",
-                args -> SpellCheckCommand.create(editor));
+                args -> SpellCheckCommand.create(this.session.getActiveEditor()));
 
         registerCommand("read",
-                args -> ReadCommand.create(editor,args[0]));
+                args -> ReadCommand.create(this.session.getActiveEditor(),args[0]));
 
         registerCommand("save",
                 args -> SaveCommand.create(session,args[0]));
 
         registerCommand("init",
-                args -> InitCommand.create(editor));
+                args -> InitCommand.create(this.session.getActiveEditor()));
 
 
         registerCommand("redo",
-                args -> RedoCommand.create(editor));
+                args -> RedoCommand.create(this.session.getActiveEditor()));
 
         registerCommand("undo",
-                args -> UndoCommand.create(editor));
+                args -> UndoCommand.create(this.session.getActiveEditor()));
 
         registerCommand("exit",
                 args -> ExitSessionCommand.create(session));

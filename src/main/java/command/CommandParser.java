@@ -19,7 +19,7 @@ public class CommandParser {
     CommandFactory commandFactory;
 
     public CommandParser(Session session, InputStream in, PrintStream out) {
-        commandFactory=new CommandFactory(session, session.getActiveEditor(),out);
+        commandFactory=new CommandFactory(session,out);
     }
 
     /**

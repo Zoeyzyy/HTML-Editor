@@ -23,7 +23,7 @@ public class ConsoleIntegrationTest {
     }
 
     private void simulateUserInput(String... inputs) {
-        String input = String.join("\n", inputs) + "\nexit\n";
+        String input = "load a.t\n"+String.join("\n", inputs) + "\nexit\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
         System.setIn(inputStream);
         console = new Console();
