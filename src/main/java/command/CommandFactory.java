@@ -9,7 +9,7 @@ import command.commandImpl.displayCommand.SpellCheckCommand;
 import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.RedoCommand;
 import command.commandImpl.historyCommand.UndoCommand;
-import command.commandImpl.sessionCommand.ExitSessionCommand;
+import command.commandImpl.sessionCommand.*;
 import document.HTMLDocument;
 import editor.Editor;
 import history.CommandHistory;
@@ -76,6 +76,10 @@ public class CommandFactory {
         commandFormats.put("redo", new CommandFormat(0, 0, "redo"));
         commandFormats.put("undo", new CommandFormat(0, 0, "undo"));
         commandFormats.put("exit", new CommandFormat(0, 0, "exit"));
+        commandFormats.put("load", new CommandFormat(1, 1, "load filepath"));
+        commandFormats.put("close", new CommandFormat(0, 0, "close"));
+        commandFormats.put("editor-list", new CommandFormat(0, 0, "editor-list"));
+        commandFormats.put("edit", new CommandFormat(1, 1, "edit filename.html"));
     }
 
     // 验证命令格式的函数
@@ -138,6 +142,19 @@ public class CommandFactory {
 
         registerCommand("exit",
                 args -> ExitSessionCommand.create(session));
+
+        registerCommand("load",
+                args -> LoadCommand.create(session,args[0]));
+
+        registerCommand("close",
+                args -> CloseCommand.create(session));
+
+        registerCommand("editor-list",
+                args -> EditorListCommand.create(session));
+
+        registerCommand("edit",
+                args -> ChangeEditorCommand.create(session,args[0]));
+
     }
 
 
