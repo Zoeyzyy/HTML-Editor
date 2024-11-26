@@ -364,6 +364,9 @@ public class HTMLDocument {
 
 
     public void editID(String oldID, String newID) throws ElementNotFound {
+        if(idSet.contains(newID))
+            throw new ElementDuplicateID("Element: Id "+newID+" has existed.");
+
         findElementById(oldID).setId(newID);
     }
 
