@@ -19,17 +19,29 @@ public class ShowIDCommandTest {
         editor.init();
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         ShowIDCommand showIDCommand = new ShowIDCommand(editor, true);
-        showIDCommand.execute();
+        try {
+            showIDCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertTrue(editor.getDocument().getShowID());
 
         // test printTree
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +
@@ -40,14 +52,22 @@ public class ShowIDCommandTest {
         printStream.close();
 
         showIDCommand = new ShowIDCommand(editor, false);
-        showIDCommand.execute();
+        try {
+            showIDCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertFalse(editor.getDocument().getShowID());
 
         // test printTree
         byteArrayOutputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(byteArrayOutputStream);
         printTreeCommand = new PrintTreeCommand(editor, printStream);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +

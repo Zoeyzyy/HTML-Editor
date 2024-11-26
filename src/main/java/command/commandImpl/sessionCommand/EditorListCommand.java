@@ -28,14 +28,10 @@ public class EditorListCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
         // return [String1, string2, ...]
-        try {
-            for (String editorName : session.getEditorList()) {
-                printStream.println(editorName);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        for (String editorName : session.getEditorList()) {
+            printStream.println(editorName);
         }
     }
 }

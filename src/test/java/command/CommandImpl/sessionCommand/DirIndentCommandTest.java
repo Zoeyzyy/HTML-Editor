@@ -25,7 +25,11 @@ public class DirIndentCommandTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         DirIndentCommand dirIndentCommand = new DirIndentCommand(session, 4, printStream);
-        dirIndentCommand.execute();
+        try {
+            dirIndentCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         // TODO: 文件夹内容

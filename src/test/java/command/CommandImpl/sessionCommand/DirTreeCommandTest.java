@@ -25,7 +25,11 @@ public class DirTreeCommandTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         DirTreeCommand dirTreeCommand = new DirTreeCommand(session, printStream);
-        dirTreeCommand.execute();
+        try {
+            dirTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         // TODO: 树形结构的目录

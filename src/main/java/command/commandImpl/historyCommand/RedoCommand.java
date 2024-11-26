@@ -16,11 +16,7 @@ public class RedoCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            editor.redo();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        editor.redo();
     }
 }

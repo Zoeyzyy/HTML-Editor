@@ -18,14 +18,22 @@ public class SpellCheckCommandTest {
         editor.init();
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello Wrold");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         // printStream to capture output
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         SpellCheckCommand spellCheckCommand = new SpellCheckCommand(editor, printStream);
-        spellCheckCommand.execute();
+        try {
+            spellCheckCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("Id: id1[Hello World]\n", output);

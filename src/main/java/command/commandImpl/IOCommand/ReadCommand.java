@@ -21,12 +21,8 @@ public class ReadCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        // Read the HTML file
-        try { // let editor to check filepath
-            editor.load(filePath);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        // let editor to check filepath
+        editor.load(filePath);
     }
 }

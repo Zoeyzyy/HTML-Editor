@@ -42,29 +42,25 @@ public class CloseCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
         // return boolean： check active file is modified
-        try {
-            boolean modified = session.confirm();
-            while (modified) {
-                printStream.println("File is modified, do you want to save?(y/n)");
-                String input = scanner.nextLine();
-                if (input.equals("y")) {
-                    String filePath = session.getActiveEditor().getFileName();
-                    Command saveCommand = SaveCommand.create(session, filePath);
-                    saveCommand.execute();
+        boolean modified = session.confirm();
+        while (modified) {
+            printStream.println("File is modified, do you want to save?(y/n)");
+            String input = scanner.nextLine();
+            if (input.equals("y")) {
+                String filePath = session.getActiveEditor().getFileName();
+                Command saveCommand = SaveCommand.create(session, filePath);
+                saveCommand.execute();
+                break;
+            } else { // confirm again
+                printStream.println("File is modified, comfirm not to save?(y/n)");
+                String inputNext = scanner.nextLine();
+                if (inputNext.equals("y")) {
                     break;
-                } else { // confirm again
-                    printStream.println("File is modified, comfirm not to save?(y/n)");
-                    String inputNext = scanner.nextLine();
-                    if (inputNext.equals("y")) {
-                        break;
-                    }
                 }
             }
-            session.close();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
         }
+        session.close();
     }
 }

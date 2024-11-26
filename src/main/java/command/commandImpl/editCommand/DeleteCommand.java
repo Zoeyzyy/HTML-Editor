@@ -38,11 +38,7 @@ public class DeleteCommand implements CanUndoCommand {
     }
 
     @Override
-    public void undo() {
-        try {
-            editor.insert(tagName, idValue, insertLocation, textContent);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void undo() throws Exception {
+        editor.insert(tagName, idValue, insertLocation, textContent);
     }
 }

@@ -29,11 +29,7 @@ public class EditIDCommand implements CanUndoCommand {
     }
 
     @Override
-    public void undo() {
-        try {
-            editor.editId(newID, oldID);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void undo() throws Exception {
+        editor.editId(newID, oldID);
     }
 }

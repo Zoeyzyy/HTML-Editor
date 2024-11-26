@@ -1,5 +1,5 @@
 package command;
 
 public interface CanUndoCommand extends Command {
-    void undo();
+    void undo() throws Exception;
 }

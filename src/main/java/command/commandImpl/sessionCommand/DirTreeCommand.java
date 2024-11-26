@@ -30,12 +30,8 @@ public class DirTreeCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
         // return String
-        try {
-            printStream.print(session.getDirTreeFormat(0));
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        printStream.print(session.getDirTreeFormat(0));
     }
 }

@@ -24,7 +24,11 @@ public class EditTextCommandTest {
         assertEquals("Hello World Again", editor.getDocument().findElementById("body").getTextContent());
 
         // test editTextCommand2 undo
-        editTextCommand2.undo();
+        try {
+            editTextCommand2.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("Hello World", editor.getDocument().findElementById("body").getTextContent());
     }
 }

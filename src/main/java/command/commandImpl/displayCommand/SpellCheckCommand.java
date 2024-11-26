@@ -23,11 +23,7 @@ public class SpellCheckCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            printStream.print(editor.spellCheck());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        printStream.print(editor.spellCheck());
     }
 }

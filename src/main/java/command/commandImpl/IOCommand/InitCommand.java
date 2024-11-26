@@ -15,11 +15,7 @@ public class InitCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            editor.init();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        editor.init();
     }
 }

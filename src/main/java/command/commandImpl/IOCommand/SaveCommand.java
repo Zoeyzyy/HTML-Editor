@@ -33,11 +33,8 @@ public class SaveCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try { // let session to check filepath
-            session.save(filePath);
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        // let session to check filepath
+        session.save(filePath);
     }
 }

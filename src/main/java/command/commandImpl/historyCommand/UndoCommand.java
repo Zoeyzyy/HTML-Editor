@@ -16,11 +16,7 @@ public class UndoCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            editor.undo();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        editor.undo();
     }
 }

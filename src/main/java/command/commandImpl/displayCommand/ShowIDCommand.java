@@ -18,11 +18,7 @@ public class ShowIDCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            editor.showId(showID);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        editor.showId(showID);
     }
 }

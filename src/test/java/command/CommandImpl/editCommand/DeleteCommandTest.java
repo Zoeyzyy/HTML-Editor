@@ -16,7 +16,11 @@ public class DeleteCommandTest {
         editor.init();
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(appendCommand);
 
         DeleteCommand deleteCommand = new DeleteCommand(editor, "id1");
@@ -25,7 +29,11 @@ public class DeleteCommandTest {
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
 
         // test undo
-        deleteCommand.undo();
+        try {
+            deleteCommand.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertNotNull(editor.getDocument().findElementById("id1"));
         assertEquals("id1", editor.getDocument().findElementById("id1").getId());
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());

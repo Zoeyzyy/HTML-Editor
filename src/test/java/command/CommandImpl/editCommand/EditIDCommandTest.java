@@ -27,7 +27,11 @@ public class EditIDCommandTest {
         assertEquals("id2", editor.getDocument().findElementById("id2").getId());
 
         // test undo
-        editIDCommand.undo();
+        try {
+            editIDCommand.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("id1", editor.getDocument().findElementById("id1").getId());
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
     }

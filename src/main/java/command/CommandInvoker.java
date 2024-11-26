@@ -8,12 +8,12 @@ public class CommandInvoker {
         this.session = session;
     }
 
-    public void executeAndStore(Command command) {
+    public void executeAndStore(Command command) throws Exception {
         command.execute();
         session.getActiveEditor().storeCommand(command);
     }
 
-    public void execute(Command command) {
+    public void execute(Command command) throws Exception {
         command.execute();
     }
 }

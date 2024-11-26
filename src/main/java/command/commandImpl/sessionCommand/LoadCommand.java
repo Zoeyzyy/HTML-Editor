@@ -17,11 +17,8 @@ public class LoadCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try { // let session to check filepath
-            session.load(filePath);
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        // let session to check filepath
+        session.load(filePath);
     }
 }

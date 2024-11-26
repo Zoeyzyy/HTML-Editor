@@ -5,6 +5,7 @@ import session.Session;
 
 public class ExitSessionCommand implements Command {
     private final Session session;
+
     public ExitSessionCommand(Session session) {
         this.session = session;
     }
@@ -14,11 +15,7 @@ public class ExitSessionCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            session.exit();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        session.exit();
     }
 }

@@ -26,7 +26,11 @@ public class CloseCommandTest {
         }
         assertEquals(filePath, session.getActiveEditor().getFileName());
         CloseCommand closeCommand = new CloseCommand(session);
-        closeCommand.execute();
+        try {
+            closeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertNull(session.getActiveEditor());
     }
 
@@ -50,7 +54,11 @@ public class CloseCommandTest {
         System.setIn(inputStream);
 
         CloseCommand closeCommand = new CloseCommand(session);
-        closeCommand.execute();
+        try {
+            closeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertNull(session.getActiveEditor());
     }
 

@@ -20,8 +20,16 @@ public class InsertCommandTest {
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
         InsertCommand insertCommand = new InsertCommand(editor, "div", "id2", "id1", "Hello HTML");
-        appendCommand.execute();
-        insertCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            insertCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(insertCommand);
         editor.storeCommand(appendCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
@@ -29,7 +37,11 @@ public class InsertCommandTest {
         assertEquals("id1", editor.getDocument().findElementById("id2").getNextSibling().getId());
 
         // test undo insert
-        insertCommand.undo();
+        try {
+            insertCommand.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
     }

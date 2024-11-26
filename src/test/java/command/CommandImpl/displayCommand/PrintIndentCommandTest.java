@@ -20,7 +20,11 @@ public class PrintIndentCommandTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1, printStream);
-        printIndentCommand.execute();
+        try {
+            printIndentCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +

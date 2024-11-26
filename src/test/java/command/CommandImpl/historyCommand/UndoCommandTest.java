@@ -17,47 +17,91 @@ public class UndoCommandTest {
 
         // Test all undoable commands
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello World");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(appendCommand);
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
 
         InsertCommand insertCommand = new InsertCommand(editor, "div", "id2", "body", "Hello HTML");
-        insertCommand.execute();
+        try {
+            insertCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(insertCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id2").getTextContent());
 
         EditIDCommand editIDCommand = new EditIDCommand(editor, "id1", "id3");
-        editIDCommand.execute();
+        try {
+            editIDCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(editIDCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
         assertEquals("id3", editor.getDocument().findElementById("id3").getId());
 
         EditTextCommand editTextCommand = new EditTextCommand(editor, "id3", "Hello HTML");
-        editTextCommand.execute();
+        try {
+            editTextCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(editTextCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id3").getTextContent());
 
         // Test not undoable commands
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(printTreeCommand);
 
         DeleteCommand deleteCommand = new DeleteCommand(editor, "id3");
-        deleteCommand.execute();
+        try {
+            deleteCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(deleteCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id3"));
 
         UndoCommand undoCommand = new UndoCommand(editor);
-        undoCommand.execute();//undo delete
+        try {
+            undoCommand.execute();//undo delete
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("Hello HTML", editor.getDocument().findElementById("id3").getTextContent());
-        undoCommand.execute();// drop PrintTreeCommand,undo editText
+        try {
+            undoCommand.execute();// drop PrintTreeCommand,undo editText
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("Hello World", editor.getDocument().findElementById("id3").getTextContent());
-        undoCommand.execute();//undo editID
+        try {
+            undoCommand.execute();//undo editID
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("Hello World", editor.getDocument().findElementById("id1").getTextContent());
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id3"));
-        undoCommand.execute();// undo insert
+        try {
+            undoCommand.execute();// undo insert
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id2"));
-        undoCommand.execute();// undo append
+        try {
+            undoCommand.execute();// undo append
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
     }
 }

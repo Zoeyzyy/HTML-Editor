@@ -28,7 +28,11 @@ public class SaveCommandTest {
         EditTextCommand editTextCommand = new EditTextCommand(session.getActiveEditor(), "body", "Hello World");
         editTextCommand.execute();
         SaveCommand saveCommand = new SaveCommand(session, fileName);
-        saveCommand.execute();
+        try {
+            saveCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         StringBuilder content = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

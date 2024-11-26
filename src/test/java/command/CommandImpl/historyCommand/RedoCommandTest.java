@@ -19,17 +19,29 @@ public class RedoCommandTest {
 
         // Test all undoable commands
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello HTML");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(appendCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id1").getTextContent());
 
         UndoCommand undoCommand = new UndoCommand(editor);
-        undoCommand.execute();
+        try {
+            undoCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
 
         // Test redo
         RedoCommand redoCommand = new RedoCommand(editor);
-        redoCommand.execute();
+        try {
+            redoCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals("Hello HTML", editor.getDocument().findElementById("id1").getTextContent());
     }
 }

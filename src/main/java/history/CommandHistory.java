@@ -33,7 +33,7 @@ public class CommandHistory {
     /**
      * 撤销上一个命令
      */
-    public void undo() {
+    public void undo() throws Exception {
         if (undoStack.isEmpty()) {
             throw new NoUndoableOperationException();
         }
@@ -46,7 +46,7 @@ public class CommandHistory {
     /**
      * 重做上一个被撤销的命令
      */
-    public void redo() {
+    public void redo() throws Exception {
         if (redoStack.isEmpty()) {
             throw new NoRedoableOperationException();
         }

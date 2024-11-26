@@ -14,7 +14,11 @@ public class LoadCommandTest {
         assertNull(session.getActiveEditor());
         String currentPath = System.getProperty("user.dir");
         LoadCommand command = new LoadCommand(session, "src/main/resources/example.html");
-        command.execute();
+        try {
+            command.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertEquals(currentPath + "\\src\\main\\resources\\example.html", session.getActiveEditor().getFileName());
     }
 }

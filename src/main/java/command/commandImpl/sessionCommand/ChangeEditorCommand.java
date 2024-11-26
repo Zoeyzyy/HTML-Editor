@@ -7,21 +7,17 @@ public class ChangeEditorCommand implements Command {
     private final Session session;
     private final String filePath;
 
-    public ChangeEditorCommand(Session session,String filePath) {
+    public ChangeEditorCommand(Session session, String filePath) {
         this.session = session;
         this.filePath = filePath;
     }
 
-    public static Command create(Session session,String filePath) {
+    public static Command create(Session session, String filePath) {
         return new ChangeEditorCommand(session, filePath);
     }
 
     @Override
-    public void execute() {
-        try {
-            session.activateEditor(filePath);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        session.activateEditor(filePath);
     }
 }

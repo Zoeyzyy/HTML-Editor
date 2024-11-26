@@ -22,7 +22,11 @@ public class ChangeEditorCommandTest {
         }
         assertEquals(filePath1, session.getActiveEditor().getFileName());
         ChangeEditorCommand changeEditorCommand = new ChangeEditorCommand(session, filePath2);
-        changeEditorCommand.execute();
+        try {
+            changeEditorCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         // TODO: check the active document
         assertEquals(filePath2, session.getActiveEditor().getFileName());

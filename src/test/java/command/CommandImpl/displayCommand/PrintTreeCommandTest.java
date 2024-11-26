@@ -22,7 +22,11 @@ public class PrintTreeCommandTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
@@ -38,26 +42,35 @@ public class PrintTreeCommandTest {
         editor.init();
 
         AppendCommand appendCommand = new AppendCommand(editor, "div", "id1", "body", "Hello Wrold");
-        appendCommand.execute();
+        try {
+            appendCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +
                 "├── head\n" +
                 "│   └── title\n" +
-                "└── body\n"+
-                "    └── [x]div\n"+
+                "└── body\n" +
+                "    └── [x]div\n" +
                 "        └── Hello Wrold\n", output);
         printStream.close();
     }
 
     /**
      * 测试复杂Html的正常打印，并且展示id
+     *
      * @throws IOException
      */
     @Test
@@ -71,7 +84,11 @@ public class PrintTreeCommandTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintTreeCommand printTreeCommand = new PrintTreeCommand(editor, printStream);
-        printTreeCommand.execute();
+        try {
+            printTreeCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("html\n" +

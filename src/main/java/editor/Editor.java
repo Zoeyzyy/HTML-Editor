@@ -7,6 +7,7 @@ import lombok.Getter;
 import history.CommandHistory;
 import exception.ElementNotFound;
 import exception.ElementBadRemoved;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class Editor {
     private String filename;
     /**
      * -- GETTER --
-     *  检查文档是否被修改
+     * 检查文档是否被修改
      *
      * @return 如果被修改返回true
      */
@@ -36,20 +37,21 @@ public class Editor {
         this.document.init();
     }
 
-    public HTMLDocument getDocument(){
+    public HTMLDocument getDocument() {
         return this.document;
     }
 
     /**
      * 加载文档内容
      * 如果文件不存在，则新建文件
+     *
      * @param filename 要加载的文件名
      * @throws IOException 如果文件操作失败
      */
     public void load(String filename) throws IOException {
         this.filename = filename;
         File file = new File(filename);
-        
+
         if (!file.exists()) {
             document.init();
             createNewHtmlFile(file);
@@ -66,6 +68,7 @@ public class Editor {
 
     /**
      * 创建新的HTML文件
+     *
      * @param file 文件对象
      * @throws IOException 如果创建文件失败
      */
@@ -78,6 +81,7 @@ public class Editor {
 
     /**
      * 保存文档内容到指定文件
+     *
      * @param filename 要保存的文件名
      * @throws IOException 如果文件操作失败
      */
@@ -86,38 +90,39 @@ public class Editor {
         if (filename == null && this.filename == null) {
             throw new IOException("无法保存：文件名不能为空");
         }
-        
+
         // 如果提供了新文件名，则更新文件名
 //        if (filename != null) {
 //            this.filename = filename.replace("\\", "/");
 //        }
-        
+
         // 确保文件名存在
         if (this.filename == null) {
             throw new IOException("无法保存：未指定文件名");
         }
-        
+
         // 获取文件内容并保存
         String content = document.save();
         File file = new File(this.filename);
-        
+
         // 确保父目录存在
         if (file.getParentFile() != null && !file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        
+
         // 写入文件
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write(content);
             writer.flush();  // 确保内容被写入
         }
-        
+
         modified = false;
     }
 
     /**
      * 关闭编辑器
+     *
      * @throws IOException 如果保存文件时发生错误
      */
     public void close() throws IOException {
@@ -125,7 +130,7 @@ public class Editor {
             System.out.println("文档已修改，是否保存？(Y/N)");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine().trim().toUpperCase();
-            
+
             if (input.equals("Y")) {
                 save(filename);
             }
@@ -136,6 +141,7 @@ public class Editor {
 
     /**
      * 设置是否显示元素ID
+     *
      * @param showId 是否显示ID
      */
     public void setShowId(boolean showId) {
@@ -163,6 +169,7 @@ public class Editor {
 
     /**
      * 获取当前文件名
+     *
      * @return 文件名
      */
     public String getFileName() {
@@ -171,6 +178,7 @@ public class Editor {
 
     /**
      * 存储命令到历史记录
+     *
      * @param command 要存储的命令
      */
     public void storeCommand(Command command) {
@@ -180,9 +188,10 @@ public class Editor {
 
     /**
      * 执行命令并记录历史
+     *
      * @param command 要执行的命令
      */
-    public void executeCommand(Command command) {
+    public void executeCommand(Command command) throws Exception {
         command.execute();
         storeCommand(command);
     }
@@ -197,7 +206,7 @@ public class Editor {
     /**
      * 撤销上一个操作
      */
-    public void undo() {
+    public void undo() throws Exception {
         if (commandHistory.canUndo()) {
             commandHistory.undo();
             updateModifiedState();
@@ -207,7 +216,7 @@ public class Editor {
     /**
      * 重做上一个被撤销的操作
      */
-    public void redo() {
+    public void redo() throws Exception {
         if (commandHistory.canRedo()) {
             commandHistory.redo();
             updateModifiedState();
@@ -223,6 +232,7 @@ public class Editor {
 
     /**
      * 拼写检查
+     *
      * @return 拼写检查结果字符串
      */
     public String spellCheck() {
@@ -231,6 +241,7 @@ public class Editor {
 
     /**
      * 树形显示
+     *
      * @return 树形格式的文档字符串
      */
     public String printTree() {
@@ -239,6 +250,7 @@ public class Editor {
 
     /**
      * 缩进显示
+     *
      * @param indent 缩进空格数
      * @return 缩进格式的文档字符串
      */
@@ -248,6 +260,7 @@ public class Editor {
 
     /**
      * 添加元素
+     *
      * @throws ElementNotFound 如果找不到父元素
      */
     public void append(String tagName, String idValue, String parentElement, String textContent) throws ElementNotFound {
@@ -257,6 +270,7 @@ public class Editor {
 
     /**
      * 插入元素
+     *
      * @throws ElementNotFound 如果找不到目标位置
      */
     public void insert(String tagName, String idValue, String insertLocation, String textContent) throws ElementNotFound {
@@ -266,7 +280,8 @@ public class Editor {
 
     /**
      * 删除元素
-     * @throws ElementNotFound 如果找不到要删除的元素
+     *
+     * @throws ElementNotFound   如果找不到要删除的元素
      * @throws ElementBadRemoved 如果元素不能被删除
      */
     public void delete(String id) throws ElementNotFound, ElementBadRemoved {
@@ -276,6 +291,7 @@ public class Editor {
 
     /**
      * 编辑ID
+     *
      * @throws ElementNotFound 如果找不到要编辑的元素
      */
     public void editId(String oldId, String newId) throws ElementNotFound {
@@ -285,6 +301,7 @@ public class Editor {
 
     /**
      * 编辑文本内容
+     *
      * @throws ElementNotFound 如果找不到要编辑的元素
      */
     public void editText(String id, String newText) throws ElementNotFound {

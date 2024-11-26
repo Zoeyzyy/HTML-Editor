@@ -17,13 +17,21 @@ public class ReadCommandTest {
         Editor editor = new Editor();
 
         ReadCommand readCommand = new ReadCommand(editor, "\\src\\main\\resources\\Test.html");
-        readCommand.execute();
+        try {
+            readCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
         PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1,printStream);
-        printIndentCommand.execute();
+        try {
+            printIndentCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         String output = byteArrayOutputStream.toString();
         assertEquals("<html>\n" +

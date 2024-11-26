@@ -6,26 +6,27 @@ import exception.NoUndoableOperationException;
 import exception.NoRedoableOperationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CommandHistoryTest {
     private CommandHistory history;
-    
+
     // 修改为实现 CanUndoCommand 接口
     private static class TestCommand implements CanUndoCommand {
         private boolean executed = false;
-        
+
         @Override
         public void execute() {
             executed = true;
         }
-        
+
         @Override
         public void undo() {
             executed = false;
         }
     }
-    
+
     // 添加一个不可撤销的命令类
     private static class NonUndoableCommand implements Command {
         @Override
@@ -65,8 +66,12 @@ public class CommandHistoryTest {
     void testUndoCommand() {
         CanUndoCommand cmd = new TestCommand();
         history.push(cmd);
-        
-        history.undo();
+
+        try {
+            history.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertFalse(history.canUndo(), "撤销后不应该有可撤销的操作");
         assertTrue(history.canRedo(), "撤销后应该有可重做的操作");
     }
@@ -75,9 +80,17 @@ public class CommandHistoryTest {
     void testRedoCommand() {
         CanUndoCommand cmd = new TestCommand();
         history.push(cmd);
-        history.undo();
-        
-        history.redo();
+        try {
+            history.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            history.redo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertTrue(history.canUndo(), "重做后应该有可撤销的操作");
         assertFalse(history.canRedo(), "重做后不应该有可重做的操作");
     }
@@ -100,11 +113,15 @@ public class CommandHistoryTest {
     void testPushClearsRedoStack() {
         CanUndoCommand cmd1 = new TestCommand();
         CanUndoCommand cmd2 = new TestCommand();
-        
+
         history.push(cmd1);
-        history.undo();
+        try {
+            history.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertTrue(history.canRedo(), "撤销后应该有可重做的操作");
-        
+
         history.push(cmd2);
         assertFalse(history.canRedo(), "执行新命令后重做栈应该被清空");
     }
@@ -113,16 +130,20 @@ public class CommandHistoryTest {
     void testMultipleUndoRedo() {
         CanUndoCommand cmd1 = new TestCommand();
         CanUndoCommand cmd2 = new TestCommand();
-        
+
         history.push(cmd1);
         history.push(cmd2);
-        
-        history.undo();
-        history.undo();
-        
-        history.redo();
-        history.redo();
-        
+
+        try {
+            history.undo();
+            history.undo();
+
+            history.redo();
+            history.redo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
         assertTrue(history.canUndo(), "重做后应该有可撤销的操作");
         assertFalse(history.canRedo(), "重做后不应该有可重做的操作");
     }

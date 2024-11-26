@@ -28,11 +28,7 @@ public class PrintTreeCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            printStream.print(editor.printTree());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        printStream.print(editor.printTree());
     }
 }
