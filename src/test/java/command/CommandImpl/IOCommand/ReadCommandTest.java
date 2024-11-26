@@ -15,6 +15,11 @@ public class ReadCommandTest {
     @Test
     public void execute() {
         Editor editor = new Editor();
+        try {
+            editor.load("\\src\\main\\resources\\template.html");
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         ReadCommand readCommand = new ReadCommand(editor, "\\src\\main\\resources\\Test.html");
         try {
