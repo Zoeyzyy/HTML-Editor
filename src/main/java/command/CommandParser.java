@@ -1,20 +1,16 @@
 package command;
 
-import document.HTMLDocument;
-import editor.Editor;
 import exception.ElementNotFound;
-import history.CommandHistory;
 import session.Session;
-
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 
 
 /**
  * The Controller of Command
  * 主要用于用户命令的解析
  */
+
 public class CommandParser {
     private final CommandFactory commandFactory;
 
@@ -101,4 +97,5 @@ public class CommandParser {
                 || "append".equals(commandName)
                 || "edit-text".equals(commandName);
     }
+
 }
