@@ -530,3 +530,53 @@ ElementBadRemoved：错误删除异常
 在`SpellCheckerManager`中，使用双重检查锁机制实现线程安全的单例模式。
 确保拼写检查器`SpellChecker`的实例唯一性，避免资源浪费。
 通过`getInstance`方法提供全局访问点，方便在多模块中使用。
+
+### Session
+
+#### 需求简述：
+- **会话管理**：管理当前会话的ID、文件列表以及活跃编辑器
+- **文件操作**：支持加载、保存、关闭文档，并追踪文档的修改状态
+- **文件目录展示**：支持以树形结构或缩进格式显示当前编辑文件所在目录
+- **会话数据持久化**：支持将会话数据存储到文件，以及从文件恢复会话数据
+- **多文件编辑支持**：支持多个文件同时编辑，并标识当前正在编辑和修改的文件
+- **会话退出**：退出会话时自动保存会话状态
+
+#### 功能开发逻辑：
+##### (1) 会话基础操作
+- `Session(String id)`: 构造函数，初始化会话，尝试从文件恢复会话数据。
+- `enter(String id)`: 进入一个新会话，恢复该会话的文件和编辑器信息。
+- `exit()`: 退出当前会话，保存会话数据到文件。
+- `getId()`: 获取当前会话的ID。
+
+##### (2) 会话数据持久化
+- `dump(String filename)`: 将当前会话的状态（文件列表、编辑器状态）保存到文件。
+- `recover(String filename)`: 从文件恢复会话数据，包括文件列表、编辑器及其状态。
+- `load(String filename)`: 加载并打开一个文件，创建对应的编辑器并激活该编辑器。
+- `save(String filename)`: 保存当前编辑器的内容到文件。
+
+##### (3) 文件和编辑器操作
+- `confirm()`: 检查当前活跃编辑器的文档是否已修改。
+- `close()`: 关闭当前编辑器，移除文件和编辑器的关联。
+- `getEditorList()`: 获取所有文件的列表，标识哪些文件已修改并显示正在编辑的文件。
+- `activateEditor(String filename)`: 激活指定的编辑器。
+- `isModified(File file)`: 检查指定文件是否已修改。
+- `isEditing(File file)`: 检查指定文件是否为当前活跃的编辑文件。
+
+##### (4) 文件目录展示
+- `getDirTreeFormat(int level)`: 获取当前编辑文件所在目录的树形结构格式。
+- `getDirIndentFormat(int indent)`: 获取当前编辑文件所在目录的缩进格式。
+- `printFile(File file, int indent, StringBuilder sb, String sep)`: 打印目录中的文件和其修改状态。
+- `printIndent(File dir, int indent, StringBuilder sb)`: 递归打印目录及其子目录的文件信息。
+
+##### (5) 会话状态管理
+- `isInSession(File file)`: 检查文件是否在当前会话中。
+- `setShowId(boolean showId)`: 设置是否显示文件的ID。
+
+##### (6) 会话退出与恢复
+- `exit()`: 在退出时保存当前会话状态。
+- `recover(String filename)`: 在启动时从文件中恢复会话数据。
+
+#### 设计模式：
+1. **单例模式）**：通过`Session`类中的`enter`方法控制会话的唯一性，确保同一时间只有一个有效的会话实例。通过保存和恢复会话状态，使得会话的数据能够跨会话持续存在，防止多个会话实例的冲突。
+
+2. **备忘录模式**：通过`dump`和`recover`方法，保存和恢复会话的状态。`DumpType`类充当备忘录，用于存储会话的数据（如文件列表和每个文件的编辑器状态），在会话退出或恢复时读取和写入这些数据，以确保会话的状态能够回退到特定时刻。
