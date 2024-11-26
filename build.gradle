@@ -28,9 +28,14 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-api:2.0.0'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
-    implementation 'org.slf4j:slf4j-nop:2.0.9'
 }
 
 test {
     useJUnitPlatform()
+}
+
+// 通过Gradle的jar任务创建jar文件
+jar {
+    archiveBaseName = 'HTML-Editor'
+    archiveVersion = '1.0-SNAPSHOT'
 }
