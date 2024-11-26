@@ -33,6 +33,7 @@ public class RedoCommandTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+        editor.storeCommand(undoCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
 
         // Test redo
@@ -42,6 +43,7 @@ public class RedoCommandTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+        editor.storeCommand(redoCommand);
         assertEquals("Hello HTML", editor.getDocument().findElementById("id1").getTextContent());
     }
 }
