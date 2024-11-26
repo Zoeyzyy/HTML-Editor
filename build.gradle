@@ -25,6 +25,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.18.1'
 
     implementation 'org.languagetool:language-en:6.5'
+
+    implementation 'org.slf4j:slf4j-api:2.0.0'
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
 }
 
 test {
