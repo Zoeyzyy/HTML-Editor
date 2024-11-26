@@ -31,6 +31,9 @@ public class SaveCommandTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+
+//        String fileName2 = "src\\main\\resources\\example2.html";
+//        String filePath2 = currentPath + "\\" + fileName2;
         SaveCommand saveCommand = new SaveCommand(session, fileName);
         try {
             saveCommand.execute();
@@ -56,6 +59,6 @@ public class SaveCommandTest {
                 "  <body>\n" +
                 "    Hello World\n" +
                 "  </body>\n" +
-                "</html>", content.toString());
+                "</html>\n", content.toString());
     }
 }
