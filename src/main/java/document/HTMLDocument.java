@@ -155,6 +155,7 @@ public class HTMLDocument {
         if(root.getId().equals(id)){
             throw new ElementBadRemoved("Cannot remove the root element.");
         }
+        idSet.remove(id);
         HTMLElement element = findElementById(id);
         element.getParent().removeChild(element);
     }

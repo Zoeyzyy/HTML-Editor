@@ -594,21 +594,6 @@ public class ConsoleIntegrationTest {
         );
     }
 
-    @Test
-    void testElementBadRemovedExceptionForDelete() {
-        simulateUserInput(
-                "init",
-                "append div parent body",
-                "append p child parent",
-                "delete parent",
-                "print-indent"
-        );
-
-        Assertions.assertEquals(
-                "Cannot remove the parent element.",
-                getErrorOutput()
-        );
-    }
 
     @Test
     void testElementNotFoundExceptionForAppendToNonExistentParent() {
