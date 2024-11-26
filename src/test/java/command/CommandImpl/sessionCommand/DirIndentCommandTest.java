@@ -30,6 +30,7 @@ public class DirIndentCommandTest {
         String output = byteArrayOutputStream.toString();
         // TODO: 文件夹内容
         assertEquals("resources\n" +
+                "    example.html\n" +
                 "    template.html\n" +
                 "    Test.html*\n", output);
         printStream.close();

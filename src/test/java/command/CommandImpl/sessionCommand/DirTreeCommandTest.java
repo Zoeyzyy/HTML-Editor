@@ -30,6 +30,7 @@ public class DirTreeCommandTest {
         String output = byteArrayOutputStream.toString();
         // TODO: 树形结构的目录
         assertEquals("├── resources/\n" +
+                "│   ├── example.html\n" +
                 "│   ├── template.html\n" +
                 "│   └── Test.html*", output);
         printStream.close();

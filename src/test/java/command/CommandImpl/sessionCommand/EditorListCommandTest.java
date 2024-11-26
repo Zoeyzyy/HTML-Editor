@@ -33,7 +33,7 @@ public class EditorListCommandTest {
         printStream.close();
 
         // TODO: 新增编辑器，再次检测
-        String fileName2 = "\\src\\main\\resources\\template.html";
+        String fileName2 = "\\src\\main\\resources\\example.html";
         String filePath2 = currentPath + fileName2;
         try {
             session.load(filePath2);

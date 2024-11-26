@@ -13,10 +13,10 @@ public class ExitSessionCommandTest {
     public void execute() {
         Session session = new Session("default");
 //        String currentPath = System.getProperty("user.dir");
-//        LoadCommand loadCommand = new LoadCommand(session, "//src//main//resources//template.html");
+//        LoadCommand loadCommand = new LoadCommand(session, "//src//main//resources//example.html");
 //        loadCommand.execute();
 //
-//        assertEquals(currentPath + "\\src\\main\\resources\\template.html", session.getActiveEditor().getFileName());
+//        assertEquals(currentPath + "\\src\\main\\resources\\example.html", session.getActiveEditor().getFileName());
 //
 //        AppendCommand appendCommand = new AppendCommand(session.getActiveEditor(), "div", "id1", "body", "Hello World");
 //        appendCommand.execute();

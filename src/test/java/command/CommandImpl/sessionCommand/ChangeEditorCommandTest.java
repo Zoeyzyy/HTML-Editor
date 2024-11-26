@@ -12,7 +12,7 @@ public class ChangeEditorCommandTest {
         // TODO: give a filepath with a document
         String currentPath = System.getProperty("user.dir");
         String filePath1 = currentPath + "\\src\\main\\resources\\Test.html";
-        String filePath2 = currentPath + "\\src\\main\\resources\\template.html";
+        String filePath2 = currentPath + "\\src\\main\\resources\\example.html";
         Session session = new Session("");
         try {
             session.load(filePath2);

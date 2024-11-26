@@ -18,7 +18,7 @@ public class CloseCommandTest {
         // TODO: close的创建 和 执行结果
         Session session = new Session("");
         String currentPath = System.getProperty("user.dir");
-        String filePath = currentPath + "\\src\\main\\resources\\template.html";
+        String filePath = currentPath + "\\src\\main\\resources\\example.html";
         try {
             session.load(filePath);
         } catch (Exception e){
@@ -34,7 +34,7 @@ public class CloseCommandTest {
     public void executeModifiedFile() {
         Session session = new Session("");
         String currentPath = System.getProperty("user.dir");
-        String filePath = currentPath + "\\src\\main\\resources\\template.html";
+        String filePath = currentPath + "\\src\\main\\resources\\example.html";
         try{
             session.load(filePath);
         } catch (Exception e){
