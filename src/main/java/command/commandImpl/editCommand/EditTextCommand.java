@@ -30,6 +30,6 @@ public class EditTextCommand implements CanUndoCommand {
 
     @Override
     public void undo() throws Exception {
-        editor.editText(element, newTextContent);
+        editor.editText(element, oldTextContent);
     }
 }
