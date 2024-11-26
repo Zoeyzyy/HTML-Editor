@@ -10,7 +10,61 @@
 
 ### CommandInvoker
 
+
 ### CommandHistory
+
+#### 需求简述：
+- **命令历史管理**：记录和管理可撤销和可重做的操作
+- **撤销和重做机制**：提供对已执行命令的撤销和重做功能
+- **状态追踪**：跟踪当前可撤销和可重做的操作状态
+- **命令栈管理**：使用两个栈（撤销栈和重做栈）管理命令历史
+
+#### 功能开发逻辑：
+##### (1) 命令栈初始化
+- 创建两个独立的栈：`undoStack`和`redoStack`
+- `undoStack`存储可以撤销的命令
+- `redoStack`存储可以重做的命令
+
+##### (2) 命令入栈管理
+- `push(Command command)`方法
+    - 检查命令是否可撤销
+    - 将可撤销命令压入`undoStack`
+    - 清空`redoStack`，确保新命令执行后之前的重做记录失效
+
+##### (3) 撤销操作
+- `undo()`方法
+    - 检查`undoStack`是否为空
+    - 弹出最近的可撤销命令
+    - 将命令压入`redoStack`
+    - 执行命令的撤销逻辑
+    - 如栈为空，抛出`NoUndoableOperationException`
+
+##### (4) 重做操作
+- `redo()`方法
+    - 检查`redoStack`是否为空
+    - 弹出最近的可重做命令
+    - 将命令压入`undoStack`
+    - 重新执行命令
+    - 如栈为空，抛出`NoRedoableOperationException`
+
+##### (5) 状态检查
+- `canUndo()`：检查是否有可撤销的操作
+- `canRedo()`：检查是否有可重做的操作
+- 通过检查两个栈的非空状态实现
+
+##### (6) 辅助方法
+- `peekLast()`：获取最后执行的命令，但不移除
+- 如无可撤销命令，抛出`NoUndoableOperationException`
+
+##### (7) 异常处理
+- 自定义异常：`NoUndoableOperationException`
+- 自定义异常：`NoRedoableOperationException`
+- 确保在无可撤销或可重做操作时提供明确的错误提示
+
+##### (8) 设计模式应用
+- 命令模式：将请求封装为对象，支持撤销和重做
+- 栈数据结构：高效管理命令历史
+- 单一职责原则：CommandHistory专注于命令历史管理
 
 ### Command
 * 需求简述：
@@ -19,6 +73,47 @@
 ### Session
 
 ### Editor
+#### 需求简述：
+- **文档管理**：加载、保存、创建和关闭HTML文档
+- **文档编辑**：支持添加、删除、修改HTML元素
+- **文档展示**：支持多种格式显示（树形、缩进）
+- **文档操作历史**：支持撤销(undo)和重做(redo)
+- **文档状态跟踪**：记录文档是否被修改
+- **额外功能**：拼写检查、ID显示控制
+
+#### 功能开发逻辑：
+##### (1) 文档基础操作
+- `init()`: 初始化新文档
+- `load(filename)`: 加载已有文档或创建新文档
+- `save(filename)`: 保存文档到指定文件
+- `close()`: 关闭文档，提示保存修改
+- `getFileName()`: 获取当前文档名称
+
+##### (2) 文档编辑功能
+- `append()`: 在指定父元素下添加新元素
+- `insert()`: 在指定位置插入新元素
+- `delete()`: 删除指定ID的元素
+- `editId()`: 修改元素的ID
+- `editText()`: 修改元素的文本内容
+
+##### (3) 历史记录管理
+- `executeCommand()`: 执行命令并记录
+- `storeCommand()`: 存储命令到历史记录
+- `undo()`: 撤销上一个操作
+- `redo()`: 重做已撤销的操作
+- `updateModifiedState()`: 更新文档修改状态
+
+##### (4) 显示与格式化
+- `display()`: 显示当前文档内容
+- `printTree()`: 以树形结构显示文档
+- `printIndent()`: 以缩进格式显示文档
+- `showId()`: 控制是否显示元素ID
+- `spellCheck()`: 执行拼写检查
+
+##### (5) 状态管理
+- `isModified()`: 检查文档是否被修改
+- `toggleModified()`: 切换文档修改状态
+- `setShowId()`: 设置是否显示元素ID
 
 ### HTMLDocument
 
