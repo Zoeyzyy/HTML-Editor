@@ -46,7 +46,11 @@ public class CloseCommandTest {
         }
         assertEquals(filePath, session.getActiveEditor().getFileName());
         InsertCommand insertCommand = new InsertCommand(session.getActiveEditor(), "div", "id1", "body", "Hello HTML");
-        insertCommand.execute();
+        try {
+            insertCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         session.getActiveEditor().storeCommand(insertCommand);
 
         String simulatedInput = "y";

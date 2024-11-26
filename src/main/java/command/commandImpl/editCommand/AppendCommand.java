@@ -30,11 +30,7 @@ public class AppendCommand implements CanUndoCommand {
     }
 
     @Override
-    public void undo() {
-        try {
-            editor.delete(idValue);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void undo() throws Exception {
+        editor.delete(idValue);
     }
 }

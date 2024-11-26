@@ -14,12 +14,20 @@ public class EditTextCommandTest {
         editor.init();
 
         EditTextCommand editTextCommand1 = new EditTextCommand(editor, "body", "Hello World");
-        editTextCommand1.execute();
+        try {
+            editTextCommand1.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(editTextCommand1);
         assertEquals("Hello World", editor.getDocument().findElementById("body").getTextContent());
 
         EditTextCommand editTextCommand2 = new EditTextCommand(editor, "body", "Hello World Again");
-        editTextCommand2.execute();
+        try {
+            editTextCommand2.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(editTextCommand2);
         assertEquals("Hello World Again", editor.getDocument().findElementById("body").getTextContent());
 

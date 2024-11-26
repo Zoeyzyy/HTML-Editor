@@ -31,7 +31,11 @@ public class AppendCommandTest {
         assertThrows(ElementDuplicateID.class, () -> appendCommand2.execute());
 
         // test undo insert
-        appendCommand.undo();
+        try {
+            appendCommand.undo();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
     }
 }

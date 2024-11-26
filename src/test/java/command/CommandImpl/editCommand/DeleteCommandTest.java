@@ -24,7 +24,11 @@ public class DeleteCommandTest {
         editor.storeCommand(appendCommand);
 
         DeleteCommand deleteCommand = new DeleteCommand(editor, "id1");
-        deleteCommand.execute();
+        try {
+            deleteCommand.execute();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
         editor.storeCommand(deleteCommand);
         assertThrows(ElementNotFound.class, () -> editor.getDocument().findElementById("id1"));
 

@@ -22,19 +22,16 @@ public class DeleteCommand implements CanUndoCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws Exception {
         // TODO: whether touch HTMLelement or not
         tagName = editor.getDocument().findElementById(element).getTagName();
         idValue = editor.getDocument().findElementById(element).getId();
         insertLocation = editor.getDocument().findElementById(element).getInsertLocation(editor.getDocument().findElementById(element));
         textContent = editor.getDocument().findElementById(element).getTextContent();
-        System.out.println("When executing DeleteCommand,the tagName/idValue/textContent: " + tagName + idValue + textContent);
-        System.out.println("After execute DeleteCommand,insertLocation is " + insertLocation);
-        try {
-            editor.delete(element);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+//        System.out.println("When executing DeleteCommand,the tagName/idValue/textContent: " + tagName + idValue + textContent);
+//        System.out.println("After execute DeleteCommand,insertLocation is " + insertLocation);
+
+        editor.delete(element);
     }
 
     @Override

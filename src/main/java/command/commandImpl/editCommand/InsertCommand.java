@@ -28,12 +28,8 @@ public class InsertCommand implements CanUndoCommand {
     }
 
     @Override
-    public void execute() {
-        try {
-            editor.insert(tagName, idValue, insertLocation, textContent);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public void execute() throws Exception {
+        editor.insert(tagName, idValue, insertLocation, textContent);
     }
 
     @Override
