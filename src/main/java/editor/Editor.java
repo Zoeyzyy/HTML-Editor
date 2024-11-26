@@ -1,5 +1,7 @@
 package editor;
 
+import command.commandImpl.historyCommand.UndoCommand;
+import command.commandImpl.historyCommand.RedoCommand;
 import document.HTMLDocument;
 import command.Command;
 import document.HTMLElement;
@@ -182,6 +184,11 @@ public class Editor {
      * @param command 要存储的命令
      */
     public void storeCommand(Command command) {
+        // 如果是Undo或Redo命令，不存入历史记录
+        if (command instanceof UndoCommand || command instanceof RedoCommand) {
+            return;
+        }
+        
         commandHistory.push(command);
         updateModifiedState();
     }
