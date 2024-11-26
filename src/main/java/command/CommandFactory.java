@@ -1,6 +1,7 @@
 package command;
 
 import command.commandImpl.IOCommand.InitCommand;
+import command.commandImpl.IOCommand.LoadCommand;
 import command.commandImpl.IOCommand.ReadCommand;
 import command.commandImpl.IOCommand.SaveCommand;
 import command.commandImpl.displayCommand.PrintIndentCommand;
@@ -10,16 +11,11 @@ import command.commandImpl.editCommand.*;
 import command.commandImpl.historyCommand.RedoCommand;
 import command.commandImpl.historyCommand.UndoCommand;
 import command.commandImpl.sessionCommand.*;
-import document.HTMLDocument;
-import editor.Editor;
-import history.CommandHistory;
 import session.Session;
 
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * 工厂模式
@@ -45,14 +41,13 @@ public class CommandFactory {
      */
     @FunctionalInterface
     private interface CommandCreator {
-        Command create(String ...args);
+        Command create(String... args);
     }
 
     private final Map<String, CommandCreator> commandMap = new HashMap<>();
     private final Map<String, CommandFormat> commandFormats = new HashMap<>();
     private final Session session;
     private final PrintStream out;
-
 
 
     public CommandFactory(Session session, PrintStream out) {
@@ -98,39 +93,40 @@ public class CommandFactory {
                             commandName, format.format, format.minArgs, format.maxArgs, args.length));
         }
     }
+
     /**
      * 手动注册命令
      */
     private void registerCommands() {
         registerCommand("insert",
-                args -> InsertCommand.create(this.session.getActiveEditor(),args[0],args[1],args[2],args[3]));
+                args -> InsertCommand.create(this.session.getActiveEditor(), args[0], args[1], args[2], args[3]));
 
         registerCommand("append",
-                args -> AppendCommand.create(this.session.getActiveEditor(),args[0],args[1],args[2],args[3]));
+                args -> AppendCommand.create(this.session.getActiveEditor(), args[0], args[1], args[2], args[3]));
 
         registerCommand("edit-id",
-                args -> EditIDCommand.create(this.session.getActiveEditor(),args[0],args[1]));
+                args -> EditIDCommand.create(this.session.getActiveEditor(), args[0], args[1]));
 
         registerCommand("edit-text",
-                args -> EditTextCommand.create(this.session.getActiveEditor(),args[0],args[1]));
+                args -> EditTextCommand.create(this.session.getActiveEditor(), args[0], args[1]));
 
         registerCommand("delete",
-                args -> DeleteCommand.create(this.session.getActiveEditor(),args[0]));
+                args -> DeleteCommand.create(this.session.getActiveEditor(), args[0]));
 
         registerCommand("print-indent",
-                args -> PrintIndentCommand.create(this.session.getActiveEditor(),args.length==1?Integer.parseInt(args[0]):2,out));
+                args -> PrintIndentCommand.create(this.session.getActiveEditor(), args.length == 1 ? Integer.parseInt(args[0]) : 2, out));
 
         registerCommand("print-tree",
-                args -> PrintTreeCommand.create(this.session.getActiveEditor(),out));
+                args -> PrintTreeCommand.create(this.session.getActiveEditor(), out));
 
         registerCommand("spell-check",
                 args -> SpellCheckCommand.create(this.session.getActiveEditor()));
 
         registerCommand("read",
-                args -> ReadCommand.create(this.session.getActiveEditor(),args[0]));
+                args -> ReadCommand.create(this.session, args[0]));
 
         registerCommand("save",
-                args -> SaveCommand.create(session,args[0]));
+                args -> SaveCommand.create(session, args[0]));
 
         registerCommand("init",
                 args -> InitCommand.create(this.session.getActiveEditor()));
@@ -146,7 +142,7 @@ public class CommandFactory {
                 args -> ExitSessionCommand.create(session));
 
         registerCommand("load",
-                args -> LoadCommand.create(session,args[0]));
+                args -> LoadCommand.create(session, args[0]));
 
         registerCommand("close",
                 args -> CloseCommand.create(session));
@@ -155,14 +151,15 @@ public class CommandFactory {
                 args -> EditorListCommand.create(session));
 
         registerCommand("edit",
-                args -> ChangeEditorCommand.create(session,args[0]));
+                args -> ChangeEditorCommand.create(session, args[0]));
 
     }
 
 
     /**
      * 注册命令
-     * @param name 命令名称
+     *
+     * @param name    命令名称
      * @param creator 命令创建器
      */
     private void registerCommand(String name, CommandCreator creator) {
@@ -174,11 +171,12 @@ public class CommandFactory {
 
     /**
      * 创建Command对象
+     *
      * @param name Command名称
      * @param args Command需要传入的参数
      * @return
      */
-    public Command createCommand(String name,String ...args) {
+    public Command createCommand(String name, String... args) {
         CommandCreator creator = commandMap.get(name);
         if (creator == null) {
             throw new IllegalArgumentException("Unknown command: " + name);

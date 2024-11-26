@@ -6,23 +6,24 @@ import java.io.File;
 import java.io.IOException;
 
 import command.Command;
+import session.Session;
 
 public class ReadCommand implements Command {
-    private final Editor editor;
+    private final Session session;
     private final String filePath;
 
-    public ReadCommand(Editor editor, String filePath) {
-        this.editor = editor;
+    public ReadCommand(Session session, String filePath) {
+        this.session = session;
         this.filePath = filePath;
     }
 
-    public static Command create(Editor editor, String filePath) {
-        return new ReadCommand(editor, filePath);
+    public static Command create(Session session, String filePath) {
+        return new ReadCommand(session, filePath);
     }
 
     @Override
     public void execute() throws Exception {
         // let editor to check filepath
-        editor.load(filePath);
+        session.load(filePath);
     }
 }

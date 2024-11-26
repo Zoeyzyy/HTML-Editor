@@ -1,6 +1,6 @@
-package command.CommandImpl.sessionCommand;
+package command.CommandImpl.IOCommand;
 
-import command.commandImpl.sessionCommand.LoadCommand;
+import command.commandImpl.IOCommand.LoadCommand;
 import org.junit.jupiter.api.Test;
 import session.Session;
 

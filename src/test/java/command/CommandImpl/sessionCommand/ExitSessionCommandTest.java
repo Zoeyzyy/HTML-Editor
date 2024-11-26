@@ -1,8 +1,6 @@
 package command.CommandImpl.sessionCommand;
 
-import command.commandImpl.editCommand.AppendCommand;
 import command.commandImpl.sessionCommand.ExitSessionCommand;
-import command.commandImpl.sessionCommand.LoadCommand;
 import org.junit.jupiter.api.Test;
 import session.Session;
 
