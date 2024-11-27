@@ -1,6 +1,28 @@
 # Lab1 : HTML-Editor
 ## 功能模块总述
 
+![e633298c31243369b7f5c1a883ec9e1](assets/e633298c31243369b7f5c1a883ec9e1.png)
+
+上图为本项目的功能模块描述图，主要分为三个模块：1. **User Interface** 2. **Command** 3. **Business Logic**
+
+### User Interface
+
+该模块主要实现与用户交互的功能，并提供用户命令结果显示以及错误输入提示的功能。
+
+目前实现的界面为命令行界面。
+
+### Command
+
+该模块是整个项目的中间模块，主要负责用户输入命令的解析，以及对应命令对象的创建和调用的功能。
+
+在模块的设计中，采用了大量的设计模型，包括但不限于：工厂模式、策略模式、组合模式等。
+
+### Business Logic
+
+该模块是项目的业务模块，负责具体的业务操作的实现，包括：HTML文档的读取、保存、增删改查等等操作。
+
+在模块的设计中，`HTMLDocument`类与`HTMLElement`类是一个组合关系，同时负责拼写检查的`SpellChecker`类被设计为单例模式。
+
 ## 功能模块描述
 ### Console
 #### 需求简述
@@ -23,11 +45,6 @@ Console类是一个命令行界面，主要用于与用户交互。其中，包�
      2. 解析为命令
      3. 运行命令
      4. 返回对应的输出或报错，包括异常处理
-
-### CommandParser
-=======
-* 闇�姹傜畝杩帮細
-* 鍔熻兘寮�鍙戦�昏緫锛�
 
 ### CommandParser
 
@@ -676,21 +693,81 @@ ElementBadRemoved：错误删除异常
 2. **备忘录模式**：通过`dump`和`recover`方法，保存和恢复会话的状态。`DumpType`类充当备忘录，用于存储会话的数据（如文件列表和每个文件的编辑器状态），在会话退出或恢复时读取和写入这些数据，以确保会话的状态能够回退到特定时刻。
 
 
-## 运行环境
-本项目采用的是Java 1.8 版本，可以选用Gradle 和 Maven任意一种方式进行构建。
+## 项目环境与运行方式
+本项目采用的是Java 1.8 版本，可以选用Gradle 和 Maven任意一种方式进行构建，具体依赖查看所需依赖。
 
-Gradle 构建方式：
+* JDK 1.8 (Java 8)
+* Maven 3.x 或更高版本
+* Windows 操作系统（推荐 Windows 11）
+* 推荐使用IntelliJ IDEA来打开并运行程序
+
+### 项目结构
 
 ```shell
-TODO
+docs				文档
+
+gradle				Gradle配置文件
+
+src.main.java       源代码路径
+
+src.main.resources  资源路径
+
+src.main.test       测试路径 
 ```
 
-Maven 构建方式：
-```shell
+### 主程序入口
+
+```sh
+src.main.java.Console	# 主程序入口
 ```
+
+### 项目测试
+
+```
+src.main.test
+```
+
+测试目录下包括**89**个项目测试，可以通过这些测试来判断项目是否运行正常。
 
 ### 所需依赖
 
+**测试框架**
 
+- JUnit Jupiter (版本: 5.7.0)
+  - junit-jupiter-api: 用于编写JUnit测试
+  - junit-jupiter-engine: JUnit测试运行引擎
+- Mockito (版本: 4.11.0)
+  - mockito-core: 用于单元测试的模拟框架
+  - mockito-junit-jupiter: Mockito与JUnit集成支持
 
+**HTML解析**
 
+- JSoup (版本: 1.15.4)
+  - 用途：HTML文档解析和操作
+
+**语言处理**
+
+- LanguageTool English (版本: 5.9)
+  - language-en: 英语语言处理支持
+
+**开发工具**
+
+- Lombok (版本: 1.18.20)
+  - 用途：通过注解简化Java代码
+  - 作用域：provided（编译时使用）
+
+**日志处理**
+
+- SLF4J NOP (版本: 1.7.36)
+  - slf4j-nop: SLF4J日志框架的空实现
+
+**编译插件**
+
+- maven-compiler-plugin (版本: 3.8.1)
+  - 配置：Java 1.8源代码和目标版本
+  - Lombok注解处理器支持
+
+**测试插件**
+
+- maven-surefire-plugin (版本: 2.22.2)
+  - 用途：执行单元测试
