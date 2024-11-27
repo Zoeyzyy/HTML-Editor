@@ -25,9 +25,9 @@ public class CommandHistory {
     public void push(Command command) {
         if(command instanceof CanUndoCommand) {
             undoStack.push((CanUndoCommand) command);
+            // 清空重做栈，因为新命令执行后原来的重做记录就失效了
+            redoStack.clear();
         }
-        // 清空重做栈，因为新命令执行后原来的重做记录就失效了
-        redoStack.clear();
     }
 
     /**
