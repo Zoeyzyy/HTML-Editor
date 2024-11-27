@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class Console {
     private final InputStream inputStream;
     private final PrintStream printStream;
+    private final PrintStream errorStream;
 
     private static final String PROMPT = "shell> ";
     private boolean isRunning = true;
@@ -20,9 +21,11 @@ public class Console {
     private final CommandParser commandParser;
     private final CommandInvoker commandInvoker;
 
+
     public Console(PrintStream printStream, InputStream inputStream) {
         this.session = new Session("default");
         this.scanner = new Scanner(inputStream);
+        this.errorStream = new PrintStream(System.err);
         this.printStream = printStream;
         this.inputStream = inputStream;
         this.commandParser = new CommandParser(session, inputStream, printStream);
@@ -60,6 +63,7 @@ public class Console {
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                errorStream.println(e.getMessage());
             }
         }
 
