@@ -3,15 +3,26 @@
 
 ## 功能模块描述
 ### Console
-* 需求简述：
-  * 读取用户输入
-  * 返回对应的输出或报错
-* 功能开发逻辑：
-  1. 初始化
-  2. 读取用户输入
-  3. 解析为命令
-  4. 运行命令
-  5. 返回对应的输出或报错
+#### 需求简述
+Console类是一个命令行界面，主要用于与用户交互。其中，包含main函数。
+- 读取用户输入
+- 返回对应的输出或报错
+
+#### 功能开发逻辑
+##### 1. 核心组件
+- CommandParser：命令解析的主控制器
+- Session：会话管理
+- InputStream：用户输入流，default为System.in
+- PrintStream：Console输出流，default为System.out
+- CommandInvoker：命令执行和存储的主控制器
+
+##### 2. 主要处理流程
+  1. 初始化组件
+  2. 循环处理用户输入，直至退出
+     1. 获取用户输入
+     2. 解析为命令
+     3. 运行命令
+     4. 返回对应的输出或报错，包括异常处理
 
 ### CommandParser
 =======
@@ -205,14 +216,18 @@ CommandFactory 类是一个命令工厂，负责创建和管理各种命令对�
 
 
 ### CommandInvoker
-* 需求简述：
-  * 执行命令
-  * 存储命令
-* 功能开发逻辑：
+#### 需求简述
+CommandInvoker 类是一个命令执行器，负责执行和执行历史管理。主要需求包括：
+- 执行命令
+- 存储命令
+
+#### 功能开发逻辑
+##### 1. 核心组件
+- Session：会话管理
+
+##### 2. 主要处理流程
   1. 执行命令
-  2. 在对应的CommandHistory中存储命令
-
-
+  2. 找到当前session中的activeEditor，在对应的CommandHistory中存储命令
 
 ### CommandHistory
 
@@ -272,8 +287,69 @@ CommandFactory 类是一个命令工厂，负责创建和管理各种命令对�
 
 
 ### Command
-* 需求简述：
-* 功能开发逻辑：
+#### 需求简述
+Command 接口是一个抽象命令，定义了命令的执行逻辑。主要需求包括：
+- 执行命令
+
+#### 功能开发逻辑
+1. execute(): 抽象方法，定义命令的执行逻辑，继续向上抛出异常
+
+
+### UndoableCommand
+#### 需求简述
+UndoableCommand 接口是一个可撤销的命令，继承自 Command 接口。主要需求包括：
+- 执行命令
+- 撤销命令
+
+#### 功能开发逻辑
+1. undo(): 抽象方法，定义命令的撤销逻辑，继续向上抛出异常
+
+### ConcreteCommand
+ConcreteCommand 代指一系列Command的具体实现（具体见src/main/java/command/commandImpl/*），实现了 Command 接口和 UndoableCommand 接口。主要需求包括：
+- displayCommand：显示类命令
+  - printTreeCommand：HTML文件的树形显示
+  - printIndentCommand：HTML文件的缩进显示
+  - ShowIDCommand：控制是否显示元素ID
+  - SpellCheckCommand：拼写检查
+- editCommand：编辑类命令
+  - EditTextCommand：编辑元素文本
+  - InsertCommand：在某个位置之前插入元素
+  - AppendCommand：在某个父节点下追加元素
+  - DeleteCommand：删除元素
+  - EditIDCommand：编辑元素ID
+  - EditTextCommand：编辑元素文本
+- historyCommand：历史类命令
+  - RedoCommand：重做命令
+  - UndoCommand：撤销命令
+- IOCommand：IO类命令
+  - initCommand：初始化编辑器
+  - loadCommand：加载文件到编辑器
+  - saveCommand：保存编辑器内容到文件
+  - ReadCommand：读取文件到编辑器
+- sessionCommand：会话类命令
+  - ChangeEditorCommand：切换编辑器
+  - CloseCommand：关闭编辑器
+  - ExitSessionCommand：退出会话
+  - EditorListCommand：列出所有编辑器
+  - DirTreeCommand：HTML文件所在文件夹的树形显示
+  - DirIndentCommand：HTML文件所在文件夹的缩进显示
+
+#### 功能开发逻辑
+1. execute(): 
+   1. 若为undoableCommand，保存撤销所需信息
+   2. 调用对应的后端业务逻辑，传递参数
+2. undo(): 
+   1. 获取保存的撤销信息，调用撤销对应的后端业务逻辑
+* **注意：Command只用于信息的传递，不应该包含任何业务逻辑**
+
+#### 设计模式说明
+
+##### 1. 命令模式
+- **实现方式**：通过不同的命令实现类封装具体操作
+- **优势**：
+    - 便于解耦前端接口和后端业务逻辑
+    - 支持命令的撤销和重做
+    - 便于添加新的命令类型
 
 ### Session
 
