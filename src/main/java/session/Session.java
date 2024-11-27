@@ -11,14 +11,13 @@ import java.util.stream.Collectors;
 public class Session {
     @Getter
     private String id;
-    private List<String> files;
+    private static int untitleID = 0;
     private Map<String, Editor> editors;
     @Getter
     private Editor activeEditor;
 
     public Session(String id) {
-        if (this.recover("./data/session_dump" ) == null) {
-            this.files = new ArrayList<>();
+        if (!this.recover("./data/session_dump")) {
             this.editors = new HashMap<>();
             this.activeEditor = null;
         }
@@ -28,7 +27,6 @@ public class Session {
     public void enter (String id) {
         Session session = new Session(id);
         this.id = session.id;
-        this.files = new ArrayList<>(session.files);
         this.editors = new HashMap<>(session.editors);
         this.activeEditor = session.activeEditor;
     }
@@ -47,7 +45,7 @@ public class Session {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
 
             List<DumpType> saved = new ArrayList<>();
-            for (String file : this.files) {
+            for (String file : this.editors.keySet()) {
                 saved.add(new DumpType(file, this.editors.get(file).getDocument().getShowID()));
             }
             if (activeEditor != null) {
@@ -61,7 +59,7 @@ public class Session {
         }
     }
 
-    public List<String> recover(String filename) {
+    public boolean recover(String filename) {
         filename = "./data/session_dump";
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
             @SuppressWarnings("unchecked")
@@ -69,13 +67,13 @@ public class Session {
 
             System.out.println("Object loaded from file: " + filename);
             if (list.isEmpty()) {
-                return null;
+                return false;
             }
-            this.files = new ArrayList<>();
+
             this.editors = new HashMap<>();
 
             for (DumpType dump : list) {
-                this.files.add(dump.getFileName());
+
                 Editor editor = new Editor();
                 editor.load(dump.getFileName());
                 editor.setShowId(dump.isShowID());
@@ -86,7 +84,7 @@ public class Session {
 
         } catch (IOException | ClassNotFoundException e) {
 //            e.printStackTrace();
-            return null;
+            return false;
         }
         File file = new File(filename);
         if (file.exists()) {
@@ -99,22 +97,32 @@ public class Session {
         } else {
             System.out.println("File does not exist.");
         }
-        return this.files;
+        return true;
     }
 
     public void load(String filename) throws IOException {
+        if (Objects.equals(filename, "")){
+            Editor editor = new Editor();
+            filename = "Untitled-" + untitleID++;
+            editor.init();
+            editor.setFilename(filename);
+            editors.put(filename, editor);
+            activeEditor = editor;
+            return;
+        }
         Editor editor = new Editor();
         File file = new File(filename);
         filename = file.getAbsolutePath();
         editor.load(filename);
         editors.put(filename, editor);
-        files.add(filename);
         activeEditor = editor;
     }
 
     public void save(String filename) throws IOException {
         filename = new File(filename).getAbsolutePath();
         activeEditor.save(filename);
+        editors.remove(activeEditor.getFileName());
+        editors.put(filename, activeEditor);
     }
 
     public boolean confirm() {
@@ -124,13 +132,17 @@ public class Session {
     public void close() {
         if (activeEditor != null) {
             editors.remove(activeEditor.getFileName());
-            files.remove(activeEditor.getFileName());
-            activeEditor = editors.isEmpty() ? null : editors.get(files.get(0));
+            Iterator<String> it = editors.keySet().iterator();
+            if (it.hasNext()) {
+                activeEditor = editors.get(it.next());
+            } else {
+                activeEditor = null;
+            }
         }
     }
 
     public List<String> getEditorList() {
-        return this.files.stream().map(file -> {
+        return this.editors.keySet().stream().map(file -> {
             File f = new File(file);
             if (isModified(f)) {
                 file = file + "*";

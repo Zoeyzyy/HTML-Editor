@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -121,5 +122,26 @@ public class SessionTest {
         assertNotNull(session.getActiveEditor());
         System.out.println("active editor: " + session.getActiveEditor().getFileName());
         System.out.println("result: \n" + session.getDirIndentFormat(0));
+    }
+
+    @Test
+    void testLoadNewFile() throws IOException {
+        session.load("");
+        assertNotNull(session.getActiveEditor());
+        assertTrue(session.getActiveEditor().getFileName().contains("Untitled"));
+    }
+
+    @Test
+    void testSaveUntitledFile() throws IOException {
+        session.load("");
+        assertTrue(session.getActiveEditor().getFileName().contains("Untitled"));
+
+        session.save("test_save.html");
+        String absolutePath = Paths.get("test_save.html").toAbsolutePath().toString();
+        assertEquals(absolutePath, session.getActiveEditor().getFileName());
+
+        File file = new File(absolutePath);
+        assertTrue(file.exists());
+        file.delete();
     }
 }
