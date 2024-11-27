@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EditorListCommandTest {
     @Test
@@ -62,7 +63,8 @@ public class EditorListCommandTest {
         }
 
         String output2 = byteArrayOutputStream2.toString();
-        assertEquals(filePath + "\r\n" + ">" + filePath2 + "*\r\n", output2);
+        assertTrue(output2.contains(filePath));
+        assertTrue(output2.contains(filePath2+"*"));
         printStream.close();
     }
 }

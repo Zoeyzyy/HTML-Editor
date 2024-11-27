@@ -9,12 +9,14 @@ import lombok.Getter;
 import history.CommandHistory;
 import exception.ElementNotFound;
 import exception.ElementBadRemoved;
+import lombok.Setter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Editor {
+    @Setter
     private String filename;
     /**
      * -- GETTER --
@@ -89,23 +91,19 @@ public class Editor {
      */
     public void save(String filename) throws IOException {
         // 如果没有提供新文件名，且当前没有文件名，则抛出异常
-        if (filename == null && this.filename == null) {
+        if ((filename == null || filename.startsWith("Untitled")) && this.filename == null) {
             throw new IOException("无法保存：文件名不能为空");
         }
 
-        // 如果提供了新文件名，则更新文件名
-//        if (filename != null) {
-//            this.filename = filename.replace("\\", "/");
-//        }
 
         // 确保文件名存在
-        if (this.filename == null) {
+        if (filename == null) {
             throw new IOException("无法保存：未指定文件名");
         }
 
         // 获取文件内容并保存
         String content = document.save();
-        File file = new File(this.filename);
+        File file = new File(filename);
 
         // 确保父目录存在
         if (file.getParentFile() != null && !file.getParentFile().exists()) {
@@ -117,7 +115,13 @@ public class Editor {
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write(content);
             writer.flush();  // 确保内容被写入
+
+        }catch (IOException e){
+            throw new IOException("文件保存失败：" + e.getMessage());
         }
+
+        // 如果提供了新文件名，则更新文件名
+        this.filename = filename;
 
         modified = false;
     }
