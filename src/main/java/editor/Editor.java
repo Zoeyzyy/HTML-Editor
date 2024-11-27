@@ -327,4 +327,28 @@ public class Editor {
         document.init();
         updateModifiedState();
     }
+
+    /**
+     * 读取文档内容
+     * 如果文件不存在，则抛出异常
+     *
+     * @param filename 要读取的文件名
+     * @throws IOException 如果文件不存在或操作失败
+     */
+    public void read(String filename) throws IOException {
+        this.filename = filename;
+        File file = new File(filename);
+
+        if (!file.exists()) {
+            throw new IOException("文件不存在：" + filename);
+        }
+
+        try {
+            document.read(file);
+        } catch (Exception e) {
+            document.init();
+            throw new IOException("文件读取失败：" + e.getMessage());
+        }
+        modified = false;
+    }
 }
