@@ -21,7 +21,6 @@ public class CommandHistory {
         add("LoadCommand");
         add("ReadCommand");
         add("SaveCommand");
-        add("CloseCommand");
         // 如果还有其他IO指令，继续添加
     }};
 
@@ -47,7 +46,7 @@ public class CommandHistory {
 
         if(command instanceof CanUndoCommand) {
             undoStack.push((CanUndoCommand) command);
-            // 执行新命令后，重做记录失效
+            // 执行编辑类命令后，redo记录失效
             redoStack.clear();
         }
     }
