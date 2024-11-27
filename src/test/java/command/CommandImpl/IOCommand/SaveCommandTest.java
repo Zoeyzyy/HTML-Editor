@@ -21,7 +21,7 @@ public class SaveCommandTest {
         String fileName = "src/main/resources/example.html";
         String filePath = currentPath + "/" + fileName;
         try {
-            session.load(filePath);
+            session.load("");
         } catch (Exception e) {
 
         }

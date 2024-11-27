@@ -129,7 +129,7 @@ public class CommandFactory {
                 args -> SaveCommand.create(session, args[0]));
 
         registerCommand("init",
-                args -> InitCommand.create(this.session.getActiveEditor()));
+                args -> InitCommand.create(this.session));
 
 
         registerCommand("redo",

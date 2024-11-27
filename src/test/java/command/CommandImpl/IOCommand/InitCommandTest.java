@@ -5,6 +5,7 @@ import command.commandImpl.displayCommand.PrintIndentCommand;
 import document.HTMLDocument;
 import editor.Editor;
 import org.junit.jupiter.api.Test;
+import session.Session;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -14,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class InitCommandTest {
     @Test
     public void execute() {
-        Editor editor = new Editor();
+        Session session = new Session("default");
 
-        InitCommand initCommand = new InitCommand(editor);
+        InitCommand initCommand = new InitCommand(session);
         try {
             initCommand.execute();
         } catch (Exception e) {
@@ -26,7 +27,7 @@ public class InitCommandTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
 
-        PrintIndentCommand printIndentCommand = new PrintIndentCommand(editor, 1, printStream);
+        PrintIndentCommand printIndentCommand = new PrintIndentCommand(session.getActiveEditor(), 1, printStream);
         try {
             printIndentCommand.execute();
         } catch (Exception e) {
