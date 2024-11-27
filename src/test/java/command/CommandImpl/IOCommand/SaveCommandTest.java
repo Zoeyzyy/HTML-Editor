@@ -18,8 +18,8 @@ public class SaveCommandTest {
     public void execute() {
         Session session = new Session("");
         String currentPath = System.getProperty("user.dir");
-        String fileName = "/src/main/resources/example.html";
-        String filePath = currentPath + fileName;
+        String fileName = "src/main/resources/example.html";
+        String filePath = currentPath + "/" + fileName;
         try {
             session.load(filePath);
         } catch (Exception e) {
