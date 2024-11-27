@@ -59,6 +59,8 @@ public class Session {
         }
     }
 
+    
+
     public boolean recover(String filename) {
         filename = "./data/session_dump";
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
@@ -114,6 +116,15 @@ public class Session {
         File file = new File(filename);
         filename = file.getAbsolutePath();
         editor.load(filename);
+        editors.put(filename, editor);
+        activeEditor = editor;
+    }
+
+    public void read(String filename){
+        Editor editor = new Editor();
+        File file = new File(filename);
+        filename = file.getAbsolutePath();
+        editor.read(filename);
         editors.put(filename, editor);
         activeEditor = editor;
     }
