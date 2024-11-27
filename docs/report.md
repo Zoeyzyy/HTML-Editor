@@ -1,7 +1,7 @@
 # Lab1 : HTML-Editor
 ## 功能模块总述
 
-![e633298c31243369b7f5c1a883ec9e1](assets/e633298c31243369b7f5c1a883ec9e1.png)
+![adddb2474cb351f1c507f6e233b16e1](assets/adddb2474cb351f1c507f6e233b16e1.png)
 
 上图为本项目的功能模块描述图，主要分为三个模块：1. **User Interface** 2. **Command** 3. **Business Logic**
 
