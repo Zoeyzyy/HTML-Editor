@@ -606,7 +606,7 @@ public class ConsoleIntegrationTest {
         );
 
         String errorOutput = getErrorOutput();
-        String[] errors = errorOutput.split("\n");
+        String[] errors = errorOutput.split("\\r?\\n");
         Assertions.assertTrue(
                 errors[0].contains("Element: Id test-id has existed.") &&
                         errors[1].contains("Element: Id non-existent Not Found")
@@ -625,7 +625,7 @@ public class ConsoleIntegrationTest {
         );
 
         String errorOutput = getErrorOutput();
-        String[] errors = errorOutput.split("\r\n");
+        String[] errors = errorOutput.split("\\r?\\n");
         Assertions.assertTrue(
                 errors[0].equals("Element: Id header has existed.") &&
                         errors[1].equals("Element: Id non-existent Not Found")
@@ -657,7 +657,7 @@ public class ConsoleIntegrationTest {
         );
 
         String errorOutput = getErrorOutput();
-        String[] errors = errorOutput.split("\r\n");
+        String[] errors = errorOutput.split("\\r?\\n");
         Assertions.assertTrue(
                 errors[0].equals("Element: Id test-id has existed.") &&
                         errors[1].equals("Element: Id non-existent Not Found")
