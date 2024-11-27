@@ -11,7 +11,7 @@
 
 ![adddb2474cb351f1c507f6e233b16e1](assets/adddb2474cb351f1c507f6e233b16e1.png)
 
-本项目完成了**基本需求+增强部分**需求。上图为本项目的功能模块描述图，主要分为三个模块：1. **User Interface** 2. **Command** 3. **Business Logic**
+上图为本项目的功能模块描述图，主要分为三个模块：1. **User Interface** 2. **Command** 3. **Business Logic**
 
 这些模块成功实现了lab1中的**所有需求**以及**增强部分的需求**，并且都通过了完整测试。
 
