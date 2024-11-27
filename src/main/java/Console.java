@@ -42,10 +42,10 @@ public class Console {
     }
 
     public void run() {
-        printStream.println("Welcome to HTML Editor! (Type 'exit' to quit)");
+        System.out.println("Welcome to HTML Editor! (Type 'exit' to quit)");
         while (isRunning) {
             try {
-                printStream.print(PROMPT);
+                System.out.print(PROMPT);
                 String input = scanner.nextLine().trim();
 
                 if (input.isEmpty()) {
@@ -59,12 +59,12 @@ public class Console {
                     commandInvoker.executeAndStore(command);
                 }
             } catch (Exception e) {
-                System.err.print(e.getMessage() + "\n");
+                System.out.println(e.getMessage());
             }
         }
 
         scanner.close();
-        printStream.println("Goodbye!");
+        System.out.println("Goodbye!");
     }
 
     public static void main(String[] args) {
