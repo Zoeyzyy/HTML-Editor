@@ -24,6 +24,6 @@ public class ReadCommand implements Command {
     @Override
     public void execute() throws Exception {
         // let editor to check filepath
-        session.load(filePath);
+        session.read(filePath);
     }
 }

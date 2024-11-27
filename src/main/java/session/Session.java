@@ -120,7 +120,7 @@ public class Session {
         activeEditor = editor;
     }
 
-    public void read(String filename){
+    public void read(String filename) throws IOException {
         Editor editor = new Editor();
         File file = new File(filename);
         filename = file.getAbsolutePath();

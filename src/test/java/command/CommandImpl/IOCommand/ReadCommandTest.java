@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import session.Session;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ReadCommandTest {
     @Test
@@ -71,5 +73,13 @@ public class ReadCommandTest {
                 " </body>\n" +
                 "</html>", output);
         printStream.close();
+    }
+
+    @Test
+    public void executeNonExistFile() {
+        Session session = new Session("default");
+
+        ReadCommand readCommand = new ReadCommand(session, "");
+        assertThrows(IOException.class, () -> readCommand.execute());
     }
 }
