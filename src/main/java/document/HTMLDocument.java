@@ -21,9 +21,9 @@ public class HTMLDocument {
     @Setter
     private boolean showID=false;
     private final boolean[] isLastChild = new boolean[100];
-    private final StringBuilder sb=new StringBuilder();
+    private StringBuilder sb=new StringBuilder();
     private final String templatePath=System.getProperty("user.dir")+"/src/main/resources/template.html";
-    private final Set<String> idSet=new HashSet<>();
+    private Set<String> idSet=new HashSet<>();
 
     public HTMLDocument(HTMLElement root) {
         this.root = root;
@@ -43,6 +43,8 @@ public class HTMLDocument {
      */
     public void init(){
         root=null;
+        this.idSet = new HashSet<>();
+        this.sb = new StringBuilder();
         read(new File(templatePath));
     }
 
